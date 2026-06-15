@@ -106,29 +106,51 @@ const Checkout = ({ linkToken }) => {
                 <section className="mb-16">
                     <h2 className="text-2xl font-bold mb-6">Configuration Options</h2>
                     <div className="overflow-x-auto">
-                        <table className="w-full text-sm border-collapse">
+                        <table className="w-full text-sm border-collapse text-left">
                             <thead>
-                                <tr className="border-b text-left">
+                                <tr className="border-b">
                                     <th className="py-2 pr-4">Prop</th>
                                     <th className="py-2 pr-4">Type</th>
+                                    <th className="py-2 pr-4 font-semibold">Required</th>
                                     <th className="py-2">Description</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="border-b">
-                                    <td className="py-3 font-mono">linkToken</td>
-                                    <td className="py-3 text-blue-500">string</td>
+                                    <td className="py-3 font-mono font-semibold">linkToken</td>
+                                    <td className="py-3 text-blue-500 font-mono">string</td>
+                                    <td className="py-3 text-green-600 font-medium">Yes</td>
                                     <td className="py-3">The token received from the transaction initiation API.</td>
                                 </tr>
                                 <tr className="border-b">
-                                    <td className="py-3 font-mono">publishableKey</td>
-                                    <td className="py-3 text-blue-500">string</td>
-                                    <td className="py-3">Your MITO public key (starts with pk_).</td>
+                                    <td className="py-3 font-mono font-semibold">linkType</td>
+                                    <td className="py-3 text-blue-500 font-mono">string</td>
+                                    <td className="py-3 text-green-600 font-medium">Yes</td>
+                                    <td className="py-3">Enum: <code>&quot;bill-payment&quot;</code>, <code>&quot;retail-payment&quot;</code>, or <code>&quot;retail-collection&quot;</code>.</td>
                                 </tr>
                                 <tr className="border-b">
-                                    <td className="py-3 font-mono">linkType</td>
-                                    <td className="py-3 text-blue-500">enum</td>
-                                    <td className="py-3">bill-payment, retail-payment, or retail-collection.</td>
+                                    <td className="py-3 font-mono font-semibold">publishableKey</td>
+                                    <td className="py-3 text-blue-500 font-mono">string</td>
+                                    <td className="py-3 text-muted-foreground">No</td>
+                                    <td className="py-3">Your public API key (starts with <code>pk_</code>).</td>
+                                </tr>
+                                <tr className="border-b">
+                                    <td className="py-3 font-mono font-semibold">environment</td>
+                                    <td className="py-3 text-blue-500 font-mono">string</td>
+                                    <td className="py-3 text-muted-foreground">No</td>
+                                    <td className="py-3">Enum: <code>&quot;production&quot;</code> or <code>&quot;sandbox&quot;</code>. Defaults to <code>&quot;production&quot;</code>.</td>
+                                </tr>
+                                <tr className="border-b">
+                                    <td className="py-3 font-mono font-semibold">onSuccess</td>
+                                    <td className="py-3 text-blue-500 font-mono">function</td>
+                                    <td className="py-3 text-green-600 font-medium">Yes</td>
+                                    <td className="py-3">Callback executed when a checkout is completed successfully. Receives transaction reference payload.</td>
+                                </tr>
+                                <tr className="border-b">
+                                    <td className="py-3 font-mono font-semibold">onExit</td>
+                                    <td className="py-3 text-blue-500 font-mono">function</td>
+                                    <td className="py-3 text-muted-foreground">No</td>
+                                    <td className="py-3">Callback executed when the user exits the checkout session or an error occurs.</td>
                                 </tr>
                             </tbody>
                         </table>

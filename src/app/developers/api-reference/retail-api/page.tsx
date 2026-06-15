@@ -5,7 +5,7 @@ import { EndpointBlock } from "@/components/developers/ApiBlocks";
 import { CodeTabs, CodeBlock } from "@/components/developers/CodeBlocks";
 import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Badge } from "@/components/ui/badge";
-import { Info, ShieldAlert, Key, Landmark } from "lucide-react";
+import { Info, ShieldAlert, Key, Landmark, Smartphone, Laptop, Settings, Zap } from "lucide-react";
 
 export default function RetailApiReference() {
     return (
@@ -444,6 +444,234 @@ export default function RetailApiReference() {
                                 />
                             </div>
                         </EndpointBlock>
+                    </section>
+
+                    {/* SECTION: FRONTEND SDK INTEGRATION */}
+                    <div className="bg-muted/10 py-6 px-8 border-b">
+                        <Badge className="bg-primary hover:bg-primary/95 text-white">Frontend SDK Integration</Badge>
+                    </div>
+
+                    <section id="sdk-overview" className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl space-y-6">
+                        <h2 className="text-3xl font-extrabold tracking-tight flex items-center gap-2">
+                            <Zap className="w-8 h-8 text-yellow-500" /> Mito Link SDKs
+                        </h2>
+                        <p className="text-lg text-muted-foreground">
+                            Provide your customers a seamless, native-feel checkout flow. The Mito Link SDKs modalise hosted checkout pages inside your application, managing KYC uploads, 3D Secure verification, and redirect handshakes automatically.
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                            <div className="border border-border bg-card rounded-xl p-6 space-y-3">
+                                <div className="flex items-center gap-2 text-foreground font-bold">
+                                    <Laptop className="w-5 h-5 text-primary" /> Web SDK (React)
+                                </div>
+                                <p className="text-sm text-muted-foreground">
+                                    Integrate Mito Link in your web application using React hooks or customized pre-built components.
+                                </p>
+                                <div className="font-mono text-xs bg-muted px-3 py-1.5 rounded-md w-fit text-foreground">
+                                    @mito-money/mito-link
+                                </div>
+                            </div>
+                            <div className="border border-border bg-card rounded-xl p-6 space-y-3">
+                                <div className="flex items-center gap-2 text-foreground font-bold">
+                                    <Smartphone className="w-5 h-5 text-primary" /> React Native SDK
+                                </div>
+                                <p className="text-sm text-muted-foreground">
+                                    Embed Mito Link into your iOS and Android native apps using webview presentation modals.
+                                </p>
+                                <div className="font-mono text-xs bg-muted px-3 py-1.5 rounded-md w-fit text-foreground">
+                                    @mito-money/mito-link-react-native
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* SDK Installation */}
+                        <div className="pt-8 space-y-4">
+                            <h3 className="text-xl font-bold text-foreground">Installation</h3>
+                            <CodeTabs
+                                tabs={[
+                                    {
+                                        label: "Web (React)",
+                                        language: "bash",
+                                        code: "npm install @mito-money/mito-link"
+                                    },
+                                    {
+                                        label: "React Native",
+                                        language: "bash",
+                                        code: "npm install @mito-money/mito-link-react-native react-native-webview react-native-safe-area-context"
+                                    }
+                                ]}
+                            />
+                        </div>
+
+                        {/* API Keys Table */}
+                        <div className="pt-8 space-y-4">
+                            <h3 className="text-xl font-bold text-foreground">API Credentials</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Make sure to separate your private secret keys (used on your servers) and your public publishable keys (injected into the frontend SDKs):
+                            </p>
+                            <div className="w-full overflow-x-auto rounded-lg border bg-card shadow-sm">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="bg-muted/50 border-b text-xs font-semibold text-muted-foreground uppercase">
+                                        <tr>
+                                            <th className="px-4 py-3">Key Type</th>
+                                            <th className="px-4 py-3">Prefix</th>
+                                            <th className="px-4 py-3">Usage Context</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y text-foreground">
+                                        <tr>
+                                            <td className="px-4 py-3 font-semibold">Secret Key</td>
+                                            <td className="px-4 py-3 font-mono text-primary text-xs">sk_live_... / sk_sandbox_...</td>
+                                            <td className="px-4 py-3 text-muted-foreground">Server-side transactions creation only. Never expose to clients.</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-4 py-3 font-semibold">Publishable Key</td>
+                                            <td className="px-4 py-3 font-mono text-primary text-xs">pk_live_... / pk_sandbox_...</td>
+                                            <td className="px-4 py-3 text-muted-foreground">Frontend/SDK initialization. Safe to bundle in build assets.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* SDK Environments */}
+                        <div className="pt-8 space-y-4">
+                            <h3 className="text-xl font-bold text-foreground">Environments</h3>
+                            <div className="w-full overflow-x-auto rounded-lg border bg-card shadow-sm">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="bg-muted/50 border-b text-xs font-semibold text-muted-foreground uppercase">
+                                        <tr>
+                                            <th className="px-4 py-3">Environment</th>
+                                            <th className="px-4 py-3">Checkout URL Destination</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y text-foreground">
+                                        <tr>
+                                            <td className="px-4 py-3 font-semibold font-mono">production</td>
+                                            <td className="px-4 py-3 font-mono text-xs">https://link.mito.money</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-4 py-3 font-semibold font-mono">sandbox</td>
+                                            <td className="px-4 py-3 font-mono text-xs">https://mito-checkout-1cca8e18297e.herokuapp.com</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* Integration Guides */}
+                        <div className="pt-12 border-t space-y-12">
+                            {/* Web SDK Guide */}
+                            <div className="space-y-4">
+                                <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                                    <Laptop className="w-6 h-6 text-primary" /> Web Integration (React Hook & Button)
+                                </h3>
+                                <p className="text-muted-foreground">
+                                    Launch the hosted checkout overlay in your web app. You can use the standard <code>useMitoLink</code> hook for customized button trigger events or the pre-styled <code>MitoLinkButton</code>.
+                                </p>
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "React Hook (useMitoLink)",
+                                            language: "tsx",
+                                            code: `import { useMitoLink } from "@mito-money/mito-link";\n\nexport const Checkout = ({ linkToken }: { linkToken: string }) => {\n  const { ready, error, open } = useMitoLink({\n    linkToken,\n    publishableKey: "pk_live_abc123",\n    linkType: "retail-payment",\n    environment: "production",\n    onSuccess: (payload) => {\n      console.log("Success! Reference:", payload.transactionReference);\n    },\n    onExit: (error) => {\n      console.log("Exit", error?.reason);\n    },\n  });\n\n  return (\n    <button \n      type="button" \n      disabled={!ready || Boolean(error)} \n      onClick={() => open({\n        autoSize: {\n          minWidth: 360,\n          minHeight: 500,\n          maxWidth: 1100,\n          maxHeight: 820,\n        }\n      })}\n    >\n      Pay with Mito\n    </button>\n  );\n};`
+                                        },
+                                        {
+                                            label: "React Button (MitoLinkButton)",
+                                            language: "tsx",
+                                            code: `import { MitoLinkButton } from "@mito-money/mito-link";\n\nexport const EasyCheckout = ({ linkToken }: { linkToken: string }) => {\n  return (\n    <MitoLinkButton\n      linkToken={linkToken}\n      publishableKey="pk_live_abc123"\n      linkType="retail-payment"\n      environment="production"\n      onSuccess={(payload) => console.log("Success", payload)}\n      onExit={(error) => console.log("Exit", error)}\n      showErrorText\n    >\n      Pay with Mito\n    </MitoLinkButton>\n  );\n};`
+                                        }
+                                    ]}
+                                />
+                            </div>
+
+                            {/* React Native Guide */}
+                            <div className="space-y-4">
+                                <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                                    <Smartphone className="w-6 h-6 text-primary" /> React Native Integration
+                                </h3>
+                                <p className="text-muted-foreground">
+                                    Embed the checkout screen in native mobile apps. You must render the pre-wired <code>MitoLinkHost</code> overlay component alongside the button trigger.
+                                </p>
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "RN Hook (useMitoLink)",
+                                            language: "tsx",
+                                            code: `import React from "react";\nimport { Button, View } from "react-native";\nimport { useMitoLink } from "@mito-money/mito-link-react-native";\n\nexport function Checkout({ linkToken }: { linkToken: string }) {\n  const { open, MitoLinkHost } = useMitoLink({\n    linkToken,\n    publishableKey: "pk_live_abc123",\n    linkType: "retail-payment",\n    environment: "production",\n    onSuccess: (payload) => {\n      console.log("Success! Reference:", payload.transactionReference);\n    },\n    onExit: (error) => {\n      console.log("Exit", error?.reason);\n    },\n  });\n\n  return (\n    <View>\n      <Button \n        title="Pay with Mito" \n        onPress={() => open({\n          animationType: "slide",\n          presentationStyle: "pageSheet"\n        })} \n      />\n      {/* Modal host WebView container */}\n      <MitoLinkHost />\n    </View>\n  );\n}`
+                                        },
+                                        {
+                                            label: "RN Button (MitoLinkButton)",
+                                            language: "tsx",
+                                            code: `import { MitoLinkButton } from "@mito-money/mito-link-react-native";\n\nexport const SimpleRNCheckout = ({ linkToken }: { linkToken: string }) => {\n  return (\n    <MitoLinkButton\n      linkToken={linkToken}\n      publishableKey="pk_live_abc123"\n      linkType="retail-payment"\n      environment="production"\n      onSuccess={(payload) => console.log("Success", payload)}\n      onExit={(error) => console.log("Exit", error)}\n    >\n      Open Mito Link\n    </MitoLinkButton>\n  );\n};`
+                                        }
+                                    ]}
+                                />
+                            </div>
+                        </div>
+
+                        {/* SDK Reference Configuration Details */}
+                        <div className="pt-12 border-t space-y-8">
+                            <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                                <Settings className="w-6 h-6 text-primary" /> SDK API Configurations
+                            </h3>
+
+                            {/* SDK Config Props */}
+                            <div className="space-y-4">
+                                <h4 className="font-semibold text-foreground m-0">Configuration Object (useMitoLink & MitoLinkButton)</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "linkToken", type: "string", required: true, description: "Secure transaction session token generated by your backend." },
+                                        { name: "linkType", type: "'bill-payment' | 'retail-payment' | 'retail-collection'", required: true, description: "Flow configuration type." },
+                                        { name: "publishableKey", type: "string", required: false, description: "Public API key prefix (pk_)." },
+                                        { name: "environment", type: "'production' | 'sandbox'", required: false, description: "Default is 'production'." },
+                                        { name: "onSuccess", type: "(payload) => void", required: true, description: "Callback triggered upon successful checkout." },
+                                        { name: "onExit", type: "(error?) => void", required: false, description: "Callback triggered when modal is closed, cancelled, or error occurs." }
+                                    ]}
+                                />
+                            </div>
+
+                            {/* open() options */}
+                            <div className="space-y-4">
+                                <h4 className="font-semibold text-foreground m-0">open(options?) Parameter Schema</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "iframeTitle (Web)", type: "string", required: false, description: "Accessible title for the generated iframe element." },
+                                        { name: "autoSize (Web)", type: "boolean | AutoSizeOptions", required: false, description: "Controls viewport size settings on web." },
+                                        { name: "width (Web)", type: "number | string", required: false, description: "Static width parameter." },
+                                        { name: "height (Web)", type: "number | string", required: false, description: "Static height parameter." },
+                                        { name: "animationType (RN)", type: "'none' | 'slide' | 'fade'", required: false, description: "Modal layout transition animation." },
+                                        { name: "presentationStyle (RN)", type: "'fullScreen' | 'pageSheet' | 'formSheet'", required: false, description: "iOS native modal style." }
+                                    ]}
+                                />
+                            </div>
+
+                            {/* Event payloads */}
+                            <div className="space-y-4">
+                                <h4 className="font-semibold text-foreground m-0">Event Callback Payloads</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="border border-border bg-card rounded-xl p-6">
+                                        <h5 className="font-bold text-foreground mb-3">onSuccess(payload)</h5>
+                                        <SchemaTable
+                                            fields={[
+                                                { name: "transactionReference", type: "string", required: true, description: "Unique transaction identifier." },
+                                                { name: "partnerReferenceNumber", type: "string", required: true, description: "Your original order code reference." },
+                                                { name: "status", type: "string", required: true, description: "Final checkout payment status." }
+                                            ]}
+                                        />
+                                    </div>
+                                    <div className="border border-border bg-card rounded-xl p-6">
+                                        <h5 className="font-bold text-foreground mb-3">onExit(error?)</h5>
+                                        <SchemaTable
+                                            fields={[
+                                                { name: "reason", type: "string", required: true, description: "Direct exit trigger reason." },
+                                                { name: "status", type: "string", required: true, description: "Last state status prior to exiting." }
+                                            ]}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 </div>
             </div>
