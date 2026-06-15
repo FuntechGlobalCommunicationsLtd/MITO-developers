@@ -1,8 +1,32 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function Header() {
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkLogin = () => {
+      const loggedIn = document.cookie.split(";").some((c) => c.trim().startsWith("isLoggedIn="));
+      setIsLoggedIn(loggedIn);
+    };
+    checkLogin();
+    window.addEventListener("focus", checkLogin);
+    return () => window.removeEventListener("focus", checkLogin);
+  }, []);
+
+  const handleLogout = () => {
+    document.cookie = "isLoggedIn=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    setIsLoggedIn(false);
+    router.push("/developers");
+    router.refresh();
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-7xl mx-auto items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -33,11 +57,17 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center space-x-4">
-          <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-md px-6 font-semibold">
-            <Link href="/login">
-              Login <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          {isLoggedIn ? (
+            <Button onClick={handleLogout} variant="outline" className="border-primary/20 hover:bg-primary/5 text-primary rounded-md px-6 font-semibold">
+              Logout <LogOut className="ml-2 h-4 w-4" />
+            </Button>
+          ) : (
+            <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-md px-6 font-semibold">
+              <Link href="/login">
+                Login <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

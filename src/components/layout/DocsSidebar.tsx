@@ -69,12 +69,9 @@ const docsConfig: NavGroup[] = [
         title: "API Reference",
         items: [
             { title: "API Landing", href: "/developers/api-reference" },
-            { title: "Transfers API", href: "/developers/api-reference/transfers" },
-            { title: "FX API", href: "/developers/api-reference/fx" },
-            { title: "Collections API", href: "/developers/api-reference/collections" },
-            { title: "Payouts API", href: "/developers/api-reference/payouts" },
-            { title: "Compliance & KYC", href: "/developers/api-reference/compliance" },
             { title: "MTO Gateway API", href: "/developers/api-reference/mto-api" },
+            { title: "Retail Submission API", href: "/developers/api-reference/retail-api" },
+            { title: "Biller Submission API", href: "/developers/api-reference/biller-api" },
         ],
     },
     {
