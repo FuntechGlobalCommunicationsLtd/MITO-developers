@@ -5,7 +5,7 @@ import { EndpointBlock } from "@/components/developers/ApiBlocks";
 import { CodeTabs, CodeBlock } from "@/components/developers/CodeBlocks";
 import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Badge } from "@/components/ui/badge";
-import { Info, ShieldAlert, Key } from "lucide-react";
+import { Info, ShieldAlert, Key, Landmark } from "lucide-react";
 
 export default function RetailApiReference() {
     return (
@@ -36,6 +36,52 @@ export default function RetailApiReference() {
                                 { name: "Content-Type", type: "string", required: true, description: "Must be set to application/json.", example: "application/json" }
                             ]}
                         />
+                    </div>
+
+                    {/* Pre-Live Testing Accounts */}
+                    <div className="pt-8 border-t mt-8 space-y-4">
+                        <h3 className="text-xl font-bold text-foreground flex items-center gap-2 m-0">
+                            <Landmark className="w-5 h-5 text-primary shrink-0" /> Pre-Live Testing Beneficiary Accounts
+                        </h3>
+                        <p className="text-sm text-muted-foreground m-0">
+                            Before going LIVE to your customers, please use the following verified beneficiary accounts to perform real-world end-to-end tests for the corresponding corridors:
+                        </p>
+                        <div className="w-full overflow-x-auto rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-muted/50 text-muted-foreground border-b uppercase text-xs">
+                                    <tr>
+                                        <th className="px-4 py-3 font-medium">Currency</th>
+                                        <th className="px-4 py-3 font-medium">Country</th>
+                                        <th className="px-4 py-3 font-medium">Type</th>
+                                        <th className="px-4 py-3 font-medium">Bank/Network</th>
+                                        <th className="px-4 py-3 font-medium">Account/Wallet No.</th>
+                                        <th className="px-4 py-3 font-medium">Beneficiary Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y relative">
+                                    {[
+                                        { currency: "NGN", country: "Nigeria", type: "Bank Account", provider: "United Bank of Africa", number: "101 831 6888", name: "Topupnigeria.com nig Ltd" },
+                                        { currency: "XOF", country: "Mali", type: "Mobile Money", provider: "Orange", number: "+22394023155", name: "-" },
+                                        { currency: "XOF", country: "Guinea Conakry", type: "Mobile Money", provider: "Orange Guinea", number: "+224621499214", name: "-" },
+                                        { currency: "XAF", country: "Cameroon", type: "Mobile Money", provider: "MTN", number: "+237655737037", name: "Boubacar Diallo" },
+                                        { currency: "XOF", country: "Senegal", type: "Mobile Money", provider: "Orange Senegal", number: "+221775913063", name: "-" },
+                                        { currency: "GHS", country: "Ghana", type: "Mobile Money", provider: "MTN", number: "0244582582", name: "Emmanuel Kofi" },
+                                        { currency: "KES", country: "Kenya", type: "Bank Account", provider: "Equity Bank", number: "1710185926608", name: "ASHLEY KASISI" },
+                                        { currency: "KES", country: "Kenya", type: "Mobile Money", provider: "Mpesa", number: "254728893174", name: "WAITERE MUTAH" },
+                                        { currency: "TZS", country: "Tanzania", type: "Mobile Money", provider: "Tigopesa", number: "255765412309", name: "SALUMU SHUKIA" }
+                                    ].map((acc, index) => (
+                                        <tr key={index} className="hover:bg-muted/30 transition-colors">
+                                            <td className="px-4 py-3 font-mono font-semibold">{acc.currency}</td>
+                                            <td className="px-4 py-3">{acc.country}</td>
+                                            <td className="px-4 py-3 text-xs">{acc.type}</td>
+                                            <td className="px-4 py-3">{acc.provider}</td>
+                                            <td className="px-4 py-3 font-mono text-xs">{acc.number}</td>
+                                            <td className="px-4 py-3 text-muted-foreground">{acc.name}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
