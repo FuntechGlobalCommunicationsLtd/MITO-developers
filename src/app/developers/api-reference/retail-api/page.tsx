@@ -2,10 +2,10 @@
 
 import { ApiReferenceLayout } from "@/components/layout/ApiReferenceLayout";
 import { EndpointBlock } from "@/components/developers/ApiBlocks";
-import { CodeTabs, CodeBlock } from "@/components/developers/CodeBlocks";
+import { CodeTabs } from "@/components/developers/CodeBlocks";
 import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Badge } from "@/components/ui/badge";
-import { Info, ShieldAlert, Key, Landmark, Smartphone, Laptop, Settings, Zap, Download, ArrowRight } from "lucide-react";
+import { Key, Landmark, Laptop, Smartphone, Zap, Download, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -122,7 +122,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "JSON",
                                             language: "json",
-                                            code: `{\n  "email": "developer@partner.com",\n  "password": "SecurePassword123!"\n}`
+                                            code: `{\n  "username": "Upesi",\n  "password": "your_secure_password",\n  "accessServiceNumber": "21036",\n  "accessAffiliateNumber": "1073"\n}`
                                         }
                                     ]}
                                 />
@@ -133,12 +133,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `{\n  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",\n  "expiresIn": 3600,\n  "tokenType": "Bearer"\n}`
-                                        },
-                                        {
-                                            label: "401 Unauthorized",
-                                            language: "json",
-                                            code: `{\n  "responseCode": "20001",\n  "responseMessage": "Incorrect login credentials provided."\n}`
+                                            code: `{\n  "data": {\n    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",\n    "issuedOn": "2026-06-15T12:00:00Z",\n    "expiresOn": "2026-06-15T13:00:00Z",\n    "refreshToken": "irure Duis..."\n  },\n  "message": "Authenticated",\n  "code": 200,\n  "responseType": "Success"\n}`
                                         }
                                     ]}
                                 />
@@ -148,8 +143,10 @@ export default function RetailApiReference() {
                                 <h4 className="font-semibold pt-4">Request Body</h4>
                                 <SchemaTable
                                     fields={[
-                                        { name: "email", type: "string", required: true, description: "Your partner registration email address." },
-                                        { name: "password", type: "string", required: true, description: "Your partner account password." }
+                                        { name: "username", type: "string", required: true, description: "Your partner dashboard username." },
+                                        { name: "password", type: "string", required: true, description: "Your partner account password." },
+                                        { name: "accessServiceNumber", type: "string", required: true, description: "Corridor service identifier." },
+                                        { name: "accessAffiliateNumber", type: "string", required: true, description: "Affiliate correspondent identifier." }
                                     ]}
                                 />
                             </div>
@@ -161,6 +158,7 @@ export default function RetailApiReference() {
                         <Badge className="bg-primary hover:bg-primary/95 text-white">User Onboarding & KYC</Badge>
                     </div>
 
+                    {/* Create User */}
                     <section id="create-user">
                         <EndpointBlock
                             method="POST"
@@ -173,7 +171,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "JSON",
                                             language: "json",
-                                            code: `{\n  "firstName": "John",\n  "lastName": "Doe",\n  "email": "john.doe@example.com",\n  "mobileNumber": "+447700900077",\n  "dateOfBirth": "1990-05-15",\n  "nationality": "GBR",\n  "gender": "Male"\n}`
+                                            code: `{\n  "email": "abc@abc.com",\n  "firstName": "John",\n  "lastName": "Doe",\n  "gender": "M",\n  "legalEntityType": "I",\n  "countryIso3": "GBR",\n  "middleName": "Singh",\n  "phoneNumber": "242424215215"\n}`
                                         }
                                     ]}
                                 />
@@ -184,7 +182,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "201 Created",
                                             language: "json",
-                                            code: `{\n  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n  "status": "PENDING_VERIFICATION",\n  "kycTier": "TIER_1"\n}`
+                                            code: `{\n  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n  "email": "abc@abc.com",\n  "firstName": "John",\n  "lastName": "Doe",\n  "countryIso3": "GBR",\n  "middleName": "Singh",\n  "legalEntityType": "Individual",\n  "created_at": "2026-06-15T12:00:00Z"\n}`
                                         }
                                     ]}
                                 />
@@ -194,13 +192,14 @@ export default function RetailApiReference() {
                                 <h4 className="font-semibold pt-4">Request Body</h4>
                                 <SchemaTable
                                     fields={[
+                                        { name: "email", type: "string", required: true, description: "Customer email address." },
                                         { name: "firstName", type: "string", required: true, description: "Legal first name." },
                                         { name: "lastName", type: "string", required: true, description: "Legal last name." },
-                                        { name: "email", type: "string", required: true, description: "Customer email address." },
-                                        { name: "mobileNumber", type: "string", required: true, description: "E.164 format mobile number." },
-                                        { name: "dateOfBirth", type: "string", required: true, description: "ISO date format (yyyy-MM-dd)." },
-                                        { name: "nationality", type: "string", required: true, description: "3-letter ISO-3166 country code." },
-                                        { name: "gender", type: "string", required: true, description: "Male or Female." }
+                                        { name: "gender", type: "string", required: true, description: "M or F." },
+                                        { name: "legalEntityType", type: "string", required: true, description: "I (Individual) or B (Business)." },
+                                        { name: "countryIso3", type: "string", required: true, description: "3-letter ISO country code." },
+                                        { name: "middleName", type: "string", required: false, description: "Optional middle name." },
+                                        { name: "phoneNumber", type: "string", required: true, description: "Customer contact mobile number." }
                                     ]}
                                 />
                             </div>
@@ -209,19 +208,20 @@ export default function RetailApiReference() {
 
                     <hr className="border-border" />
 
+                    {/* Get User Profile */}
                     <section id="get-user">
                         <EndpointBlock
                             method="GET"
                             path="/users/{userId}"
                             title="Get User Profile"
-                            description="Retrieve user profile, current KYC approval status, and limit level."
+                            description="Retrieve user profile, current KYC status, and creation details."
                             responseSamples={
                                 <CodeTabs
                                     tabs={[
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `{\n  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n  "firstName": "John",\n  "lastName": "Doe",\n  "email": "john.doe@example.com",\n  "kycStatus": "APPROVED",\n  "limits": {\n    "dailyRemaining": 5000.00,\n    "currency": "GBP"\n  }\n}`
+                                            code: `{\n  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n  "email": "abc@abc.com",\n  "firstName": "John",\n  "lastName": "Doe",\n  "countryIso3": "GBR",\n  "middleName": "Singh",\n  "legalEntityType": "Individual",\n  "created_at": "2026-06-15T12:00:00Z"\n}`
                                         }
                                     ]}
                                 />
@@ -240,6 +240,7 @@ export default function RetailApiReference() {
 
                     <hr className="border-border" />
 
+                    {/* Get User Balances */}
                     <section id="get-balances">
                         <EndpointBlock
                             method="GET"
@@ -252,7 +253,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `[\n  {\n    "currency": "GBP",\n    "balance": 1500.50,\n    "hold": 0.00\n  },\n  {\n    "currency": "EUR",\n    "balance": 250.00,\n    "hold": 50.00\n  }\n]`
+                                            code: `{\n  "UserId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n  "currency": "GBP",\n  "TotalBalance": "1500.50",\n  "created_at": "2026-06-15T12:00:00Z",\n  "wallet": [\n    {\n      "type": "funding_account",\n      "account_number": "12345678",\n      "account_number_type": "IBAN",\n      "account_holder_name": "John Doe",\n      "bank_name": "Barclays",\n      "bank_address": "London",\n      "bank_country": "GBR",\n      "currency": "GBP",\n      "routing_code": "200000",\n      "routing_code_type": "sortcode",\n      "balance": "1500.50"\n    }\n  ]\n}`
                                         }
                                     ]}
                                 />
@@ -265,6 +266,49 @@ export default function RetailApiReference() {
                                         { name: "userId", type: "string", required: true, description: "The ID of the user." }
                                     ]}
                                 />
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "currency", type: "string", required: true, description: "3-letter currency code (e.g. GBP)." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Get All Users (NEW) */}
+                    <section id="get-users">
+                        <EndpointBlock
+                            method="GET"
+                            path="/users"
+                            title="Get All Users"
+                            description="List and search onboarding users across your affiliate network."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": [\n    {\n      "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n      "email": "abc@abc.com",\n      "firstName": "John",\n      "lastName": "Doe",\n      "countryIso3": "GBR",\n      "legalEntityType": "Individual"\n    }\n  ],\n  "pageSize": 10,\n  "currentPage": 1,\n  "totalCount": 1,\n  "totalPages": 1,\n  "hasPreviousPage": false,\n  "hasNextPage": false\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "PageNo", type: "integer", required: false, description: "Page number. Default is 1." },
+                                        { name: "PageSize", type: "integer", required: false, description: "Number of items per page. Default is 10." },
+                                        { name: "email", type: "string", required: false, description: "Filter by email address." },
+                                        { name: "countryIso3", type: "string", required: false, description: "Filter by country ISO code." },
+                                        { name: "fromDate", type: "string", required: false, description: "Filter users created from date (yyyy-MM-dd)." },
+                                        { name: "toDate", type: "string", required: false, description: "Filter users created up to date (yyyy-MM-dd)." }
+                                    ]}
+                                />
                             </div>
                         </EndpointBlock>
                     </section>
@@ -274,6 +318,7 @@ export default function RetailApiReference() {
                         <Badge className="bg-primary hover:bg-primary/95 text-white">Rates & Routing</Badge>
                     </div>
 
+                    {/* Get Active Corridors */}
                     <section id="get-corridors">
                         <EndpointBlock
                             method="GET"
@@ -286,16 +331,26 @@ export default function RetailApiReference() {
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `[\n  {\n    "sourceCountry": "GBR",\n    "destinationCountry": "NGA",\n    "supportedCurrencies": ["NGN", "USD"],\n    "status": "ACTIVE"\n  }\n]`
+                                            code: `[\n  {\n    "value": "GBR-NGA-MONEYTRANSFER"\n  }\n]`
                                         }
                                     ]}
                                 />
                             }
-                        />
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "ServiceCode", type: "string", required: true, description: "Service type filter, e.g. MONEYTRANSFER." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
                     </section>
 
                     <hr className="border-border" />
 
+                    {/* Lookup Service Providers */}
                     <section id="get-lookup-provider">
                         <EndpointBlock
                             method="GET"
@@ -308,7 +363,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `[\n  {\n    "providerId": "prov_ng_gtb",\n    "name": "Guaranty Trust Bank",\n    "serviceType": "MONEYTRANSFER",\n    "collectionMode": "BANKACCOUNT",\n    "status": "ACTIVE"\n  }\n]`
+                                            code: `[\n  {\n    "value": "Guaranty Trust Bank"\n  }\n]`
                                         }
                                     ]}
                                 />
@@ -318,10 +373,10 @@ export default function RetailApiReference() {
                                 <h4 className="font-semibold pt-4">Query Parameters</h4>
                                 <SchemaTable
                                     fields={[
-                                        { name: "countryiso3", type: "string", required: true, description: "3-letter destination country ISO." },
+                                        { name: "countryiso3", type: "string", required: true, description: "3-letter destination country ISO code." },
                                         { name: "CurrencyCode", type: "string", required: true, description: "Payout currency ISO code." },
-                                        { name: "ServiceCode", type: "string", required: true, description: "E.g. MONEYTRANSFER, MOBILETOPUP" },
-                                        { name: "CollectionMode", type: "string", required: false, description: "BANKACCOUNT, CASH, MOBILEMONEY" }
+                                        { name: "ServiceCode", type: "string", required: true, description: "E.g. MONEYTRANSFER, MOBILETOPUP." },
+                                        { name: "CollectionMode", type: "string", required: false, description: "E.g. BANKACCOUNT, CASH, MOBILEMONEY." }
                                     ]}
                                 />
                             </div>
@@ -330,11 +385,44 @@ export default function RetailApiReference() {
 
                     <hr className="border-border" />
 
+                    {/* Get Lookup Types (NEW) */}
+                    <section id="get-lookup-types">
+                        <EndpointBlock
+                            method="GET"
+                            path="/lookups/types"
+                            title="Retrieve Types"
+                            description="Retrieve various static configurations and types required for creating transactions (e.g. transfer purposes, source of funds)."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": {\n    "transactionType": [],\n    "collectionMode": [],\n    "relationships": [],\n    "reason": [],\n    "sourceOfFunds": []\n  },\n  "code": 200,\n  "message": "success",\n  "responseType": "Success"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "filter", type: "string", required: false, description: "Comma-separated list of types to retrieve, e.g. purposes,source-of-funds." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Calculate FX Rate Quote */}
                     <section id="post-rates">
                         <EndpointBlock
                             method="POST"
                             path="/exchange/rates"
-                            title="Calculate FX Rate Quote"
+                            title="Calculate FX Rate Quote (Validate)"
                             description="Generates and locks an FX conversion rate and breakdown fees for the user."
                             requestSamples={
                                 <CodeTabs
@@ -342,7 +430,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "JSON",
                                             language: "json",
-                                            code: `{\n  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n  "serviceCode": "MONEYTRANSFER",\n  "collectionMode": "BANKACCOUNT",\n  "fromCountry": "GBR",\n  "toCountry": "NGA",\n  "fromCurrency": "GBP",\n  "toCurrency": "NGN",\n  "amount": 100.00,\n  "direction": "SEND"\n}`
+                                            code: `{\n  "userId": "cb81e791-ee42-4de9-a05e-c3f4c3dcdbfa",\n  "serviceCode": "MONEYTRANSFER",\n  "collectionMode": "BANKACCOUNT",\n  "fromCountry": "GBR",\n  "toCountry": "NGA",\n  "fromCurrency": "GBP",\n  "toCurrency": "NGN",\n  "amount": 1000,\n  "direction": "S",\n  "providerId": "1831846e-75c6-4606-bc5c-0f092cb5ce0a"\n}`
                                         }
                                     ]}
                                 />
@@ -353,7 +441,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `{\n  "rateId": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",\n  "exchangeRate": 1950.00,\n  "sendAmount": 100.00,\n  "receiveAmount": 195000.00,\n  "transferFee": 2.50,\n  "totalAmountToPay": 102.50,\n  "expiresAt": "2026-06-15T12:15:00Z"\n}`
+                                            code: `{\n  "data": {\n    "commission": 2.5,\n    "fromCountry": "GBR",\n    "toCountry": "NGA",\n    "sendAmount": 1000.00,\n    "receiveAmount": 1950000.00,\n    "rate": 1950.00,\n    "isKycRequired": false,\n    "fromCurrency": "GBP",\n    "id": "rate_9b1deb4d...",\n    "code": "OK",\n    "paymentMethods": []\n  },\n  "code": 200,\n  "message": "Validated"\n}`
                                         }
                                     ]}
                                 />
@@ -364,25 +452,191 @@ export default function RetailApiReference() {
                                 <SchemaTable
                                     fields={[
                                         { name: "userId", type: "string", required: true, description: "ID of the verified user." },
-                                        { name: "serviceCode", type: "string", required: true, description: "MONEYTRANSFER, etc." },
-                                        { name: "collectionMode", type: "string", required: true, description: "BANKACCOUNT, CASH." },
+                                        { name: "serviceCode", type: "string", required: true, description: "E.g. MONEYTRANSFER." },
+                                        { name: "collectionMode", type: "string", required: true, description: "BANKACCOUNT, CASH, MOBILEMONEY." },
                                         { name: "fromCountry", type: "string", required: true, description: "3-letter sender country." },
                                         { name: "toCountry", type: "string", required: true, description: "3-letter payout country." },
                                         { name: "fromCurrency", type: "string", required: true, description: "3-letter source currency." },
                                         { name: "toCurrency", type: "string", required: true, description: "3-letter destination currency." },
                                         { name: "amount", type: "number", required: true, description: "Amount value." },
-                                        { name: "direction", type: "string", required: true, description: "SEND (amount is source) or RECEIVE (amount is payout)." }
+                                        { name: "direction", type: "string", required: true, description: "S (Send) or R (Receive)." },
+                                        { name: "providerId", type: "string", required: true, description: "Service Provider ID." }
                                     ]}
                                 />
                             </div>
                         </EndpointBlock>
                     </section>
 
-                    {/* SECTION: TRANSACTIONS */}
+                    {/* SECTION: BENEFICIARY MANAGEMENT */}
+                    <div className="bg-muted/10 py-6 px-8 border-b">
+                        <Badge className="bg-primary hover:bg-primary/95 text-white">Beneficiary Management</Badge>
+                    </div>
+
+                    {/* Get Beneficiary Requirements (NEW) */}
+                    <section id="get-beneficiary-requirements">
+                        <EndpointBlock
+                            method="GET"
+                            path="/beneficiaries/requirements"
+                            title="Get Beneficiary Requirements"
+                            description="Fetch the dynamically required fields for adding a beneficiary in a specific payout corridor."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "code": 200,\n  "message": "success",\n  "responseType": "Success",\n  "data": [\n    {\n      "label": "First Name",\n      "name": "firstName",\n      "order": 1,\n      "type": "text",\n      "columnDataType": "string",\n      "isRequired": true,\n      "isDisplayable": true,\n      "format": null,\n      "fieldInformation": "Legal first name"\n    }\n  ]\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "providerId", type: "string", required: true, description: "Target service provider ID." },
+                                        { name: "toCountry", type: "string", required: true, description: "3-letter destination country ISO." },
+                                        { name: "toCurrencyCode", type: "string", required: true, description: "3-letter payout currency code." },
+                                        { name: "entityType", type: "string", required: true, description: "I (Individual) or B (Business)." },
+                                        { name: "ServiceCode", type: "string", required: true, description: "E.g. MONEYTRANSFER." },
+                                        { name: "collectionMode", type: "string", required: false, description: "E.g. BANKACCOUNT." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Get Beneficiary by ID (NEW) */}
+                    <section id="get-beneficiary">
+                        <EndpointBlock
+                            method="GET"
+                            path="/beneficiaries/{beneficiaryId}"
+                            title="Get Beneficiary by ID"
+                            description="Retrieve detailed beneficiary information, including banking account details and nickname."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "beneficiaryId": "benef_789_xyz",\n  "firstName": "Jane",\n  "lastName": "Doe",\n  "countryIso3": "NGA",\n  "currencyIso": "NGN"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Path Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "beneficiaryId", type: "string", required: true, description: "The unique ID of the beneficiary." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Create Beneficiary (NEW) */}
+                    <section id="create-beneficiary">
+                        <EndpointBlock
+                            method="POST"
+                            path="/beneficiaries"
+                            title="Create Beneficiary"
+                            description="Create a payout recipient (Beneficiary) profile on the network. Field requirements must be derived dynamically from GetBeneficiaryRequirements."
+                            requestSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "JSON",
+                                            language: "json",
+                                            code: `{\n  "serviceCode": "MONEYTRANSFER",\n  "collectionMode": "BANKACCOUNT",\n  "legalEntityType": "Individual",\n  "countryIso3": "NGA",\n  "currencyIso": "NGN",\n  "providerId": "prov_gtb",\n  "userId": "9c701982-1b75-c410-2444-69e0fff0b68a",\n  "firstName": "Jane",\n  "lastName": "Doe",\n  "acctNumber": "0123456789",\n  "bankName": "Guaranty Trust Bank"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": {\n    "beneficiaryId": "benef_789_xyz",\n    "status": "active",\n    "message": "Created"\n  },\n  "code": 200,\n  "message": "Beneficiary created successfully"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Request Body</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "serviceCode", type: "string", required: true, description: "E.g. MONEYTRANSFER." },
+                                        { name: "collectionMode", type: "string", required: true, description: "E.g. BANKACCOUNT, MOBILEMONEY." },
+                                        { name: "legalEntityType", type: "string", required: true, description: "Individual or Business." },
+                                        { name: "countryIso3", type: "string", required: true, description: "Payout destination country ISO." },
+                                        { name: "currencyIso", type: "string", required: true, description: "Payout currency ISO." },
+                                        { name: "providerId", type: "string", required: true, description: "Provider ID code." },
+                                        { name: "userId", type: "string", required: true, description: "User ID of the onboarding customer." },
+                                        { name: "firstName", type: "string", required: true, description: "Legal first name." },
+                                        { name: "lastName", type: "string", required: true, description: "Legal last name." },
+                                        { name: "acctNumber", type: "string", required: false, description: "Bank account or wallet number." },
+                                        { name: "bankName", type: "string", required: false, description: "Name of the target bank." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Get Beneficiaries (NEW) */}
+                    <section id="get-beneficiaries">
+                        <EndpointBlock
+                            method="GET"
+                            path="/beneficiaries"
+                            title="Get Beneficiaries"
+                            description="List and filter beneficiaries created under your partner portfolio."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": [\n    {\n      "beneficiaryId": "benef_789_xyz",\n      "firstName": "Jane",\n      "lastName": "Doe",\n      "countryIso3": "NGA",\n      "collectionMode": "BANKACCOUNT"\n    }\n  ],\n  "pageSize": 10,\n  "currentPage": 1,\n  "totalCount": 1,\n  "totalPages": 1,\n  "hasPreviousPage": false,\n  "hasNextPage": false\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "serviceCode", type: "string", required: true, description: "Service type filter." },
+                                        { name: "collectionMode", type: "string", required: true, description: "Collection mode filter." },
+                                        { name: "legalEntityType", type: "string", required: true, description: "Individual or Business." },
+                                        { name: "countryIso3", type: "string", required: true, description: "Destination country." },
+                                        { name: "currencyIso", type: "string", required: true, description: "Destination currency." },
+                                        { name: "providerId", type: "string", required: true, description: "Provider ID filter." },
+                                        { name: "PageNo", type: "integer", required: false, description: "Page number." },
+                                        { name: "PageSize", type: "integer", required: false, description: "Page size." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    {/* SECTION: CHECKOUT & TRANSACTIONS */}
                     <div className="bg-muted/10 py-6 px-8 border-b">
                         <Badge className="bg-primary hover:bg-primary/95 text-white">Checkout & Transactions</Badge>
                     </div>
 
+                    {/* Initiate Transaction Session */}
                     <section id="create-transaction">
                         <EndpointBlock
                             method="POST"
@@ -395,7 +649,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "JSON",
                                             language: "json",
-                                            code: `{\n  "serviceCode": "MONEYTRANSFER",\n  "collectionMode": "BANKACCOUNT",\n  "PartnerReferenceNumber": "ORD-12345",\n  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n  "beneficiaryId": "benef-789-xyz",\n  "sendCountryIso3": "GBR",\n  "receiveCountryIso3": "NGA",\n  "sendCurrency": "GBP",\n  "receiveCurrency": "NGN",\n  "sendAmount": 100.00,\n  "rateId": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",\n  "redirectUrl": "https://yourwebsite.com/success",\n  "webhookUrl": "https://yourwebsite.com/api/webhooks"\n}`
+                                            code: `{\n  "serviceCode": "MONEYTRANSFER",\n  "collectionMode": "BANKACCOUNT",\n  "sendCountryIso3": "GBR",\n  "receiveCountryIso3": "NGA",\n  "sendCurrency": "GBP",\n  "receiveCurrency": "NGN",\n  "sendAmount": 1000,\n  "providerId": "eac23c4f-ca01-4cd0-8698-dbb455c9c53c",\n  "rateId": "rate_9b1deb4d...",\n  "userId": "c183e206-aef7-42be-94d0-d3881c198066",\n  "redirecturl": "https://yourwebsite.com/done",\n  "PartnerReferenceNumber": "ORD-12345",\n  "reasonId": "1a082009-...",\n  "sourceOfFundId": "8cf07511-...",\n  "paymentNarration": "Family Support",\n  "webhookUrl": "https://yourwebsite.com/api/webhook"\n}`
                                         }
                                     ]}
                                 />
@@ -406,7 +660,7 @@ export default function RetailApiReference() {
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `{\n  "data": {\n    "retailTransactionId": "tx_abc123xyz789",\n    "reference": "MITO-889900",\n    "partnerReferenceNumber": "ORD-12345",\n    "status": "NEW",\n    "paymentUrl": "https://link.mito.money/retail-payment?journeyCode=abc123token...",\n    "linkToken": "abc123encryptedtoken..."\n  }\n}`
+                                            code: `{\n  "data": {\n    "id": "tx_abc123xyz789",\n    "reference": "MITO-889900",\n    "status": "AWAITINGAFFILIATEUPDATE",\n    "_links": {\n      "redirect": {\n        "href": "https://link.mito.money/retail-payment?journeyCode=abc123token..."\n      }\n    }\n  },\n  "code": 200,\n  "message": "Transaction initiated"\n}`
                                         }
                                     ]}
                                 />
@@ -418,13 +672,20 @@ export default function RetailApiReference() {
                                     fields={[
                                         { name: "serviceCode", type: "string", required: true, description: "E.g. MONEYTRANSFER." },
                                         { name: "collectionMode", type: "string", required: true, description: "BANKACCOUNT, CASH, MOBILEMONEY." },
-                                        { name: "PartnerReferenceNumber", type: "string", required: true, description: "Your internal tracking order reference." },
-                                        { name: "userId", type: "string", required: true, description: "The customer's ID." },
-                                        { name: "beneficiaryId", type: "string", required: true, description: "The payout beneficiary's ID." },
+                                        { name: "sendCountryIso3", type: "string", required: true, description: "3-letter sender country." },
+                                        { name: "receiveCountryIso3", type: "string", required: true, description: "3-letter payout country." },
+                                        { name: "sendCurrency", type: "string", required: true, description: "3-letter source currency." },
+                                        { name: "receiveCurrency", type: "string", required: true, description: "3-letter destination currency." },
                                         { name: "sendAmount", type: "number", required: true, description: "Amount to send (excluding fees)." },
+                                        { name: "providerId", type: "string", required: true, description: "Provider ID." },
                                         { name: "rateId", type: "string", required: true, description: "The active FX quote ID from POST /exchange/rates." },
-                                        { name: "redirectUrl", type: "string", required: true, description: "The landing URL redirect for when the payment finishes on Hosted flow." },
-                                        { name: "webhookUrl", type: "string", required: true, description: "Destination endpoint for transaction status webhooks." }
+                                        { name: "userId", type: "string", required: true, description: "The customer's onboarding ID." },
+                                        { name: "redirecturl", type: "string", required: true, description: "Redirect URL for hosted flow completion." },
+                                        { name: "PartnerReferenceNumber", type: "string", required: true, description: "Your internal tracking order reference." },
+                                        { name: "reasonId", type: "string", required: true, description: "The purpose code ID from static types." },
+                                        { name: "sourceOfFundId", type: "string", required: true, description: "The source of fund ID." },
+                                        { name: "paymentNarration", type: "string", required: false, description: "Optional description." },
+                                        { name: "webhookUrl", type: "string", required: true, description: "Webhook endpoint for transaction status notifications." }
                                     ]}
                                 />
                             </div>
@@ -433,19 +694,52 @@ export default function RetailApiReference() {
 
                     <hr className="border-border" />
 
-                    <section id="get-transaction-ref">
+                    {/* Get Transaction by ID (NEW) */}
+                    <section id="get-transaction">
                         <EndpointBlock
                             method="GET"
-                            path="/transactions/by-reference"
-                            title="Get Transaction Status"
-                            description="Query transaction status by reference or partner internal reference ID."
+                            path="/transactions/{transactionId}"
+                            title="Get Transaction Details"
+                            description="Query current status and metadata of a specific transaction session."
                             responseSamples={
                                 <CodeTabs
                                     tabs={[
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `{\n  "retailTransactionId": "tx_abc123xyz789",\n  "reference": "MITO-889900",\n  "partnerReferenceNumber": "ORD-12345",\n  "status": "COMPLETED",\n  "amount": 100.00,\n  "currency": "GBP"\n}`
+                                            code: `{\n  "data": {\n    "id": "tx_abc123xyz789",\n    "reference": "MITO-889900",\n    "status": "COMPLETED",\n    "sendAmount": 1000.00,\n    "sendCurrency": "GBP",\n    "receiveCurrency": "NGN",\n    "createdAt": "2026-06-15T12:00:00Z"\n  },\n  "code": 200,\n  "message": "success"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Path Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "transactionId", type: "string", required: true, description: "The unique transaction ID." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Get Transactions (NEW) */}
+                    <section id="get-transactions-list">
+                        <EndpointBlock
+                            method="GET"
+                            path="/transactions"
+                            title="Get Transaction List"
+                            description="List and search transactions under your affiliate account."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": [\n    {\n      "id": "tx_abc123xyz789",\n      "reference": "MITO-889900",\n      "status": "COMPLETED",\n      "sendAmount": 1000.00\n    }\n  ],\n  "pageSize": 10,\n  "currentPage": 1,\n  "totalCount": 1,\n  "totalPages": 1,\n  "hasPreviousPage": false,\n  "hasNextPage": false\n}`
                                         }
                                     ]}
                                 />
@@ -455,241 +749,103 @@ export default function RetailApiReference() {
                                 <h4 className="font-semibold pt-4">Query Parameters</h4>
                                 <SchemaTable
                                     fields={[
-                                        { name: "reference", type: "string", required: false, description: "MITO reference number." },
-                                        { name: "partnerReferenceNumber", type: "string", required: false, description: "Your internal reference number." }
+                                        { name: "userId", type: "string", required: false, description: "Filter by onboarding user ID." },
+                                        { name: "providerId", type: "string", required: false, description: "Filter by provider ID." },
+                                        { name: "beneficiaryId", type: "string", required: false, description: "Filter by beneficiary ID." },
+                                        { name: "status", type: "string", required: false, description: "Filter by transaction status (e.g. COMPLETED, CANCELLED, PENDING)." },
+                                        { name: "fromDate", type: "string", required: false, description: "Filter transactions created from date (yyyy-MM-dd)." },
+                                        { name: "toDate", type: "string", required: false, description: "Filter transactions created up to date (yyyy-MM-dd)." },
+                                        { name: "PageNo", type: "integer", required: false, description: "Page number." },
+                                        { name: "PageSize", type: "integer", required: false, description: "Number of items per page." }
                                     ]}
                                 />
                             </div>
                         </EndpointBlock>
                     </section>
 
-                    {/* SECTION: FRONTEND SDK INTEGRATION */}
+                    {/* SECTION: WEBHOOKS */}
                     <div className="bg-muted/10 py-6 px-8 border-b">
-                        <Badge className="bg-primary hover:bg-primary/95 text-white">Frontend SDK Integration</Badge>
+                        <Badge className="bg-primary hover:bg-primary/95 text-white">Webhooks & Notifications</Badge>
                     </div>
 
-                    <section id="sdk-overview" className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl space-y-6">
-                        <h2 className="text-3xl font-extrabold tracking-tight flex items-center gap-2">
-                            <Zap className="w-8 h-8 text-yellow-500" /> Mito Link SDKs
-                        </h2>
-                        <p className="text-lg text-muted-foreground">
-                            Provide your customers a seamless, native-feel checkout flow. The Mito Link SDKs modalise hosted checkout pages inside your application, managing KYC uploads, 3D Secure verification, and redirect handshakes automatically.
-                        </p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                            <div className="border border-border bg-card rounded-xl p-6 space-y-3">
-                                <div className="flex items-center gap-2 text-foreground font-bold">
-                                    <Laptop className="w-5 h-5 text-primary" /> Web SDK (React)
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                    Integrate Mito Link in your web application using React hooks or customized pre-built components.
-                                </p>
-                                <div className="font-mono text-xs bg-muted px-3 py-1.5 rounded-md w-fit text-foreground">
-                                    @mito-money/mito-link
-                                </div>
-                            </div>
-                            <div className="border border-border bg-card rounded-xl p-6 space-y-3">
-                                <div className="flex items-center gap-2 text-foreground font-bold">
-                                    <Smartphone className="w-5 h-5 text-primary" /> React Native SDK
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                    Embed Mito Link into your iOS and Android native apps using webview presentation modals.
-                                </p>
-                                <div className="font-mono text-xs bg-muted px-3 py-1.5 rounded-md w-fit text-foreground">
-                                    @mito-money/mito-link-react-native
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* SDK Installation */}
-                        <div className="pt-8 space-y-4">
-                            <h3 className="text-xl font-bold text-foreground">Installation</h3>
-                            <CodeTabs
-                                tabs={[
-                                    {
-                                        label: "Web (React)",
-                                        language: "bash",
-                                        code: "npm install @mito-money/mito-link"
-                                    },
-                                    {
-                                        label: "React Native",
-                                        language: "bash",
-                                        code: "npm install @mito-money/mito-link-react-native react-native-webview react-native-safe-area-context"
-                                    }
-                                ]}
-                            />
-                        </div>
-
-                        {/* API Keys Table */}
-                        <div className="pt-8 space-y-4">
-                            <h3 className="text-xl font-bold text-foreground">API Credentials</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Make sure to separate your private secret keys (used on your servers) and your public publishable keys (injected into the frontend SDKs):
-                            </p>
-                            <div className="w-full overflow-x-auto rounded-lg border bg-card shadow-sm">
-                                <table className="w-full text-sm text-left">
-                                    <thead className="bg-muted/50 border-b text-xs font-semibold text-muted-foreground uppercase">
-                                        <tr>
-                                            <th className="px-4 py-3">Key Type</th>
-                                            <th className="px-4 py-3">Prefix</th>
-                                            <th className="px-4 py-3">Usage Context</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y text-foreground">
-                                        <tr>
-                                            <td className="px-4 py-3 font-semibold">Secret Key</td>
-                                            <td className="px-4 py-3 font-mono text-primary text-xs">sk_live_... / sk_sandbox_...</td>
-                                            <td className="px-4 py-3 text-muted-foreground">Server-side transactions creation only. Never expose to clients.</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="px-4 py-3 font-semibold">Publishable Key</td>
-                                            <td className="px-4 py-3 font-mono text-primary text-xs">pk_live_... / pk_sandbox_...</td>
-                                            <td className="px-4 py-3 text-muted-foreground">Frontend/SDK initialization. Safe to bundle in build assets.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        {/* SDK Environments */}
-                        <div className="pt-8 space-y-4">
-                            <h3 className="text-xl font-bold text-foreground">Environments</h3>
-                            <div className="w-full overflow-x-auto rounded-lg border bg-card shadow-sm">
-                                <table className="w-full text-sm text-left">
-                                    <thead className="bg-muted/50 border-b text-xs font-semibold text-muted-foreground uppercase">
-                                        <tr>
-                                            <th className="px-4 py-3">Environment</th>
-                                            <th className="px-4 py-3">Checkout URL Destination</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y text-foreground">
-                                        <tr>
-                                            <td className="px-4 py-3 font-semibold font-mono">production</td>
-                                            <td className="px-4 py-3 font-mono text-xs">https://link.mito.money</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="px-4 py-3 font-semibold font-mono">sandbox</td>
-                                            <td className="px-4 py-3 font-mono text-xs">https://mito-checkout-1cca8e18297e.herokuapp.com</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        {/* Integration Guides */}
-                        <div className="pt-12 border-t space-y-12">
-                            {/* Web SDK Guide */}
-                            <div className="space-y-4">
-                                <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                                    <Laptop className="w-6 h-6 text-primary" /> Web Integration (React Hook & Button)
-                                </h3>
-                                <p className="text-muted-foreground">
-                                    Launch the hosted checkout overlay in your web app. You can use the standard <code>useMitoLink</code> hook for customized button trigger events or the pre-styled <code>MitoLinkButton</code>.
-                                </p>
+                    {/* Webhook Status Notification */}
+                    <section id="webhook-notification">
+                        <EndpointBlock
+                            method="POST"
+                            path="/webhooks"
+                            title="Transaction Status Update Webhook"
+                            description="MITO sends a POST request to this webhook URL to notify partners of transaction status changes."
+                            requestSamples={
                                 <CodeTabs
                                     tabs={[
                                         {
-                                            label: "React Hook (useMitoLink)",
-                                            language: "tsx",
-                                            code: `import { useMitoLink } from "@mito-money/mito-link";\n\nexport const Checkout = ({ linkToken }: { linkToken: string }) => {\n  const { ready, error, open } = useMitoLink({\n    linkToken,\n    publishableKey: "pk_live_abc123",\n    linkType: "retail-payment",\n    environment: "production",\n    onSuccess: (payload) => {\n      console.log("Success! Reference:", payload.transactionReference);\n    },\n    onExit: (error) => {\n      console.log("Exit", error?.reason);\n    },\n  });\n\n  return (\n    <button \n      type="button" \n      disabled={!ready || Boolean(error)} \n      onClick={() => open({\n        autoSize: {\n          minWidth: 360,\n          minHeight: 500,\n          maxWidth: 1100,\n          maxHeight: 820,\n        }\n      })}\n    >\n      Pay with Mito\n    </button>\n  );\n};`
-                                        },
-                                        {
-                                            label: "React Button (MitoLinkButton)",
-                                            language: "tsx",
-                                            code: `import { MitoLinkButton } from "@mito-money/mito-link";\n\nexport const EasyCheckout = ({ linkToken }: { linkToken: string }) => {\n  return (\n    <MitoLinkButton\n      linkToken={linkToken}\n      publishableKey="pk_live_abc123"\n      linkType="retail-payment"\n      environment="production"\n      onSuccess={(payload) => console.log("Success", payload)}\n      onExit={(error) => console.log("Exit", error)}\n      showErrorText\n    >\n      Pay with Mito\n    </MitoLinkButton>\n  );\n};`
+                                            label: "JSON",
+                                            language: "json",
+                                            code: `{\n  "transactionId": "tx_abc123xyz789",\n  "status": "PROCESSED",\n  "updatedAt": "2026-06-15T12:30:00Z",\n  "reason": "Payout processed successfully"\n}`
                                         }
                                     ]}
                                 />
-                            </div>
-
-                            {/* React Native Guide */}
-                            <div className="space-y-4">
-                                <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                                    <Smartphone className="w-6 h-6 text-primary" /> React Native Integration
-                                </h3>
-                                <p className="text-muted-foreground">
-                                    Embed the checkout screen in native mobile apps. You must render the pre-wired <code>MitoLinkHost</code> overlay component alongside the button trigger.
-                                </p>
+                            }
+                            responseSamples={
                                 <CodeTabs
                                     tabs={[
                                         {
-                                            label: "RN Hook (useMitoLink)",
-                                            language: "tsx",
-                                            code: `import React from "react";\nimport { Button, View } from "react-native";\nimport { useMitoLink } from "@mito-money/mito-link-react-native";\n\nexport function Checkout({ linkToken }: { linkToken: string }) {\n  const { open, MitoLinkHost } = useMitoLink({\n    linkToken,\n    publishableKey: "pk_live_abc123",\n    linkType: "retail-payment",\n    environment: "production",\n    onSuccess: (payload) => {\n      console.log("Success! Reference:", payload.transactionReference);\n    },\n    onExit: (error) => {\n      console.log("Exit", error?.reason);\n    },\n  });\n\n  return (\n    <View>\n      <Button \n        title="Pay with Mito" \n        onPress={() => open({\n          animationType: "slide",\n          presentationStyle: "pageSheet"\n        })} \n      />\n      {/* Modal host WebView container */}\n      <MitoLinkHost />\n    </View>\n  );\n}`
-                                        },
-                                        {
-                                            label: "RN Button (MitoLinkButton)",
-                                            language: "tsx",
-                                            code: `import { MitoLinkButton } from "@mito-money/mito-link-react-native";\n\nexport const SimpleRNCheckout = ({ linkToken }: { linkToken: string }) => {\n  return (\n    <MitoLinkButton\n      linkToken={linkToken}\n      publishableKey="pk_live_abc123"\n      linkType="retail-payment"\n      environment="production"\n      onSuccess={(payload) => console.log("Success", payload)}\n      onExit={(error) => console.log("Exit", error)}\n    >\n      Open Mito Link\n    </MitoLinkButton>\n  );\n};`
+                                            label: "200 OK",
+                                            language: "text",
+                                            code: "OK"
                                         }
                                     ]}
                                 />
-                            </div>
-                        </div>
-
-                        {/* SDK Reference Configuration Details */}
-                        <div className="pt-12 border-t space-y-8">
-                            <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                                <Settings className="w-6 h-6 text-primary" /> SDK API Configurations
-                            </h3>
-
-                            {/* SDK Config Props */}
-                            <div className="space-y-4">
-                                <h4 className="font-semibold text-foreground m-0">Configuration Object (useMitoLink & MitoLinkButton)</h4>
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Webhook Payload Schema</h4>
                                 <SchemaTable
                                     fields={[
-                                        { name: "linkToken", type: "string", required: true, description: "Secure transaction session token generated by your backend." },
-                                        { name: "linkType", type: "'bill-payment' | 'retail-payment' | 'retail-collection'", required: true, description: "Flow configuration type." },
-                                        { name: "publishableKey", type: "string", required: false, description: "Public API key prefix (pk_)." },
-                                        { name: "environment", type: "'production' | 'sandbox'", required: false, description: "Default is 'production'." },
-                                        { name: "onSuccess", type: "(payload) => void", required: true, description: "Callback triggered upon successful checkout." },
-                                        { name: "onExit", type: "(error?) => void", required: false, description: "Callback triggered when modal is closed, cancelled, or error occurs." }
+                                        { name: "transactionId", type: "string", required: true, description: "The unique MITO transaction identifier." },
+                                        { name: "status", type: "string", required: true, description: "The new transaction status, e.g. PROCESSED, FAILED." },
+                                        { name: "updatedAt", type: "string", required: true, description: "Date time of status update (ISO 8601 format)." },
+                                        { name: "reason", type: "string", required: false, description: "Additional status description or reason for failure." }
                                     ]}
                                 />
                             </div>
-
-                            {/* open() options */}
-                            <div className="space-y-4">
-                                <h4 className="font-semibold text-foreground m-0">open(options?) Parameter Schema</h4>
-                                <SchemaTable
-                                    fields={[
-                                        { name: "iframeTitle (Web)", type: "string", required: false, description: "Accessible title for the generated iframe element." },
-                                        { name: "autoSize (Web)", type: "boolean | AutoSizeOptions", required: false, description: "Controls viewport size settings on web." },
-                                        { name: "width (Web)", type: "number | string", required: false, description: "Static width parameter." },
-                                        { name: "height (Web)", type: "number | string", required: false, description: "Static height parameter." },
-                                        { name: "animationType (RN)", type: "'none' | 'slide' | 'fade'", required: false, description: "Modal layout transition animation." },
-                                        { name: "presentationStyle (RN)", type: "'fullScreen' | 'pageSheet' | 'formSheet'", required: false, description: "iOS native modal style." }
-                                    ]}
-                                />
-                            </div>
-
-                            {/* Event payloads */}
-                            <div className="space-y-4">
-                                <h4 className="font-semibold text-foreground m-0">Event Callback Payloads</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="border border-border bg-card rounded-xl p-6">
-                                        <h5 className="font-bold text-foreground mb-3">onSuccess(payload)</h5>
-                                        <SchemaTable
-                                            fields={[
-                                                { name: "transactionReference", type: "string", required: true, description: "Unique transaction identifier." },
-                                                { name: "partnerReferenceNumber", type: "string", required: true, description: "Your original order code reference." },
-                                                { name: "status", type: "string", required: true, description: "Final checkout payment status." }
-                                            ]}
-                                        />
-                                    </div>
-                                    <div className="border border-border bg-card rounded-xl p-6">
-                                        <h5 className="font-bold text-foreground mb-3">onExit(error?)</h5>
-                                        <SchemaTable
-                                            fields={[
-                                                { name: "reason", type: "string", required: true, description: "Direct exit trigger reason." },
-                                                { name: "status", type: "string", required: true, description: "Last state status prior to exiting." }
-                                            ]}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </EndpointBlock>
                     </section>
+                </div>
+
+                {/* Frontend SDK */}
+                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-t space-y-6">
+                    <h2 className="text-3xl font-extrabold tracking-tight flex items-center gap-2">
+                        <Zap className="w-8 h-8 text-yellow-500" /> Mito Link SDKs
+                    </h2>
+                    <p className="text-lg text-muted-foreground">
+                        Provide your customers a seamless, native-feel checkout flow. The Mito Link SDKs modalise hosted checkout pages inside your application, managing KYC uploads, 3D Secure verification, and redirect handshakes automatically.
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                        <div className="border border-border bg-card rounded-xl p-6 space-y-3">
+                            <div className="flex items-center gap-2 text-foreground font-bold">
+                                <Laptop className="w-5 h-5 text-primary" /> Web SDK (React)
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                                Integrate Mito Link in your web application using React hooks or customized pre-built components.
+                            </p>
+                            <div className="font-mono text-xs bg-muted px-3 py-1.5 rounded-md w-fit text-foreground">
+                                @mito-money/mito-link
+                            </div>
+                        </div>
+                        <div className="border border-border bg-card rounded-xl p-6 space-y-3">
+                            <div className="flex items-center gap-2 text-foreground font-bold">
+                                <Smartphone className="w-5 h-5 text-primary" /> React Native SDK
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                                Embed Mito Link into your iOS and Android native apps using webview presentation modals.
+                            </p>
+                            <div className="font-mono text-xs bg-muted px-3 py-1.5 rounded-md w-fit text-foreground">
+                                @mito-money/mito-link-react-native
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </ApiReferenceLayout>

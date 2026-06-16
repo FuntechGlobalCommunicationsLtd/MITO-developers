@@ -2,10 +2,10 @@
 
 import { ApiReferenceLayout } from "@/components/layout/ApiReferenceLayout";
 import { EndpointBlock } from "@/components/developers/ApiBlocks";
-import { CodeTabs, CodeBlock } from "@/components/developers/CodeBlocks";
+import { CodeTabs } from "@/components/developers/CodeBlocks";
 import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Badge } from "@/components/ui/badge";
-import { CreditCard, Landmark, RefreshCw, ShieldCheck, Download, ArrowRight } from "lucide-react";
+import { ShieldCheck, Download, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -64,6 +64,7 @@ export default function BillerApiReference() {
                         <Badge className="bg-primary hover:bg-primary/95 text-white">Payment Collections</Badge>
                     </div>
 
+                    {/* Initiate Collection Transaction */}
                     <section id="initiate-transaction">
                         <EndpointBlock
                             method="POST"
@@ -76,7 +77,7 @@ export default function BillerApiReference() {
                                         {
                                             label: "JSON",
                                             language: "json",
-                                            code: `{\n  "billerId": "bill_778899",\n  "partnerReferenceNumber": "INV-2026-001",\n  "sendAmount": 150.00,\n  "senderAccountNumber": "234687",\n  "senderFirstName": "Vakil",\n  "senderLastName": "Singh",\n  "senderGender": "Male",\n  "senderMobileNumber": "+447700900088",\n  "senderEmail": "vakil.singh@example.com",\n  "senderAddressBuildingNumber": "12",\n  "senderAddressStreet": "High Street",\n  "senderAddressCity": "London",\n  "senderAddressPostcode": "EC1A 1BB",\n  "senderDateOfBirth": "1985-10-10",\n  "paymentMode": "MOBILE_MONEY",\n  "callbackUrl": "https://yourwebsite.com/api/webhooks/mito",\n  "expireTime": 15,\n  "redirectUrl": "https://yourwebsite.com/done"\n}`
+                                            code: `{\n  "billerId": "bill_778899",\n  "partnerReferenceNumber": "INV-2026-001",\n  "sendAmount": 100,\n  "senderFirstName": "FIROPO",\n  "senderLastName": "AKIN-AGUNBIADE",\n  "senderGender": "M",\n  "senderMobileNumber": "+4487456133",\n  "senderEmail": "jaskaran.brar.6.2@gmail.com",\n  "senderAddressBuildingNumber": "39",\n  "senderAddressStreet": "COLERIDGE WAY",\n  "senderAddressCity": "BOREHAMWOOD",\n  "senderAddressPostcode": "WD6 2AE",\n  "senderDateOfBirth": "1979-09-06",\n  "paymentMode": "PLAID",\n  "expireTime": "2029-05-16",\n  "callbackurl": "https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d",\n  "redirectUrl": "https://payment.rhemito.com/payment_st.html",\n  "paymentReference": "a0be521571076"\n}`
                                         }
                                     ]}
                                 />
@@ -102,9 +103,19 @@ export default function BillerApiReference() {
                                         { name: "sendAmount", type: "number", required: true, description: "The collection amount." },
                                         { name: "senderFirstName", type: "string", required: true, description: "Customer's first name." },
                                         { name: "senderLastName", type: "string", required: true, description: "Customer's last name." },
+                                        { name: "senderGender", type: "string", required: true, description: "Customer's gender ('M' or 'F')." },
                                         { name: "senderMobileNumber", type: "string", required: true, description: "E.164 phone number." },
-                                        { name: "paymentMode", type: "string", required: true, description: "E.g. CARD, MOBILE_MONEY, BANK_TRANSFER." },
-                                        { name: "callbackUrl", type: "string", required: true, description: "Webhook endpoint for transaction status notifications." }
+                                        { name: "senderEmail", type: "string", required: true, description: "Customer's email address." },
+                                        { name: "senderAddressBuildingNumber", type: "string", required: true, description: "Building number." },
+                                        { name: "senderAddressStreet", type: "string", required: true, description: "Street address." },
+                                        { name: "senderAddressCity", type: "string", required: true, description: "City." },
+                                        { name: "senderAddressPostcode", type: "string", required: true, description: "Postcode." },
+                                        { name: "senderDateOfBirth", type: "string", required: true, description: "Customer's date of birth (yyyy-MM-dd)." },
+                                        { name: "paymentMode", type: "string", required: true, description: "E.g. PLAID, CARDCHECKOUT, MOBILE_MONEY, BANKPAYMENT." },
+                                        { name: "expireTime", type: "string", required: true, description: "Expiry date time." },
+                                        { name: "callbackurl", type: "string", required: true, description: "Webhook endpoint for transaction status notifications." },
+                                        { name: "redirectUrl", type: "string", required: true, description: "Redirect landing URL after payment capture." },
+                                        { name: "paymentReference", type: "string", required: false, description: "Optional reference number." }
                                     ]}
                                 />
                             </div>
@@ -113,6 +124,7 @@ export default function BillerApiReference() {
 
                     <hr className="border-border" />
 
+                    {/* Get Collection Status */}
                     <section id="get-status">
                         <EndpointBlock
                             method="GET"
@@ -125,7 +137,7 @@ export default function BillerApiReference() {
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `{\n  "referenceNo": "31000521",\n  "partnerReferenceNumber": "INV-2026-001",\n  "amount": 150.00,\n  "status": "completed",\n  "settledAmount": 147.00,\n  "feeAmount": 3.00,\n  "settlementCurrency": "USD"\n}`
+                                            code: `{\n  "data": {\n    "referenceNo": 31000395,\n    "partnerRefernceNumber": "274543222",\n    "status": "COMPSUCCESS"\n  },\n  "message": null,\n  "code": 200,\n  "responseType": "Success"\n}`
                                         }
                                     ]}
                                 />
@@ -136,7 +148,7 @@ export default function BillerApiReference() {
                                 <SchemaTable
                                     fields={[
                                         { name: "referenceNo", type: "integer", required: false, description: "MITO generated transaction reference ID." },
-                                        { name: "partnerReferenceNumber", type: "string", required: false, description: "Your internal tracking order reference ID." }
+                                        { name: "partnerRefernceNumber", type: "string", required: false, description: "Your internal tracking order reference ID (note spelling: partnerRefernceNumber)." }
                                     ]}
                                 />
                             </div>
@@ -145,6 +157,110 @@ export default function BillerApiReference() {
 
                     <hr className="border-border" />
 
+                    {/* Get Transaction List (NEW) */}
+                    <section id="get-transactions">
+                        <EndpointBlock
+                            method="GET"
+                            path="/api/v2/Business/GetTransactions"
+                            title="Get Transaction List"
+                            description="List all collection transactions for your biller account with support for pagination and search filters."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": [\n    {\n      "referenceNo": 31000395,\n      "partnerRefernceNumber": "274543222",\n      "status": "COMPSUCCESS"\n    }\n  ],\n  "message": null,\n  "code": 200,\n  "responseType": "Success"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "billerId", type: "string", required: true, description: "Your unique biller service code." },
+                                        { name: "pageNo", type: "integer", required: false, description: "Page number for pagination. Default is 1." },
+                                        { name: "pageSize", type: "integer", required: false, description: "Number of items to retrieve per page. Default is 10." },
+                                        { name: "SearchingText", type: "string", required: false, description: "A text filter to search for transactions." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Confirm Payment (NEW) */}
+                    <section id="payment-confirmation">
+                        <EndpointBlock
+                            method="GET"
+                            path="/api/v2/Business/PaymentConfirmation"
+                            title="Confirm Payment"
+                            description="Approve or reject a pending transaction status. Useful for simulated environment testing or administrator actions."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": {\n    "referenceNo": 31000395,\n    "partnerRefernceNumber": "274543222",\n    "status": "COMPSUCCESS"\n  },\n  "message": null,\n  "code": 200,\n  "responseType": "Success"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "ReferenceNo", type: "string", required: true, description: "MITO generated transaction reference ID." },
+                                        { name: "approvalStatus", type: "string", required: true, description: "Target status ('Approve' or 'Reject')." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Switch Payment Mode (NEW) */}
+                    <section id="switch-payment-mode">
+                        <EndpointBlock
+                            method="GET"
+                            path="/api/v2/Business/SwitchPaymentMode"
+                            title="Switch Payment Mode"
+                            description="Change the payout method or checkout path for an already-initiated collection session."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": {\n    "referenceNo": 31000395,\n    "partnerRefernceNumber": "274543222",\n    "status": "COMPSUCCESS"\n  },\n  "message": null,\n  "code": 200,\n  "responseType": "Success"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "PaymentReference", type: "string", required: true, description: "Session payment reference." },
+                                        { name: "PaymentMode", type: "string", required: true, description: "Target payment mode, e.g. CARDCHECKOUT, MOBILE_MONEY." },
+                                        { name: "ReferenceNo", type: "string", required: false, description: "Optional transaction reference number." },
+                                        { name: "PartnerRefernceNumber", type: "string", required: false, description: "Optional partner reference number." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Get Biller Balances */}
                     <section id="get-balances">
                         <EndpointBlock
                             method="GET"
@@ -157,12 +273,21 @@ export default function BillerApiReference() {
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `[\n  {\n    "walletId": "wall_usd_001",\n    "currency": "USD",\n    "availableBalance": 45000.00,\n    "pendingSettlement": 1200.00\n  }\n]`
+                                            code: `{\n  "data": {\n    "referenceNo": 31000395,\n    "partnerRefernceNumber": "274543222",\n    "status": "COMPSUCCESS"\n  },\n  "message": null,\n  "code": 200,\n  "responseType": "Success"\n}`
                                         }
                                     ]}
                                 />
                             }
-                        />
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "billerId", type: "string", required: true, description: "Your unique biller service code." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
                     </section>
 
                     {/* SECTION: SETTLEMENT PAYOUTS */}
@@ -170,6 +295,7 @@ export default function BillerApiReference() {
                         <Badge className="bg-primary hover:bg-primary/95 text-white">Settlement Payouts</Badge>
                     </div>
 
+                    {/* Execute Settlement Payout */}
                     <section id="create-payout">
                         <EndpointBlock
                             method="POST"
@@ -182,7 +308,7 @@ export default function BillerApiReference() {
                                         {
                                             label: "JSON",
                                             language: "json",
-                                            code: `{\n  "amount": 5000.00,\n  "description": "Weekly settlement payout",\n  "accountId": "070386bf-b14f-4ef4-a8a5-819ea2f6f257",\n  "partnerReferenceNumber": "PAY-2026-06"\n}`
+                                            code: `{\n  "amount": 100.00,\n  "description": "Monthly payout",\n  "partnerReferenceNumber": "1243fsf",\n  "accountId": "b6c286e4-12f5-4d56-a144-9155af26383a"\n}`
                                         }
                                     ]}
                                 />
@@ -193,7 +319,7 @@ export default function BillerApiReference() {
                                         {
                                             label: "200 Success",
                                             language: "json",
-                                            code: `{\n  "payoutId": "pay_998877",\n  "status": "processing",\n  "amount": 5000.00,\n  "currency": "USD"\n}`
+                                            code: `{\n  "transactionId": "guid-12345",\n  "message": "Payout created successfully."\n}`
                                         }
                                     ]}
                                 />
@@ -215,6 +341,56 @@ export default function BillerApiReference() {
 
                     <hr className="border-border" />
 
+                    {/* Add Payout Bank Account (NEW) */}
+                    <section id="add-payout-account">
+                        <EndpointBlock
+                            method="POST"
+                            path="/api/v2/Payout/AddPayoutAccount"
+                            title="Add Payout Bank Account"
+                            description="Register a new destination corporate bank account for processing your settlement withdrawals."
+                            requestSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "JSON",
+                                            language: "json",
+                                            code: `{\n  "billerId": "bill_778899",\n  "AccountHolderName": "MITO Corp Ltd",\n  "BankName": "Barclays Bank",\n  "AccountNumber": "142412314",\n  "Sortcode": "123131",\n  "bankCountryIso3Code": "GBR",\n  "currencyCode": "GBP"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "message": "Payout Account created successfully.",\n  "AccountId": "422113"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Request Body</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "billerId", type: "string", required: true, description: "Your unique biller service code." },
+                                        { name: "AccountHolderName", type: "string", required: true, description: "Full name on the corporate bank account." },
+                                        { name: "BankName", type: "string", required: true, description: "Official bank name." },
+                                        { name: "AccountNumber", type: "string", required: true, description: "Destination bank account number." },
+                                        { name: "Sortcode", type: "string", required: true, description: "Bank routing sort code." },
+                                        { name: "bankCountryIso3Code", type: "string", required: true, description: "3-letter country ISO code of the bank." },
+                                        { name: "currencyCode", type: "string", required: true, description: "3-letter currency code (e.g. GBP)." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Get Payout Bank Accounts */}
                     <section id="get-payout-accounts">
                         <EndpointBlock
                             method="GET"
@@ -227,12 +403,55 @@ export default function BillerApiReference() {
                                         {
                                             label: "200 OK",
                                             language: "json",
-                                            code: `[\n  {\n    "accountId": "070386bf-b14f-4ef4-a8a5-819ea2f6f257",\n    "bankName": "Barclays Bank",\n    "accountNumber": "******8901",\n    "currency": "GBP",\n    "status": "APPROVED"\n  }\n]`
+                                            code: `[\n  {\n    "AccountHolderName": "MITO Corp Ltd",\n    "BankName": "Barclays Bank",\n    "AccountNumber": "142412314",\n    "Sortcode": "123131",\n    "AccountId": "121443154"\n  }\n]`
                                         }
                                     ]}
                                 />
                             }
-                        />
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "billerId", type: "string", required: true, description: "Your unique biller service code." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Get Payout Report (NEW) */}
+                    <section id="get-payout-report">
+                        <EndpointBlock
+                            method="GET"
+                            path="/api/v2/payout/report"
+                            title="Get Payout Report"
+                            description="Retrieve a detailed payout status report within a specified date range."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `[\n  {\n    "transactionId": "guid-12345",\n    "amount": 100.00,\n    "status": "Completed",\n    "createdDate": "2024-09-20T12:00:00Z"\n  }\n]`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "billerId", type: "string", required: true, description: "Your unique biller service code." },
+                                        { name: "startDate", type: "string", required: false, description: "Start date filter (format: YYYY/MM/DD)." },
+                                        { name: "endDate", type: "string", required: false, description: "End date filter (format: YYYY/MM/DD)." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
                     </section>
 
                     {/* SECTION: REFUNDS */}
@@ -240,6 +459,7 @@ export default function BillerApiReference() {
                         <Badge className="bg-primary hover:bg-primary/95 text-white">Refunds Management</Badge>
                     </div>
 
+                    {/* Create Refund */}
                     <section id="create-refund">
                         <EndpointBlock
                             method="POST"
@@ -252,7 +472,7 @@ export default function BillerApiReference() {
                                         {
                                             label: "JSON",
                                             language: "json",
-                                            code: `{\n  "referenceNo": "31000521",\n  "amount": 150.00,\n  "reason": "Customer cancellation"\n}`
+                                            code: `{\n  "referenceNo": 100072,\n  "partnerReferenceNumber": "3f1aab3d-121a-4713-8d06-d92ce6223dcf",\n  "reason": "test 1234"\n}`
                                         }
                                     ]}
                                 />
@@ -263,12 +483,90 @@ export default function BillerApiReference() {
                                         {
                                             label: "200 Success",
                                             language: "json",
-                                            code: `{\n  "refundReference": "ref_992211",\n  "status": "pending",\n  "amount": 150.00\n}`
+                                            code: `{\n  "data": {\n    "referenceNo": 31000395,\n    "partnerRefernceNumber": "274543222",\n    "status": "COMPSUCCESS"\n  },\n  "message": null,\n  "code": 200,\n  "responseType": "Success"\n}`
                                         }
                                     ]}
                                 />
                             }
-                        />
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Request Body</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "referenceNo", type: "integer", required: true, description: "MITO generated transaction reference ID." },
+                                        { name: "partnerReferenceNumber", type: "string", required: true, description: "Your unique refund reference ID." },
+                                        { name: "reason", type: "string", required: false, description: "Reason for processing the refund." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Get Refund Details (NEW) */}
+                    <section id="get-refund">
+                        <EndpointBlock
+                            method="GET"
+                            path="/api/v2/Refund/GetRefund"
+                            title="Get Refund Details"
+                            description="Retrieve detailed status and metadata of a specific refund using its reference ID."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": {\n    "referenceNo": 31000395,\n    "partnerRefernceNumber": "274543222",\n    "status": "COMPSUCCESS"\n  },\n  "message": null,\n  "code": 200,\n  "responseType": "Success"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "refundReferenceNo", type: "string", required: true, description: "The unique reference ID of the refund." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
+                    </section>
+
+                    <hr className="border-border" />
+
+                    {/* Get Refund List (NEW) */}
+                    <section id="get-refund-list">
+                        <EndpointBlock
+                            method="GET"
+                            path="/api/v2/Refund/GetRefundList"
+                            title="Get Refund List"
+                            description="List all refunds initiated for your biller account with support for pagination and search text."
+                            responseSamples={
+                                <CodeTabs
+                                    tabs={[
+                                        {
+                                            label: "200 OK",
+                                            language: "json",
+                                            code: `{\n  "data": {\n    "referenceNo": 31000395,\n    "partnerRefernceNumber": "274543222",\n    "status": "COMPSUCCESS"\n  },\n  "message": null,\n  "code": 200,\n  "responseType": "Success"\n}`
+                                        }
+                                    ]}
+                                />
+                            }
+                        >
+                            <div>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
+                                <SchemaTable
+                                    fields={[
+                                        { name: "billerId", type: "string", required: true, description: "Your unique biller service code." },
+                                        { name: "pageNo", type: "integer", required: false, description: "Page number. Default is 1." },
+                                        { name: "pageSize", type: "integer", required: false, description: "Items per page. Default is 10." },
+                                        { name: "SearchingText", type: "string", required: false, description: "Text filter to search specific refunds." }
+                                    ]}
+                                />
+                            </div>
+                        </EndpointBlock>
                     </section>
                 </div>
             </div>
