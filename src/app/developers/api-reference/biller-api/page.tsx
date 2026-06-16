@@ -5,7 +5,9 @@ import { EndpointBlock } from "@/components/developers/ApiBlocks";
 import { CodeTabs, CodeBlock } from "@/components/developers/CodeBlocks";
 import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Badge } from "@/components/ui/badge";
-import { CreditCard, Landmark, RefreshCw, ShieldCheck } from "lucide-react";
+import { CreditCard, Landmark, RefreshCw, ShieldCheck, Download, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function BillerApiReference() {
     return (
@@ -14,9 +16,14 @@ export default function BillerApiReference() {
                 {/* Page Header */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">Biller Submission API</h1>
-                    <p className="text-xl text-muted-foreground">
+                    <p className="text-xl text-muted-foreground mb-6">
                         Integrate MITO&apos;s Biller Collection engine to accept local payments, perform automatic FX conversions, and execute settled payouts to corporate bank accounts.
                     </p>
+                    <Button asChild className="gap-2 bg-primary hover:bg-primary/90 text-white rounded-full px-6">
+                        <a href="/biller-api.postman_collection.json" download="biller-api.postman_collection.json">
+                            <Download className="w-4 h-4" /> Download Postman Collection
+                        </a>
+                    </Button>
                 </div>
 
                 {/* Authentication and Setup */}
@@ -36,6 +43,16 @@ export default function BillerApiReference() {
                                 { name: "Content-Type", type: "string", required: true, description: "Must be set to application/json.", example: "application/json" }
                             ]}
                         />
+                        <div className="pt-4 border-t flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mt-4">
+                            <span className="text-xs text-muted-foreground">
+                                Retrieve your staging or live credentials from the service profiles tab.
+                            </span>
+                            <Button asChild size="xs" variant="link" className="text-primary hover:underline font-semibold p-0 h-auto">
+                                <Link href="/developers/credentials?service=biller" className="flex items-center gap-1">
+                                    View Biller Credentials <ArrowRight className="w-3.5 h-3.5" />
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 </div>
 

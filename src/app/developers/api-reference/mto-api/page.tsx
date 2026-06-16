@@ -6,7 +6,9 @@ import { EndpointBlock } from "@/components/developers/ApiBlocks";
 import { CodeTabs, CodeBlock } from "@/components/developers/CodeBlocks";
 import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, FileText, FolderSync, Info, ShieldCheck, Landmark } from "lucide-react";
+import { ArrowRight, FileText, FolderSync, Info, ShieldCheck, Landmark, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function MtoApiReference() {
     const [activeSchema, setActiveSchema] = useState<"corridor" | "global">("corridor");
@@ -17,9 +19,14 @@ export default function MtoApiReference() {
                 {/* Header */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">MTO Submission API & FTP Reference</h1>
-                    <p className="text-xl text-muted-foreground">
+                    <p className="text-xl text-muted-foreground mb-6">
                         Secure, production-ready REST endpoints and FTP Gateway interfaces for Money Transfer Operators integrating with the MITO Unified Remittance Network.
                     </p>
+                    <Button asChild className="gap-2 bg-primary hover:bg-primary/90 text-white rounded-full px-6">
+                        <a href="/mto-api.postman_collection.json" download="mto-api.postman_collection.json">
+                            <Download className="w-4 h-4" /> Download Postman Collection
+                        </a>
+                    </Button>
                 </div>
 
                 {/* Authentication & Setup Overview */}
@@ -61,6 +68,16 @@ export default function MtoApiReference() {
                                 <li><code>AccessAffiliateNumber</code>: Your assigned partner code (e.g. <code>1062</code>).</li>
                                 <li><code>AccessServiceNumber</code>: The corridor service identifier (e.g. <code>21012</code>).</li>
                             </ul>
+                            <div className="pt-4 border-t flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mt-4">
+                                <span className="text-xs text-muted-foreground">
+                                    Retrieve your staging or live credentials from the service profiles tab.
+                                </span>
+                                <Button asChild size="xs" variant="link" className="text-primary hover:underline font-semibold p-0 h-auto">
+                                    <Link href="/developers/credentials?service=mto" className="flex items-center gap-1">
+                                        View MTO Credentials <ArrowRight className="w-3.5 h-3.5" />
+                                    </Link>
+                                </Button>
+                            </div>
                         </div>
 
                         {/* Testing Accounts Section */}

@@ -3,14 +3,19 @@
 import { DocsLayout } from "@/components/layout/DocsLayout";
 import { FlowDiagram, FlowNode, FlowArrow, StepFlow } from "@/components/developers/Flows";
 import { CodeBlock } from "@/components/developers/CodeBlocks";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export default function RetailAffiliateGuidePage() {
     return (
         <DocsLayout>
             <div className="max-w-4xl">
                 <h1 className="text-4xl font-extrabold tracking-tight mb-4">Retail Submission Guide</h1>
-                <p className="text-xl text-muted-foreground mb-12">
+                <p className="text-xl text-muted-foreground mb-4">
                     As a Retail Submission, you resell MITO&apos;s money transfer services directly to your own customers, earning commission. You can choose to build your own UI or use our Hosted Payment Pages.
+                </p>
+                <p className="text-base text-muted-foreground mb-12">
+                    For detailed endpoint specifications and schemas, please refer to the <Link href="/developers/api-reference/retail-api" className="text-primary hover:underline font-semibold inline-flex items-center gap-1">Retail API Reference <ArrowRight className="w-3.5 h-3.5" /></Link>.
                 </p>
 
                 <section className="mb-16">
@@ -31,20 +36,40 @@ export default function RetailAffiliateGuidePage() {
                     <StepFlow
                         steps={[
                             {
-                                title: "1. Generate a Checkout Session",
-                                description: "Call POST /v1/checkout/sessions with the transfer amount and destination logic. Receive a secure redirect URL."
+                                title: "1. Onboard user/Sender",
+                                description: "Register the remitting customer (Sender) within your application and collect their baseline details."
                             },
                             {
-                                title: "2. Redirect the Customer",
-                                description: "Redirect the user's browser to the MITO-hosted page. MITO will securely collect their card details and handle 3D Secure authentication."
+                                title: "2. Get Active Corridors and Rates from Mito",
+                                description: "Query the rates API to retrieve active currency corridors and fetch live FX exchange rates."
                             },
                             {
-                                title: "3. MITO Processes KYC",
-                                description: "If the customer is new, MITO will automatically prompt them to upload ID documents within the hosted flow before completing the transfer."
+                                title: "3. Do KYC of Sender",
+                                description: "Perform Identity Verification (KYC) on the sender in compliance with regulatory rules."
                             },
                             {
-                                title: "4. Return to Submission",
-                                description: "Once payment is successful, the user is redirected back to your configured return_url. Commission is automatically credited to your submission wallet."
+                                title: "4. Create and Submit beneficiary if it is a new beneficiary",
+                                description: "Create a recipient (Beneficiary) profile on the network containing payout account or mobile wallet details."
+                            },
+                            {
+                                title: "5. Get Purpose Codes",
+                                description: "Fetch the legal remittance purpose codes required for the specific country corridor."
+                            },
+                            {
+                                title: "6. Get Service Providers",
+                                description: "Query supported payout service providers (banks, cash networks, or mobile operators) for the corridor."
+                            },
+                            {
+                                title: "7. Submit Transaction",
+                                description: "Initiate and submit the money transfer payload for processing by the MITO engine."
+                            },
+                            {
+                                title: "8. Receive Response through Webhook",
+                                description: "Listen to transaction webhooks to receive real-time, asynchronous transaction updates."
+                            },
+                            {
+                                title: "9. Get Transaction details",
+                                description: "Query transaction details using reference IDs to verify final status, fees, and payout receipts."
                             }
                         ]}
                     />

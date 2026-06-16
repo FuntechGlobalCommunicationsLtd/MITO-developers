@@ -27,9 +27,9 @@ export function CodeBlock({
 
     return (
         <div 
-            className={`relative group flex flex-col h-full max-w-full overflow-hidden ${
+            className={`relative group flex flex-col max-w-full overflow-hidden ${
                 isNested 
-                    ? "bg-transparent border-0 rounded-none" 
+                    ? "bg-transparent border-0 rounded-none h-full" 
                     : "rounded-lg bg-[#0d1117] border border-slate-800/80"
             }`}
         >

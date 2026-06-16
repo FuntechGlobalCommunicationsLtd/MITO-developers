@@ -1,0 +1,132 @@
+{
+  "info": {
+    "_postman_id": "4da244c3-e8e7-4572-b544-9bd7cf506b77",
+    "name": "MITO MTO Submission API",
+    "description": "Postman Collection for MITO Money Transfer Operator (MTO) Submission API endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Live Exchange Rates",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          },
+          {
+            "key": "AccessServiceNumber",
+            "value": "{{AccessServiceNumber}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/Mto/GetRate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Mto",
+            "GetRate"
+          ]
+        },
+        "description": "Retrieve real-time exchange rates for money transfer, mobile top-up, and bill collections available on your affiliate profile."
+      }
+    },
+    {
+      "name": "Initiate Transaction",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          },
+          {
+            "key": "AccessServiceNumber",
+            "value": "{{AccessServiceNumber}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Mtn\": \"MTO-987654321\",\n  \"Rate\": 1.15,\n  \"SettlementCurrency\": \"GBP\",\n  \"PayoutCurrency\": \"CAD\",\n  \"SendingCountryISO\": \"GBR\",\n  \"ReceivingCountryISO\": \"CAD\",\n  \"TransactionType\": \"MONEYTRANSFER\",\n  \"CollectionMode\": \"BANKACCOUNT\",\n  \"PurposeCode\": \"FAMILY_SUPPORT\",\n  \"sourceOfFund\": \"SALARY\",\n  \"CreationDate\": \"2026-06-15T12:00:00Z\",\n  \"PayoutPrincipal\": 1150.00,\n  \"SettlementAmount\": 1000.00,\n  \"TotalSale\": 1000.00,\n  \"ServiceProviderCode\": \"FGCGENERIC\",\n  \"ServiceProviderName\": \"Royal Bank of Canada\",\n  \"BankAccountNumber\": \"1234567890\",\n  \"sender\": {\n    \"FirstName\": \"John\",\n    \"LastName\": \"Doe\",\n    \"MobileNumber\": \"447700900077\",\n    \"gender\": \"Male\",\n    \"nationality\": \"GBR\",\n    \"countryOfBirth\": \"GBR\",\n    \"RelationshipCode\": \"FAMILY\",\n    \"occupationCode\": \"ENGINEER\",\n    \"EmploymentStatus\": \"EMPLOYED\",\n    \"Address\": {\n      \"addressLine1\": \"10 Downing Street\",\n      \"country\": \"GBR\",\n      \"postCode\": \"SW1A 2AA\"\n    },\n    \"IdDocument\": {\n      \"type\": \"PASSPORT\",\n      \"number\": \"987654321\",\n      \"issueDate\": \"2020-01-01\",\n      \"expiryDate\": \"2030-01-01\",\n      \"placeOfIssue\": \"GBR\"\n    }\n  },\n  \"Beneficiary\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\",\n    \"mobileNumber\": \"15140001111\",\n    \"nationality\": \"CAN\",\n    \"Address\": {\n      \"addressLine1\": \"100 Queen Street\",\n      \"country\": \"CAN\"\n    }\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/Mto/TransactionCreate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Mto",
+            "TransactionCreate"
+          ]
+        },
+        "description": "Submit payment details to process a remittance transfer, mobile top-up, or bill collection."
+      }
+    },
+    {
+      "name": "Validate Bank Account",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          },
+          {
+            "key": "AccessServiceNumber",
+            "value": "{{AccessServiceNumber}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"serviceProviderCode\": \"2643\",\n  \"beneficiaryAccountNumber\": \"1234567890\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/Mto/BankAccountValidate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "Mto",
+            "BankAccountValidate"
+          ]
+        },
+        "description": "Validate the beneficiary's bank account details before initiating a transaction to reduce errors."
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://furp02-staging.funtechcom.com",
+      "type": "string"
+    },
+    {
+      "key": "AccessAffiliateNumber",
+      "value": "1062",
+      "type": "string"
+    },
+    {
+      "key": "AccessServiceNumber",
+      "value": "21012",
+      "type": "string"
+    }
+  ]
+}

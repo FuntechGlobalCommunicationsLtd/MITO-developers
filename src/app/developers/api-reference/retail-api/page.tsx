@@ -5,7 +5,9 @@ import { EndpointBlock } from "@/components/developers/ApiBlocks";
 import { CodeTabs, CodeBlock } from "@/components/developers/CodeBlocks";
 import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Badge } from "@/components/ui/badge";
-import { Info, ShieldAlert, Key, Landmark, Smartphone, Laptop, Settings, Zap } from "lucide-react";
+import { Info, ShieldAlert, Key, Landmark, Smartphone, Laptop, Settings, Zap, Download, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function RetailApiReference() {
     return (
@@ -14,9 +16,14 @@ export default function RetailApiReference() {
                 {/* Page Title */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">Retail Submission API</h1>
-                    <p className="text-xl text-muted-foreground">
+                    <p className="text-xl text-muted-foreground mb-6">
                         Integrate MITO&apos;s White-labelled payment and money transfer engine. This API powers customer onboarding, FX validations, and checkout session management.
                     </p>
+                    <Button asChild className="gap-2 bg-primary hover:bg-primary/90 text-white rounded-full px-6">
+                        <a href="/retail-api.postman_collection.json" download="retail-api.postman_collection.json">
+                            <Download className="w-4 h-4" /> Download Postman Collection
+                        </a>
+                    </Button>
                 </div>
 
                 {/* Authentication Info */}
@@ -36,6 +43,16 @@ export default function RetailApiReference() {
                                 { name: "Content-Type", type: "string", required: true, description: "Must be set to application/json.", example: "application/json" }
                             ]}
                         />
+                        <div className="pt-4 border-t flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mt-4">
+                            <span className="text-xs text-muted-foreground">
+                                Retrieve your staging secret keys or JWT details from the service profiles tab.
+                            </span>
+                            <Button asChild size="xs" variant="link" className="text-primary hover:underline font-semibold p-0 h-auto">
+                                <Link href="/developers/credentials?service=retail" className="flex items-center gap-1">
+                                    View Retail Credentials <ArrowRight className="w-3.5 h-3.5" />
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
 
                     {/* Pre-Live Testing Accounts */}

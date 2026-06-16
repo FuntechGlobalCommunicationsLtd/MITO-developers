@@ -14,7 +14,8 @@ import {
     LifeBuoy,
     Milestone,
     HelpCircle,
-    FileDown
+    FileDown,
+    Key
 } from "lucide-react";
 
 interface NavItem {
@@ -36,6 +37,7 @@ const docsConfig: NavGroup[] = [
         items: [
             { title: "Introduction", href: "/developers", icon: <Book className="w-4 h-4" /> },
             { title: "Getting Started", href: "/developers/get-started", icon: <Milestone className="w-4 h-4" /> },
+            { title: "API Credentials", href: "/developers/credentials", icon: <Key className="w-4 h-4" /> },
         ],
     },
     {

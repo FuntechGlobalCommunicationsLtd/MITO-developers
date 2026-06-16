@@ -1,0 +1,3383 @@
+{
+  "info": {
+    "_postman_id": "3ec244c3-e8e7-4572-b544-9bd7cf506b65",
+    "name": "Affiliate payment",
+    "description": "## Authentication\n\n1. combine your API username and password into a single string, separated by a colon. For example, `username:password`.\n    \n2. Encode the combined string in base64 format.\n    \n3. Include the base64-encoded string in the `Authorization` header of your API request in the following format: `Authorization: Basic {base64_encoded_username_password}`.\n    \n4. header AccessAffiliateNumber string required  \n    This is the agent correspondent id provided to the agent by the admin department. It is used to facilitate API management and auditing.\n    \n\nFor example:\n\nIf the agent's username is `ABC00000001` and the current password is `ABC123` and a new password is `Password123!` then Base64 encoding should be applied to the value `AE00000001:Password123!`\n\n`Authorization: Basic QUUwMDAwMDAwMTpBQkMxMjM6UGFzc3dvcmQxMjMh`  \n`AccessAffiliateNumber:1062`\n\n### Authentication error response\n\nIf an API key is missing, malformed, or invalid, you will receive an HTTP 401 Unauthorized response code.\n\n# **Notification Types and Details**\n\n### **User Onboarding**\n\n**Notification Type: USER_ONBOARDING****Body:**Name: vakilsingh**Email:** [<b>opeadeoye@gmail.com</b>](https://mailto:opeadeoye@gmail.com)**  \nAccount Number: 234687**\n\n### **\n\nTransaction Created**\n\n**Notification Type: TRANSACTION_CREATED****Body:**Reference Number: 31000521**Amount: $10****Status: pending**\n\n**  \nPayment Captured**\n\n**Notification Type: PAYMENT_CAPTURED****Body:**Reference Number: 31000486**Amount: $100.00****Status: pending**\n\nTransaction Completed\n\n**Notification Type: TRANSACTION_COMPLETED****Body:**Partner Reference Number: 54933785222**Reference Number: 31000486**Amount: $100.00**Status: completed**\n\nTransaction Under Review\n\n**Notification Type: TRANSACTION_UNDERREVIEW****Body:**Reference Number: 31000490**Amount: $10.00****Status: pending**\n\nTransaction Underpay Refund\n\n**Notification Type: TRANSACTION_UNDERPAY_REFUND****Body:**Refund Reference Number: 31000488**Amount: $50.00****Status: pending**\n\n### **\n\nTransaction Failed**\n\n**Notification Type: TRANSACTION_FAILED****Body:**Partner Reference Number: 54925222**Reference Number: 31000487**Amount: $100.00**Status: failed**\n\nTransaction Underpay Refund\n\nNotification Type: TRANSACTION_UNDERPAY_REFUND  \nBody:  \nRefund Reference Number: 31000484  \nAmount: $50.00  \nStatus: pending\n\nBank Account Verification Failed\n\n**Notification Type: BANK_ACCOUNT_VERIFICATION_FAILED****Body:**Partner Reference Number: 549785**Reference Number: 31000481**Amount: $102.00**Status: failed**\n\n### Transaction Expired\n\n**Notification Type: TRANSACTION_EXPIRED****Body:**Partner Reference Number: 32135444**Reference Number: 31000478**Amount: $102.00**Status: failed**",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13950380",
+    "_collection_link": "https://go.postman.co/collection/13950380-3ec244c3-e8e7-4572-b544-9bd7cf506b65?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Initiate Transaction",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}"
+          },
+          {
+            "key": "AccessServiceNumber",
+            "value": "{{AccessServiceNumber}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"partnerReferenceNumber\": \"{{$guid}}\",\r\n    \"billerId\": \"{{billerId}}\",\r\n    \"sendAmount\": 100,\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jaskaran.brar.6.2@gmail.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1979-09-06\",\r\n    \"paymentMode\": \"PLAID\", //CARDCHECKOUT\r\n    \"expireTime\": \"2029-05-16\",\r\n    \"callbackurl\": \"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\",\r\n    \"redirectUrl\":\"https://payment.rhemito.com/payment_st.html\",\r\n    \"paymentReference\":\"a0be521571076\"\r\n    }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/api/v2/Business/InitiateTransactions",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "Business",
+            "InitiateTransactions"
+          ]
+        },
+        "description": "#### Request Parameters\n\n| Field |  | Type | Description | Examples |\n| --- | --- | --- | --- | --- |\n| sendAmount | `_required_` | double | The amount money to be remitted | 100.00 |\n| partnerRefernceNumber | `_required_` | String | A unique reference for the transaction | 2113123 |\n| senderAccountNumber |  | Number | Sender's identifier.  <br>If it doesn't set a new entity will be created.  <br>Once generated then it is require to store in agent’s system and send the same for futures transaction for same remitter. | 21015 |\n| senderFirstName | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | FirstName |  |\n| senderMiddleName | `Optional` | String | MiddleName |  |\n| senderLastName | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | LastName |  |\n| senderGender | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | The sender Gender | M/F |\n| senderMobileNumber | `Optional` | String | The sender phone number |  |\n| senderEmail | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | The sender Email |  |\n| senderAddressBuildingNumber | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | BuildingNumber |  |\n| senderAddressStreet | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | Street |  |\n| senderAddressCity | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | AddressCity |  |\n| senderAddressPostcode | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | Address  <br>Postcode |  |\n| senderDateOfBirth | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | date | DateOfBirth | 1995-01-01 |\n| callbackurl | `optional` | String | url | [https://webhook.site/e136dc4f-e945-4d71-9234-4cb4b245714d](https://webhook.site/e136dc4f-e945-4d71-9234-4cb4b245714d) |\n| expire_time | `Mandatory` | datetime | yyyy-MM-ddTHH:mm:ssZ | yyyy-MM-ddTHH:mm:ssZ |\n| payment_Mode | `Mandatory` | String | CARDCHECKOUT |  |"
+      },
+      "response": [
+        {
+          "name": "Initiate Transaction",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"565465465\",\r\n    \"sendAmount\": 102,\r\n    \"senderAccountNumber\": 234428,\r\n    \"expire_time\": \"2024-05-16\",\r\n    \"payment_Mode\": \"BANKPAYMENT\", //CARDCHECKOUT\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jas13@furpl.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1976-09-16\",\r\n    \"callbackurl\": \"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/v1/Business/InitiateTransactions",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 06:53:13 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "description": ""
+            }
+          ],
+          "cookie": [],
+          "body": "{\r\n    \"sendAmount\": 500,\r\n    \"ReferenceNo:\": \"31000372\",\r\n    \"status\": \"AWAITINGPAYMENT\",\r\n    \"partnerRefernceNumber\": \"2312231\",\r\n    \"senderAccountNumber\": \"23421432\",\r\n    \"fundingAccount\": {\r\n        \"bankName\": \"The Currency Cloud Limited\",\r\n        \"accountHolderName\": \"peter\",\r\n        \"accountNumberType\": \"Account Number\",\r\n        \"accountNumber\": \"22771953\",\r\n        \"SortCode\": \"123456\"\r\n    }\r\n}"
+        },
+        {
+          "name": "When SenderAccountNumber Not Null",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"99885566\",\r\n    \"SenderAccountNumber\": 234427,\r\n    \"sendAmount\": 1000,\r\n    \"expire_time\": \"2024-05-16\",\r\n    \"payment_Mode\": \"BANKPAYMENT\", //CARDCHECKOUT\r\n    \"callbackurl\": \"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:39:40 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"sendAmount\": 978,\n        \"referenceNo\": \"31000379\",\n        \"partnerRefernceNumber\": \"99885566\",\n        \"status\": \"AWAITINGPAYMENT\",\n        \"senderAccountNumber\": \"234427\",\n        \"fundingAccount\": {\n            \"bankName\": \"The Currency Cloud Limited\",\n            \"accountHolderName\": \"John Henry\",\n            \"accountNumberType\": null,\n            \"accountNumber\": \"57128539\",\n            \"sortCode\": \"123456\"\n        }\n    },\n    \"message\": \"Successful\",\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid SenderAccountNumber",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"99885566\",\r\n    \"SenderAccountNumber\": 23442700,\r\n    \"sendAmount\": 1000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:41:17 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid senderaccountnumber provided, no data found!\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Sender Email Already Exists",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"565465465\",\r\n    \"sendAmount\": 102,\r\n    \"senderAccountNumber\": 234428,\r\n    \"expire_time\":\"2024-05-16\",\r\n    \"payment_Mode\":\"BANKPAYMENT\",//CARDCHECKOUT\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jas13@furpl.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1976-09-16\",\r\n    \"callbackurl\":\"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:42:26 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"sender email already exists\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid SenderDateOfBirth",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"565465465\",\r\n    \"sendAmount\": 102,\r\n    \"senderAccountNumber\": 234428,\r\n    \"expire_time\":\"2024-05-16\",\r\n    \"payment_Mode\":\"BANKPAYMENT\",//CARDCHECKOUT\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jas13@furpl.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1976-09-16\",\r\n    \"callbackurl\":\"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:43:16 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid dob format,it must be yyyy-mm-dd\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "GetTransactionStatus",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/api/v2/Business/GetTransactionStatus?referenceNo=31000395",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "Business",
+            "GetTransactionStatus"
+          ],
+          "query": [
+            {
+              "key": "referenceNo",
+              "value": "31000395"
+            },
+            {
+              "key": "partnerRefernceNumber",
+              "value": null,
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/api/v1/Business/GetTransactionStatus?referenceNo=31000373&partnerRefernceNumber",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "31000373"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:29:52 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"referenceNo\": 31000395,\n        \"partnerRefernceNumber\": \"274543222\",\n        \"status\": \"COMPSUCCESS\"\n    },\n    \"message\": null,\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid ReferenceNumber",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=310003&partnerRefernceNumber",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "310003"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:30:59 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid referenceno\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid Partner Reference Number",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=&partnerRefernceNumber=hgjkmhmgh",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": ""
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": "hgjkmhmgh"
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:32:14 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid partnerreferncenumber\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "GetTransactions",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/api/v2/Business/GetTransactions?billerId={{billerId}}&pageNo=1&pageSize=1&SearchingText=000",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "Business",
+            "GetTransactions"
+          ],
+          "query": [
+            {
+              "key": "billerId",
+              "value": "{{billerId}}"
+            },
+            {
+              "key": "pageNo",
+              "value": "1"
+            },
+            {
+              "key": "pageSize",
+              "value": "1"
+            },
+            {
+              "key": "SearchingText",
+              "value": "000",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/api/v1/Business/GetTransactionStatus?referenceNo=31000373&partnerRefernceNumber",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "31000373"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:29:52 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"referenceNo\": 31000395,\n        \"partnerRefernceNumber\": \"274543222\",\n        \"status\": \"COMPSUCCESS\"\n    },\n    \"message\": null,\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid ReferenceNumber",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=310003&partnerRefernceNumber",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "310003"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:30:59 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid referenceno\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid Partner Reference Number",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=&partnerRefernceNumber=hgjkmhmgh",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": ""
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": "hgjkmhmgh"
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:32:14 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid partnerreferncenumber\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "PaymentConfirmation",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Basic NGhIeDlHMXNZeTg6MWtOaDlKM3RCYTlBM3hDajhO",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "{{url}}api/v2/Business/PaymentConfirmation?ReferenceNo=100527&approvalStatus=Approve",
+          "host": [
+            "{{url}}api"
+          ],
+          "path": [
+            "v2",
+            "Business",
+            "PaymentConfirmation"
+          ],
+          "query": [
+            {
+              "key": "ReferenceNo",
+              "value": "100527"
+            },
+            {
+              "key": "approvalStatus",
+              "value": "Approve"
+            }
+          ]
+        },
+        "description": "#### Request Parameters\n\n| Field |  | Type | Description | Examples |\n| --- | --- | --- | --- | --- |\n| sendAmount | `_required_` | double | The amount money to be remitted | 100.00 |\n| partnerRefernceNumber | `_required_` | String | A unique reference for the transaction | 2113123 |\n| senderAccountNumber |  | Number | Sender's identifier.  <br>If it doesn't set a new entity will be created.  <br>Once generated then it is require to store in agent’s system and send the same for futures transaction for same remitter. | 21015 |\n| senderFirstName | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | FirstName |  |\n| senderMiddleName | `Optional` | String | MiddleName |  |\n| senderLastName | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | LastName |  |\n| senderGender | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | The sender Gender | M/F |\n| senderMobileNumber | `Optional` | String | The sender phone number |  |\n| senderEmail | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | The sender Email |  |\n| senderAddressBuildingNumber | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | BuildingNumber |  |\n| senderAddressStreet | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | Street |  |\n| senderAddressCity | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | AddressCity |  |\n| senderAddressPostcode | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | Address  <br>Postcode |  |\n| senderDateOfBirth | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | date | DateOfBirth | 1995-01-01 |\n| callbackurl | `optional` | String | url | [https://webhook.site/e136dc4f-e945-4d71-9234-4cb4b245714d](https://webhook.site/e136dc4f-e945-4d71-9234-4cb4b245714d) |\n| expire_time | `Mandatory` | datetime | yyyy-MM-ddTHH:mm:ssZ | yyyy-MM-ddTHH:mm:ssZ |\n| payment_Mode | `Mandatory` | String | CARDCHECKOUT |  |"
+      },
+      "response": [
+        {
+          "name": "Initiate Transaction",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"565465465\",\r\n    \"sendAmount\": 102,\r\n    \"senderAccountNumber\": 234428,\r\n    \"expire_time\": \"2024-05-16\",\r\n    \"payment_Mode\": \"BANKPAYMENT\", //CARDCHECKOUT\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jas13@furpl.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1976-09-16\",\r\n    \"callbackurl\": \"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/v1/Business/InitiateTransactions",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 06:53:13 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "description": ""
+            }
+          ],
+          "cookie": [],
+          "body": "{\r\n    \"sendAmount\": 500,\r\n    \"ReferenceNo:\": \"31000372\",\r\n    \"status\": \"AWAITINGPAYMENT\",\r\n    \"partnerRefernceNumber\": \"2312231\",\r\n    \"senderAccountNumber\": \"23421432\",\r\n    \"fundingAccount\": {\r\n        \"bankName\": \"The Currency Cloud Limited\",\r\n        \"accountHolderName\": \"peter\",\r\n        \"accountNumberType\": \"Account Number\",\r\n        \"accountNumber\": \"22771953\",\r\n        \"SortCode\": \"123456\"\r\n    }\r\n}"
+        },
+        {
+          "name": "When SenderAccountNumber Not Null",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"99885566\",\r\n    \"SenderAccountNumber\": 234427,\r\n    \"sendAmount\": 1000,\r\n    \"expire_time\": \"2024-05-16\",\r\n    \"payment_Mode\": \"BANKPAYMENT\", //CARDCHECKOUT\r\n    \"callbackurl\": \"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:39:40 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"sendAmount\": 978,\n        \"referenceNo\": \"31000379\",\n        \"partnerRefernceNumber\": \"99885566\",\n        \"status\": \"AWAITINGPAYMENT\",\n        \"senderAccountNumber\": \"234427\",\n        \"fundingAccount\": {\n            \"bankName\": \"The Currency Cloud Limited\",\n            \"accountHolderName\": \"John Henry\",\n            \"accountNumberType\": null,\n            \"accountNumber\": \"57128539\",\n            \"sortCode\": \"123456\"\n        }\n    },\n    \"message\": \"Successful\",\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid SenderAccountNumber",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"99885566\",\r\n    \"SenderAccountNumber\": 23442700,\r\n    \"sendAmount\": 1000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:41:17 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid senderaccountnumber provided, no data found!\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Sender Email Already Exists",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"565465465\",\r\n    \"sendAmount\": 102,\r\n    \"senderAccountNumber\": 234428,\r\n    \"expire_time\":\"2024-05-16\",\r\n    \"payment_Mode\":\"BANKPAYMENT\",//CARDCHECKOUT\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jas13@furpl.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1976-09-16\",\r\n    \"callbackurl\":\"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:42:26 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"sender email already exists\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid SenderDateOfBirth",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"565465465\",\r\n    \"sendAmount\": 102,\r\n    \"senderAccountNumber\": 234428,\r\n    \"expire_time\":\"2024-05-16\",\r\n    \"payment_Mode\":\"BANKPAYMENT\",//CARDCHECKOUT\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jas13@furpl.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1976-09-16\",\r\n    \"callbackurl\":\"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:43:16 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid dob format,it must be yyyy-mm-dd\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "PaymentConfirmation Copy",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "1059",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Basic NGhIeDlHMXNZeTg6MWtOaDlKM3RCYTlBM3hDajhO",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://localhost:5001/api/v2/Business/PaymentConfirmation?ReferenceNo=116664&approvalStatus=Approve",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5001",
+          "path": [
+            "api",
+            "v2",
+            "Business",
+            "PaymentConfirmation"
+          ],
+          "query": [
+            {
+              "key": "ReferenceNo",
+              "value": "116664"
+            },
+            {
+              "key": "approvalStatus",
+              "value": "Approve"
+            }
+          ]
+        },
+        "description": "#### Request Parameters\n\n| Field |  | Type | Description | Examples |\n| --- | --- | --- | --- | --- |\n| sendAmount | `_required_` | double | The amount money to be remitted | 100.00 |\n| partnerRefernceNumber | `_required_` | String | A unique reference for the transaction | 2113123 |\n| senderAccountNumber |  | Number | Sender's identifier.  <br>If it doesn't set a new entity will be created.  <br>Once generated then it is require to store in agent’s system and send the same for futures transaction for same remitter. | 21015 |\n| senderFirstName | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | FirstName |  |\n| senderMiddleName | `Optional` | String | MiddleName |  |\n| senderLastName | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | LastName |  |\n| senderGender | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | The sender Gender | M/F |\n| senderMobileNumber | `Optional` | String | The sender phone number |  |\n| senderEmail | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | The sender Email |  |\n| senderAddressBuildingNumber | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | BuildingNumber |  |\n| senderAddressStreet | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | Street |  |\n| senderAddressCity | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | AddressCity |  |\n| senderAddressPostcode | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | String | Address  <br>Postcode |  |\n| senderDateOfBirth | `Conditional rules: Mandatory`  <br>`if sender Account Number is null.` | date | DateOfBirth | 1995-01-01 |\n| callbackurl | `optional` | String | url | [https://webhook.site/e136dc4f-e945-4d71-9234-4cb4b245714d](https://webhook.site/e136dc4f-e945-4d71-9234-4cb4b245714d) |\n| expire_time | `Mandatory` | datetime | yyyy-MM-ddTHH:mm:ssZ | yyyy-MM-ddTHH:mm:ssZ |\n| payment_Mode | `Mandatory` | String | CARDCHECKOUT |  |"
+      },
+      "response": [
+        {
+          "name": "Initiate Transaction",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"565465465\",\r\n    \"sendAmount\": 102,\r\n    \"senderAccountNumber\": 234428,\r\n    \"expire_time\": \"2024-05-16\",\r\n    \"payment_Mode\": \"BANKPAYMENT\", //CARDCHECKOUT\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jas13@furpl.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1976-09-16\",\r\n    \"callbackurl\": \"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/v1/Business/InitiateTransactions",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 06:53:13 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "description": ""
+            }
+          ],
+          "cookie": [],
+          "body": "{\r\n    \"sendAmount\": 500,\r\n    \"ReferenceNo:\": \"31000372\",\r\n    \"status\": \"AWAITINGPAYMENT\",\r\n    \"partnerRefernceNumber\": \"2312231\",\r\n    \"senderAccountNumber\": \"23421432\",\r\n    \"fundingAccount\": {\r\n        \"bankName\": \"The Currency Cloud Limited\",\r\n        \"accountHolderName\": \"peter\",\r\n        \"accountNumberType\": \"Account Number\",\r\n        \"accountNumber\": \"22771953\",\r\n        \"SortCode\": \"123456\"\r\n    }\r\n}"
+        },
+        {
+          "name": "When SenderAccountNumber Not Null",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"99885566\",\r\n    \"SenderAccountNumber\": 234427,\r\n    \"sendAmount\": 1000,\r\n    \"expire_time\": \"2024-05-16\",\r\n    \"payment_Mode\": \"BANKPAYMENT\", //CARDCHECKOUT\r\n    \"callbackurl\": \"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:39:40 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"sendAmount\": 978,\n        \"referenceNo\": \"31000379\",\n        \"partnerRefernceNumber\": \"99885566\",\n        \"status\": \"AWAITINGPAYMENT\",\n        \"senderAccountNumber\": \"234427\",\n        \"fundingAccount\": {\n            \"bankName\": \"The Currency Cloud Limited\",\n            \"accountHolderName\": \"John Henry\",\n            \"accountNumberType\": null,\n            \"accountNumber\": \"57128539\",\n            \"sortCode\": \"123456\"\n        }\n    },\n    \"message\": \"Successful\",\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid SenderAccountNumber",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"99885566\",\r\n    \"SenderAccountNumber\": 23442700,\r\n    \"sendAmount\": 1000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:41:17 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid senderaccountnumber provided, no data found!\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Sender Email Already Exists",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"565465465\",\r\n    \"sendAmount\": 102,\r\n    \"senderAccountNumber\": 234428,\r\n    \"expire_time\":\"2024-05-16\",\r\n    \"payment_Mode\":\"BANKPAYMENT\",//CARDCHECKOUT\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jas13@furpl.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1976-09-16\",\r\n    \"callbackurl\":\"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:42:26 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"sender email already exists\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid SenderDateOfBirth",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"partnerRefernceNumber\": \"565465465\",\r\n    \"sendAmount\": 102,\r\n    \"senderAccountNumber\": 234428,\r\n    \"expire_time\":\"2024-05-16\",\r\n    \"payment_Mode\":\"BANKPAYMENT\",//CARDCHECKOUT\r\n    \"senderFirstName\": \"FIROPO\",\r\n    \"senderLastName\": \"AKIN-AGUNBIADE\",\r\n    \"senderGender\": \"M\",\r\n    \"senderMobileNumber\": \"+4487456133\",\r\n    \"senderEmail\": \"jas13@furpl.com\",\r\n    \"senderAddressBuildingNumber\": \"39\",\r\n    \"senderAddressStreet\": \"COLERIDGE WAY\",\r\n    \"senderAddressCity\": \"BOREHAMWOOD\",\r\n    \"senderAddressPostcode\": \"WD6 2AE\",\r\n    \"senderDateOfBirth\": \"1976-09-16\",\r\n    \"callbackurl\":\"https://webhook.site/b28426b8-1532-4ba0-a090-a0be1ea7003d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v1/Business/InitiateTransactions",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "InitiateTransactions"
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 13:43:16 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid dob format,it must be yyyy-mm-dd\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "CreateRefund",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"referenceNo\": 100072,\r\n  \"partnerReferenceNumber\": \"3f1aab3d-121a-4713-8d06-d92ce6223dcf\",\r\n  \"reason\": \"test 1234\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/api/v2/Refund/CreateRefund",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "Refund",
+            "CreateRefund"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/api/v1/Business/GetTransactionStatus?referenceNo=31000373&partnerRefernceNumber",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "31000373"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:29:52 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"referenceNo\": 31000395,\n        \"partnerRefernceNumber\": \"274543222\",\n        \"status\": \"COMPSUCCESS\"\n    },\n    \"message\": null,\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid ReferenceNumber",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=310003&partnerRefernceNumber",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "310003"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:30:59 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid referenceno\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid Partner Reference Number",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=&partnerRefernceNumber=hgjkmhmgh",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": ""
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": "hgjkmhmgh"
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:32:14 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid partnerreferncenumber\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "GetRefund",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/api/v2/Refund/GetRefund?refundReferenceNo=22498575",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "Refund",
+            "GetRefund"
+          ],
+          "query": [
+            {
+              "key": "refundReferenceNo",
+              "value": "22498575"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/api/v1/Business/GetTransactionStatus?referenceNo=31000373&partnerRefernceNumber",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "31000373"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:29:52 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"referenceNo\": 31000395,\n        \"partnerRefernceNumber\": \"274543222\",\n        \"status\": \"COMPSUCCESS\"\n    },\n    \"message\": null,\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid ReferenceNumber",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=310003&partnerRefernceNumber",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "310003"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:30:59 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid referenceno\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid Partner Reference Number",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=&partnerRefernceNumber=hgjkmhmgh",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": ""
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": "hgjkmhmgh"
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:32:14 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid partnerreferncenumber\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "GetRefundList",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/api/v2/Refund/GetRefundList?billerId={{billerId}}&pageNo=1&pageSize=1&SearchingText",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "Refund",
+            "GetRefundList"
+          ],
+          "query": [
+            {
+              "key": "billerId",
+              "value": "{{billerId}}"
+            },
+            {
+              "key": "pageNo",
+              "value": "1"
+            },
+            {
+              "key": "pageSize",
+              "value": "1"
+            },
+            {
+              "key": "SearchingText",
+              "value": null,
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/api/v1/Business/GetTransactionStatus?referenceNo=31000373&partnerRefernceNumber",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "31000373"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:29:52 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"referenceNo\": 31000395,\n        \"partnerRefernceNumber\": \"274543222\",\n        \"status\": \"COMPSUCCESS\"\n    },\n    \"message\": null,\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid ReferenceNumber",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=310003&partnerRefernceNumber",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "310003"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:30:59 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid referenceno\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid Partner Reference Number",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=&partnerRefernceNumber=hgjkmhmgh",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": ""
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": "hgjkmhmgh"
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:32:14 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid partnerreferncenumber\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "SwitchPaymentMode",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}}/api/v2/Business/SwitchPaymentMode?PaymentReference=1243&PaymentMode=CARDCHECKOUT",
+          "host": [
+            "{{url}}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "Business",
+            "SwitchPaymentMode"
+          ],
+          "query": [
+            {
+              "key": "ReferenceNo",
+              "value": "12313",
+              "disabled": true
+            },
+            {
+              "key": "PartnerRefernceNumber",
+              "value": "1234",
+              "disabled": true
+            },
+            {
+              "key": "PaymentReference",
+              "value": "1243"
+            },
+            {
+              "key": "PaymentMode",
+              "value": "CARDCHECKOUT"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/api/v1/Business/GetTransactionStatus?referenceNo=31000373&partnerRefernceNumber",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "31000373"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:29:52 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"referenceNo\": 31000395,\n        \"partnerRefernceNumber\": \"274543222\",\n        \"status\": \"COMPSUCCESS\"\n    },\n    \"message\": null,\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid ReferenceNumber",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=310003&partnerRefernceNumber",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "310003"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:30:59 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid referenceno\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid Partner Reference Number",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=&partnerRefernceNumber=hgjkmhmgh",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": ""
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": "hgjkmhmgh"
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:32:14 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid partnerreferncenumber\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "balances",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/api/v2/Business/balances?billerId=\"{{billerId}}\"",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "Business",
+            "balances"
+          ],
+          "query": [
+            {
+              "key": "billerId",
+              "value": "\"{{billerId}}\""
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "1059"
+              }
+            ],
+            "url": {
+              "raw": "https://connect.funtechcom.com/api/api/v1/Business/GetTransactionStatus?referenceNo=31000373&partnerRefernceNumber",
+              "protocol": "https",
+              "host": [
+                "connect",
+                "funtechcom",
+                "com"
+              ],
+              "path": [
+                "api",
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "31000373"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:29:52 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"referenceNo\": 31000395,\n        \"partnerRefernceNumber\": \"274543222\",\n        \"status\": \"COMPSUCCESS\"\n    },\n    \"message\": null,\n    \"code\": 200,\n    \"responseType\": \"Success\"\n}"
+        },
+        {
+          "name": "Invalid ReferenceNumber",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=310003&partnerRefernceNumber",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": "310003"
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:30:59 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid referenceno\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        },
+        {
+          "name": "Invalid Partner Reference Number",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "AccessAffiliateNumber",
+                "value": "{{AccessAffiliateNumber}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/v1/Business/GetTransactionStatus?referenceNo=&partnerRefernceNumber=hgjkmhmgh",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "Business",
+                "GetTransactionStatus"
+              ],
+              "query": [
+                {
+                  "key": "referenceNo",
+                  "value": ""
+                },
+                {
+                  "key": "partnerRefernceNumber",
+                  "value": "hgjkmhmgh"
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "api-supported-versions",
+              "value": "1.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 11 Apr 2024 11:32:14 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": null,\n    \"message\": \"invalid partnerreferncenumber\",\n    \"code\": 400,\n    \"responsetype\": \"error\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Create Payout",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"amount\": 100.00,\r\n  \"description\": \"Monthly payout\",\r\n  \"partnerReferenceNumber\":\"1243fsf\",\r\n  \"accountId\":\"b6c286e4-12f5-4d56-a144-9155af26383a\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/api/v2/payout/CreatePayout",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "payout",
+            "CreatePayout"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "CreatePayout",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"amount\": 100.00,\r\n  \"description\": \"Monthly payout\",\r\n  \"AccountId\":\"241454\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v2/payout/CreatePayout",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "payout",
+                "CreatePayout"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 20 Sep 2024 06:38:10 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\r\n  \"transactionId\": \"guid-12345\",\r\n  \"message\": \"Payout created successfully.\"\r\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Payout Report",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/api/v2/payout/report?startDate=2024/09/09&endDate=2025/11/16&billerId={{billerId}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "payout",
+            "report"
+          ],
+          "query": [
+            {
+              "key": "startDate",
+              "value": "2024/09/09",
+              "description": "optional"
+            },
+            {
+              "key": "endDate",
+              "value": "2025/11/16",
+              "description": "optional"
+            },
+            {
+              "key": "billerId",
+              "value": "{{billerId}}",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Get Payout Report",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/v2/payout/report?startDate =2024/09/09&endDate =2024/09/09",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "payout",
+                "report"
+              ],
+              "query": [
+                {
+                  "key": "startDate ",
+                  "value": "2024/09/09"
+                },
+                {
+                  "key": "endDate ",
+                  "value": "2024/09/09"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 20 Sep 2024 06:38:10 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "[\r\n  {\r\n    \"transactionId\": \"guid-12345\",\r\n    \"amount\": 100.00,\r\n    \"status\": \"Completed\",\r\n    \"createdDate\": \"2024-09-20T12:00:00Z\"\r\n  },\r\n  {\r\n    \"transactionId\": \"guid-67890\",\r\n    \"amount\": 200.00,\r\n    \"status\": \"Pending\",\r\n    \"createdDate\": \"2024-09-21T12:00:00Z\"\r\n  }\r\n]\r\n"
+        }
+      ]
+    },
+    {
+      "name": "AddPayoutAccount",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n        \"billerId\":\"{{billerId}}\",\r\n        \"AccountHolderName\": \"test\",\r\n        \"BankName\": \"BankName payout\",\r\n        \"AccountNumber\": \"142412314\",\r\n        \"Sortcode\": \"123131\",\r\n        \"bankCountryIso3Code\": \"GBR\",\r\n        \"currencyCode\": \"GBP\"\r\n\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/api/v2/Payout/AddPayoutAccount",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "Payout",
+            "AddPayoutAccount"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "AddPayoutAccount",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n         \"AccountHolderName\": \"test\",\r\n        \"BankName\": \"BankName payout\",\r\n        \"AccountNumber\": \"142412314\",\r\n        \"Sortcode\": \"123131\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/v2/payout/AddPayoutAccount",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "payout",
+                "AddPayoutAccount"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 20 Sep 2024 06:38:10 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\r\n  \"message\": \"Payout Account created successfully.\",\r\n  \"AccountId\":\"422113\"\r\n\r\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Payout Accounts",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "{{Password}}",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "{{Username}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "AccessAffiliateNumber",
+            "value": "{{AccessAffiliateNumber}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/api/v2/payout/GetPayoutAccounts?billerId={{billerId}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "payout",
+            "GetPayoutAccounts"
+          ],
+          "query": [
+            {
+              "key": "billerId",
+              "value": "{{billerId}}"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Get Payout Accounts",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/v2/payout/GetPayoutAccounts",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "payout",
+                "GetPayoutAccounts"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Server",
+              "value": "Microsoft-IIS/10.0"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "ASP.NET"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 20 Sep 2024 06:38:10 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "[\r\n    {\r\n        \"AccountHolderName\": \"test\",\r\n        \"BankName\": \"BankName payout\",\r\n        \"AccountNumber\": \"142412314\",\r\n        \"Sortcode\": \"123131\",\r\n        \"AccountId\": \"121443154\"\r\n    },\r\n    {\r\n        \"AccountHolderName\": \"test\",\r\n        \"BankName\": \"BankName payout\",\r\n        \"AccountNumber\": \"142412314\",\r\n        \"Sortcode\": \"123131\",\r\n        \"AccountId\": \"121443154\"\r\n    }\r\n]"
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "Username",
+      "value": "ssfsfds"
+    },
+    {
+      "key": "Password",
+      "value": "5mEw9E8dXv8E4uHt8Y7"
+    },
+    {
+      "key": "AccessAffiliateNumber",
+      "value": "1062"
+    },
+    {
+      "key": "billerId",
+      "value": "0df8ffc4-609e-40e5-a342-ef2ed828c901"
+    },
+    {
+      "key": "url",
+      "value": "https://furp02-staging.funtechcom.com"
+    },
+    {
+      "key": "AccessServiceNumber",
+      "value": ""
+    }
+  ]
+}

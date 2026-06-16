@@ -1,0 +1,140 @@
+{
+  "info": {
+    "_postman_id": "7fa244c3-e8e7-4572-b544-9bd7cf506b88",
+    "name": "MITO Retail Submission API",
+    "description": "Postman Collection for MITO Retail Submission API endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Generate Access Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"partner@example.com\",\n  \"password\": \"your_dashboard_password\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        },
+        "description": "Exchange dashboard credentials for a temporary JWT bearer token."
+      }
+    },
+    {
+      "name": "Create Checkout Session",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwtToken}}"
+          },
+          {
+            "key": "Mito-Secret-Key",
+            "value": "{{privateKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 100.00,\n  \"currency\": \"GBP\",\n  \"returnUrl\": \"https://yourwebsite.com/checkout/success\",\n  \"cancelUrl\": \"https://yourwebsite.com/checkout/cancel\",\n  \"subMerchantId\": \"sub_123456\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/checkout/sessions",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "checkout",
+            "sessions"
+          ]
+        },
+        "description": "Create a secure checkout session token and hosted payment page URL."
+      }
+    },
+    {
+      "name": "Initiate Transaction",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwtToken}}"
+          },
+          {
+            "key": "Mito-Secret-Key",
+            "value": "{{privateKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sendAmount\": 100,\n  \"sendCurrency\": \"GBP\",\n  \"serviceCode\": \"retail-payment\",\n  \"receiveCountryIso3\": \"NGA\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/transactions",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "transactions"
+          ]
+        },
+        "description": "Initiate a direct transaction or query rate metrics before capturing payment."
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://furp02-staging.funtechcom.com",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "eyJhbGciOi...",
+      "type": "string"
+    },
+    {
+      "key": "privateKey",
+      "value": "sk_test_xyz789",
+      "type": "string"
+    }
+  ]
+}
