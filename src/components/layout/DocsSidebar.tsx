@@ -58,7 +58,7 @@ const docsConfig: NavGroup[] = [
         ],
     },
     {
-        title: "Core Architecture",
+        title: "",
         items: [
             { title: "Hosted Payment Flows", href: "/developers/hosted-flows", icon: <TerminalSquare className="w-4 h-4" /> },
             { title: "Webhooks & Callbacks", href: "/developers/webhooks", icon: <Network className="w-4 h-4" /> },
@@ -96,9 +96,11 @@ export function DocsSidebar() {
                 <div className="flex flex-col gap-6 px-4">
                     {docsConfig.map((group, index) => (
                         <div key={index} className="flex flex-col gap-2">
-                            <h4 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground ml-2">
-                                {group.title}
-                            </h4>
+                            {group.title && (
+                                <h4 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground ml-2">
+                                    {group.title}
+                                </h4>
+                            )}
                             <div className="flex flex-col gap-1">
                                 {group.items.map((item, itemIndex) => (
                                     <div key={itemIndex} className="flex flex-col gap-1">
