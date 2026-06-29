@@ -2,131 +2,147 @@
 
 import { DocsLayout } from "@/components/layout/DocsLayout";
 import { WebhookEventCard } from "@/components/developers/WebhookEventCard";
-import { CodeBlock } from "@/components/developers/CodeBlocks";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+const eventGroups = [
+    {
+        phase: "Collect",
+        events: [
+            {
+                event: "PAYMENT_CAPTURED",
+                description: "Biller collection payment captured. Confirm before releasing goods.",
+                usedIn: [{ label: "Biller", href: "/developers/guides/biller" }],
+                payload: `{ "type": "PAYMENT_CAPTURED", "data": { "transactionRef": "INV-001", "status": "captured" } }`,
+            },
+            {
+                event: "collection.completed",
+                description: "Customer successfully paid a collection request.",
+                usedIn: [{ label: "Retail", href: "/developers/guides/retail" }],
+                payload: `{ "type": "collection.completed", "data": { "collection_id": "col_987", "amount": 50000, "currency": "KES" } }`,
+            },
+        ],
+    },
+    {
+        phase: "Process / Forex",
+        events: [
+            {
+                event: "transfer.processing",
+                description: "Transfer accepted and being processed through FX and compliance.",
+                usedIn: [{ label: "MTO", href: "/developers/guides/mto" }, { label: "Retail", href: "/developers/guides/retail" }],
+                payload: `{ "type": "transfer.processing", "data": { "transfer_id": "trf_123", "status": "processing" } }`,
+            },
+            {
+                event: "compliance.case.approved",
+                description: "Sender KYC submission approved.",
+                usedIn: [{ label: "Retail", href: "/developers/guides/retail" }],
+                payload: `{ "type": "compliance.case.approved", "data": { "individual_id": "ind_555", "status": "approved" } }`,
+            },
+        ],
+    },
+    {
+        phase: "Disburse",
+        events: [
+            {
+                event: "payout_initiated",
+                description: "MTO: settlement debited, payout transaction created (mtoforex outbound webhook).",
+                usedIn: [{ label: "MTO", href: "/developers/guides/mto" }],
+                payload: `{ "eventType": "payout_initiated", "data": { "transactionRef": "100012345", "payoutId": "...", "status": "INREVIEW" } }`,
+            },
+            {
+                event: "payout_completed",
+                description: "MTO: payout reached successful terminal status (e.g. COMPSUCCESS).",
+                usedIn: [{ label: "MTO", href: "/developers/guides/mto" }],
+                payload: `{ "eventType": "payout_completed", "data": { "transactionRef": "100012345", "status": "COMPSUCCESS" } }`,
+            },
+            {
+                event: "payout_failed",
+                description: "MTO: payout failed (e.g. COMPFAILED, UNRESOLVED).",
+                usedIn: [{ label: "MTO", href: "/developers/guides/mto" }],
+                payload: `{ "eventType": "payout_failed", "data": { "transactionRef": "100012345", "status": "COMPFAILED" } }`,
+            },
+            {
+                event: "transfer.completed",
+                description: "Funds reached the beneficiary bank account or mobile wallet.",
+                usedIn: [{ label: "MTO", href: "/developers/guides/mto" }, { label: "Retail", href: "/developers/guides/retail" }],
+                payload: `{ "type": "transfer.completed", "data": { "transfer_id": "trf_123", "status": "completed" } }`,
+            },
+            {
+                event: "transfer.failed",
+                description: "Transfer permanently rejected by the payout network.",
+                usedIn: [{ label: "MTO", href: "/developers/guides/mto" }, { label: "Retail", href: "/developers/guides/retail" }],
+                payload: `{ "type": "transfer.failed", "data": { "transfer_id": "trf_456", "failure_reason": "account_closed" } }`,
+            },
+        ],
+    },
+];
 
 export default function WebhooksPage() {
-    const signatureCheckCode = `const crypto = require('crypto');
-
-// The raw request body as a string
-const payload = req.rawBody; 
-const signatureHeader = req.headers['x-mito-signature'];
-const webhookSecret = process.env.MITO_WEBHOOK_SECRET;
-
-const expectedSignature = crypto
-  .createHmac('sha256', webhookSecret)
-  .update(payload)
-  .digest('hex');
-
-if (signatureHeader === expectedSignature) {
-  // Signature is valid, process event
-  res.status(200).send('OK');
-} else {
-  // Invalid signature!
-  res.status(401).send('Invalid signature');
-}`;
-
     return (
         <DocsLayout>
             <div className="max-w-4xl">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Webhooks & Callbacks</h1>
-                <p className="text-xl text-muted-foreground mb-12">
-                    Listen for asynchronous events from MITO. Webhooks are the primary way to receive real-time updates on transfers, collections, and compliance cases.
+                <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">Platform</p>
+                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Webhooks</h1>
+                <p className="text-xl text-muted-foreground mb-8">
+                    Receive async notifications when transaction status changes. Always confirm server-side before giving value.
                 </p>
 
-                <section className="mb-16">
-                    <h2 className="text-2xl font-bold mb-4">Core Concepts</h2>
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className="bg-card border rounded-lg p-6">
-                            <h3 className="font-semibold text-lg mb-2">Delivery & Retries</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                                MITO expects your webhook endpoint to return a <code className="bg-muted px-1.5 py-0.5 rounded text-foreground">2xx</code> HTTP status code within 5 seconds. If we receive a timeout or a <code className="bg-muted px-1.5 py-0.5 rounded text-foreground">5xx</code> error, we will retry delivery 5 times with exponential backoff over 24 hours.
+                <section className="mb-12">
+                    <h2 className="text-2xl font-bold mb-4">Core behaviour</h2>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div className="border rounded-xl p-5">
+                            <h3 className="font-semibold mb-2">Delivery & retries</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Return <code className="bg-muted px-1 rounded">2xx</code> within 5 seconds. MITO retries up to 5 times with exponential backoff over 24 hours on timeout or <code className="bg-muted px-1 rounded">5xx</code>.
                             </p>
                         </div>
-                        <div className="bg-card border rounded-lg p-6">
-                            <h3 className="font-semibold text-lg mb-2">Idempotency</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                                Network errors can cause duplicate webhook deliveries. You should always use the <code className="bg-muted px-1.5 py-0.5 rounded text-foreground">event_id</code> included in the payload to ensure you only process an event once.
+                        <div className="border rounded-xl p-5">
+                            <h3 className="font-semibold mb-2">Idempotency</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Use <code className="bg-muted px-1 rounded">event_id</code> to deduplicate. Network issues can cause duplicate deliveries.
                             </p>
                         </div>
                     </div>
                 </section>
 
-                <section className="mb-16 scroll-mt-24" id="security">
-                    <h2 className="text-2xl font-bold mb-4">Signature Verification</h2>
-                    <p className="text-muted-foreground mb-6">
-                        To ensure the webhook was actually sent by MITO, verify the HMAC signature included in the <code className="bg-muted px-1.5 py-0.5 rounded text-foreground font-mono">X-Mito-Signature</code> header using your Endpoint Secret.
+                <section className="mb-12 scroll-mt-24" id="security">
+                    <h2 className="text-2xl font-bold mb-4">Signature verification</h2>
+                    <p className="text-muted-foreground mb-4">
+                        Verify the HMAC in the <code className="bg-muted px-1 rounded font-mono">X-Mito-Signature</code> header using your webhook secret.
                     </p>
-                    <CodeBlock code={signatureCheckCode} language="javascript" />
+                    <Link
+                        href="/developers/api-reference/manage#webhook-verification"
+                        className="inline-flex items-center gap-1 text-primary font-semibold hover:underline"
+                    >
+                        Verification code samples in API Reference <ArrowRight className="w-4 h-4" />
+                    </Link>
                 </section>
 
-                <section className="mb-16 scroll-mt-24" id="events">
-                    <h2 className="text-2xl font-bold mb-6">Event Catalog</h2>
-
-                    <h3 className="text-xl font-semibold mb-4 text-foreground/80 border-b pb-2">Transfers</h3>
-                    <WebhookEventCard
-                        event="transfer.completed"
-                        description="Sent when an outwards transfer has successfully reached the recipient's bank account or mobile wallet."
-                        payload={`{
-  "event_id": "evt_abc123def456",
-  "type": "transfer.completed",
-  "created_at": "2024-05-15T14:26:05Z",
-  "data": {
-    "transfer_id": "trf_123456789",
-    "reference": "TXN-001",
-    "status": "completed",
-    "completed_at": "2024-05-15T14:26:00Z"
-  }
-}`}
-                    />
-                    <WebhookEventCard
-                        event="transfer.failed"
-                        description="Sent when a transfer is permanently rejected by the receiving network."
-                        payload={`{
-  "event_id": "evt_def456ghi789",
-  "type": "transfer.failed",
-  "created_at": "2024-05-15T14:30:10Z",
-  "data": {
-    "transfer_id": "trf_987654321",
-    "reference": "TXN-002",
-    "status": "failed",
-    "failure_reason": "account_closed"
-  }
-}`}
-                    />
-
-                    <h3 className="text-xl font-semibold mb-4 mt-12 text-foreground/80 border-b pb-2">Collections</h3>
-                    <WebhookEventCard
-                        event="collection.completed"
-                        description="Sent when a customer has successfully paid a collection request."
-                        payload={`{
-  "event_id": "evt_jkl012mno345",
-  "type": "collection.completed",
-  "created_at": "2024-05-15T15:05:22Z",
-  "data": {
-    "collection_id": "col_987654321",
-    "reference": "INV-2024-001",
-    "amount": 50000,
-    "currency": "KES"
-  }
-}`}
-                    />
-
-                    <h3 className="text-xl font-semibold mb-4 mt-12 text-foreground/80 border-b pb-2">Compliance</h3>
-                    <WebhookEventCard
-                        event="compliance.case.approved"
-                        description="Sent when a user's KYC submission has been approved manually or by AI."
-                        payload={`{
-  "event_id": "evt_pqr678stu901",
-  "type": "compliance.case.approved",
-  "created_at": "2024-05-15T10:15:00Z",
-  "data": {
-    "individual_id": "ind_555666777",
-    "status": "approved"
-  }
-}`}
-                    />
+                <section className="mb-12 scroll-mt-24" id="events">
+                    <h2 className="text-2xl font-bold mb-6">Events by phase</h2>
+                    {eventGroups.map((group) => (
+                        <div key={group.phase} className="mb-10">
+                            <h3 className="text-lg font-bold mb-4 text-foreground/90 border-b pb-2">{group.phase}</h3>
+                            {group.events.map((ev) => (
+                                <div key={ev.event} className="mb-6">
+                                    <WebhookEventCard event={ev.event} description={ev.description} payload={ev.payload} />
+                                    <div className="flex flex-wrap gap-2 mt-2 ml-1">
+                                        <span className="text-xs text-muted-foreground">Used in:</span>
+                                        {ev.usedIn.map((flow) => (
+                                            <Link
+                                                key={flow.href}
+                                                href={flow.href}
+                                                className="text-xs font-medium px-2 py-0.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary"
+                                            >
+                                                {flow.label}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ))}
                 </section>
-
             </div>
         </DocsLayout>
     );

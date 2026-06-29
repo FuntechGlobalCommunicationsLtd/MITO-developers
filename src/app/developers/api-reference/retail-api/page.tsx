@@ -16,8 +16,11 @@ export default function RetailApiReference() {
                 {/* Page Title */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">Retail Submission API</h1>
-                    <p className="text-xl text-muted-foreground mb-6">
-                        Integrate MITO&apos;s White-labelled payment and money transfer engine. This API powers customer onboarding, FX validations, and checkout session management.
+                    <p className="text-xl text-muted-foreground mb-4">
+                        Furp retail API — users, corridors, rates, beneficiaries, transactions. Spec:{" "}
+                        <a href="https://furp02-staging.funtechcom.com/mito.html" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">mito.html</a>
+                        {" · "}SDK:{" "}
+                        <a href="https://furp02-staging.funtechcom.com/mito/mito.html#tag/SDK-Integration" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">SDK Integration</a>
                     </p>
                     <Button asChild className="gap-2 bg-primary hover:bg-primary/90 text-white rounded-full px-6">
                         <a href="/retail-api.postman_collection.json" download="retail-api.postman_collection.json">

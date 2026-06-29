@@ -1,119 +1,105 @@
 "use client";
 
 import { DocsLayout } from "@/components/layout/DocsLayout";
-import { FlowDiagram, FlowNode, FlowArrow, StepFlow } from "@/components/developers/Flows";
-import { CodeBlock } from "@/components/developers/CodeBlocks";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { IntegrationGuide } from "@/components/developers/IntegrationGuide";
+import { FlowNode, FlowArrow } from "@/components/developers/Flows";
 
 export default function RetailAffiliateGuidePage() {
     return (
         <DocsLayout>
-            <div className="max-w-4xl">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Retail Submission Guide</h1>
-                <p className="text-xl text-muted-foreground mb-4">
-                    As a Retail Submission, you resell MITO&apos;s money transfer services directly to your own customers, earning commission. You can choose to build your own UI or use our Hosted Payment Pages.
-                </p>
-                <p className="text-base text-muted-foreground mb-12">
-                    For detailed endpoint specifications and schemas, please refer to the <Link href="/developers/api-reference/retail-api" className="text-primary hover:underline font-semibold inline-flex items-center gap-1">Retail API Reference <ArrowRight className="w-3.5 h-3.5" /></Link>.
-                </p>
-
-                <section className="mb-16">
-                    <h2 className="text-2xl font-bold mb-6">Integration Architecture</h2>
-                    <FlowDiagram title="Retail Submission Flow (Hosted UI)">
+            <IntegrationGuide
+                content={{
+                    title: "Retail affiliate integration",
+                    partnerLabel: "Integration model · Retail",
+                    description:
+                        "Resell MITO remittance services to end customers and earn commission. Build your own UI or use hosted pages, SDK, or widget.",
+                    prerequisites: [
+                        "Retail affiliate contract and API credentials.",
+                        "Enabled corridors for your target countries.",
+                        "KYC/compliance flow for senders (regulatory requirements per corridor).",
+                        "Webhook endpoint for async transaction updates.",
+                    ],
+                    integrationMethods: [
+                        { label: "REST API", href: "/developers/guides/retail", description: "Full custom UI with MITO backend rails." },
+                        { label: "Hosted checkout", href: "/developers/hosted-flows", description: "Redirect to MITO payment and KYC pages." },
+                        { label: "SDK & widget", href: "/developers/guides/sdk", description: "Embedded checkout without full redirect." },
+                    ],
+                    diagramTitle: "Retail remittance flow",
+                    diagram: (
                         <div className="flex flex-col md:flex-row items-center justify-center">
-                            <FlowNode label="Your Website" sublabel="Generate Session" type="user" />
-                            <FlowArrow direction="right" label="Redirect" />
-                            <FlowNode label="MITO Pay Page" sublabel="KYC & Card Capture" type="MITO" />
-                            <FlowArrow direction="right" label="Return" />
-                            <FlowNode label="Your Success Page" sublabel="Commission Earned" type="secondary" />
+                            <FlowNode label="Your website" sublabel="Session / API" type="user" />
+                            <FlowArrow direction="right" label="Transfer" />
+                            <FlowNode label="MITO" sublabel="FX & routing" type="MITO" />
+                            <FlowArrow direction="right" label="Payout" />
+                            <FlowNode label="Beneficiary" sublabel="Bank or wallet" type="secondary" />
                         </div>
-                    </FlowDiagram>
-                </section>
-
-                <section className="mb-16">
-                    <h2 className="text-2xl font-bold mb-6">Step-by-Step Implementation</h2>
-                    <StepFlow
-                        steps={[
+                    ),
+                    phases: {
+                        collect: [
                             {
-                                title: "1. Onboard user/Sender",
-                                description: "Register the remitting customer (Sender) within your application and collect their baseline details."
+                                title: "Register sender",
+                                description: "Onboard the remitting customer and collect baseline identity details.",
+                                apiLinks: [{ label: "Create user", href: "/developers/api-reference/retail-api#users" }],
                             },
                             {
-                                title: "2. Get Active Corridors and Rates from Mito",
-                                description: "Query the rates API to retrieve active currency corridors and fetch live FX exchange rates."
+                                title: "Verify sender (KYC)",
+                                description: "Complete identity verification in compliance with corridor regulations.",
+                            },
+                        ],
+                        processForex: [
+                            {
+                                title: "Get corridors and rates",
+                                description: "Query active corridors and live FX exchange rates before quoting the customer.",
+                                apiLinks: [
+                                    { label: "Corridors", href: "/developers/api-reference/retail-api#exchange-Corridors" },
+                                    { label: "Rates", href: "/developers/api-reference/retail-api#exchange-rates" },
+                                ],
                             },
                             {
-                                title: "3. Do KYC of Sender",
-                                description: "Perform Identity Verification (KYC) on the sender in compliance with regulatory rules."
+                                title: "Prepare transaction metadata",
+                                description: "Fetch purpose codes and payout service providers for the destination corridor.",
+                                apiLinks: [
+                                    { label: "Providers", href: "/developers/api-reference/retail-api#lookups-provider" },
+                                ],
                             },
                             {
-                                title: "4. Create and Submit beneficiary if it is a new beneficiary",
-                                description: "Create a recipient (Beneficiary) profile on the network containing payout account or mobile wallet details."
+                                title: "Submit transaction",
+                                description: "Initiate the money transfer for processing by the MITO engine.",
+                                apiLinks: [{ label: "Create transaction", href: "/developers/api-reference/retail-api#transactions" }],
+                            },
+                        ],
+                        disburse: [
+                            {
+                                title: "Create beneficiary",
+                                description: "Register payout destination (bank account or mobile wallet) if not already saved.",
+                                apiLinks: [{ label: "Beneficiaries", href: "/developers/api-reference/retail-api#beneficiaries" }],
                             },
                             {
-                                title: "5. Get Purpose Codes",
-                                description: "Fetch the legal remittance purpose codes required for the specific country corridor."
+                                title: "Confirm via webhook",
+                                description: "Listen for async status updates before showing final confirmation to the customer.",
+                                webhookLinks: [{ label: "Webhook events", href: "/developers/webhooks" }],
                             },
                             {
-                                title: "6. Get Service Providers",
-                                description: "Query supported payout service providers (banks, cash networks, or mobile operators) for the corridor."
+                                title: "Retrieve transaction details",
+                                description: "Query final status, fees, and payout receipt using the transaction reference.",
+                                apiLinks: [{ label: "Get transaction", href: "/developers/api-reference/retail-api#transactions-{transactionId}" }],
                             },
-                            {
-                                title: "7. Submit Transaction",
-                                description: "Initiate and submit the money transfer payload for processing by the MITO engine."
-                            },
-                            {
-                                title: "8. Receive Response through Webhook",
-                                description: "Listen to transaction webhooks to receive real-time, asynchronous transaction updates."
-                            },
-                            {
-                                title: "9. Get Transaction details",
-                                description: "Query transaction details using reference IDs to verify final status, fees, and payout receipts."
-                            }
-                        ]}
-                    />
-                </section>
-
-                <section className="mb-16">
-                    <div className="bg-primary/5 border border-primary/20 rounded-xl p-8">
-                        <h2 className="text-2xl font-bold mb-4">Native Experience: MITO SDK</h2>
-                        <p className="text-muted-foreground mb-6">
-                            Instead of a full-page redirect, use the MITO Link SDK to provide a seamless, modal-based checkout experience that keeps users on your site.
-                        </p>
-                        
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-semibold">1. Integration</h3>
-                                <CodeBlock 
-                                    code={`import { useMitoLink } from '@mito-money/mito-link';
-
-const { open } = useMitoLink({
-  linkToken: 'token_from_your_backend',
-  publishableKey: 'pk_live_...',
-  environment: 'production',
-  linkType: 'retail-payment'
-});`} 
-                                    language="javascript" 
-                                />
-                            </div>
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-semibold">2. Server-Side Initiation</h3>
-                                <CodeBlock 
-                                    code={`POST /api/v1/transactions
-{
-  "sendAmount": 50,
-  "sendCurrency": "GBP",
-  "serviceCode": "retail-payment",
-  "receiveCountryIso3": "NGA"
-}`} 
-                                    language="json" 
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+                        ],
+                    },
+                    webhookEvents: [
+                        { name: "transfer.completed", href: "/developers/webhooks", when: "Transfer successfully disbursed." },
+                        { name: "transfer.failed", href: "/developers/webhooks", when: "Transfer failed or was reversed." },
+                    ],
+                    statusFlow: ["pending", "processing", "completed", "failed"],
+                    credentialsService: "retail",
+                    apisInvolved: [
+                        { method: "POST", path: "/auth/login", title: "Authenticate", href: "/developers/api-reference/manage#auth-login" },
+                        { method: "GET", path: "/exchange/rates", title: "FX rates", href: "/developers/api-reference/process-forex#exchange-rates" },
+                        { method: "POST", path: "/beneficiaries", title: "Create beneficiary", href: "/developers/api-reference/disburse#beneficiaries" },
+                        { method: "POST", path: "/transactions", title: "Create transaction", href: "/developers/api-reference/collect#transactions" },
+                    ],
+                }}
+            />
         </DocsLayout>
     );
 }

@@ -8,7 +8,7 @@ import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, FileText, FolderSync, Info, ShieldCheck, Landmark, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { MtoForexApiSections } from "@/components/developers/MtoForexApiSections";
 
 export default function MtoApiReference() {
     const [activeSchema, setActiveSchema] = useState<"corridor" | "global">("corridor");
@@ -18,9 +18,12 @@ export default function MtoApiReference() {
             <div className="flex flex-col w-full">
                 {/* Header */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">MTO Submission API & FTP Reference</h1>
-                    <p className="text-xl text-muted-foreground mb-6">
-                        Secure, production-ready REST endpoints and FTP Gateway interfaces for Money Transfer Operators integrating with the MITO Unified Remittance Network.
+                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">MTO API Reference</h1>
+                    <p className="text-xl text-muted-foreground mb-4">
+                        Forex, collections, and payouts for MTO partners. Primary spec:{" "}
+                        <a href="https://furp02-staging.funtechcom.com/mtoforex.html" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">
+                            mtoforex.html
+                        </a>
                     </p>
                     <Button asChild className="gap-2 bg-primary hover:bg-primary/90 text-white rounded-full px-6">
                         <a href="/mto-api.postman_collection.json" download="mto-api.postman_collection.json">
@@ -143,7 +146,8 @@ export default function MtoApiReference() {
 
                     {/* REST API Endpoints Section */}
                     <TabsContent value="rest" className="mt-0 space-y-0">
-                        {/* Get Live FX Rate */}
+                        <MtoForexApiSections />
+                        {/* Get Live FX Rate — legacy */}
                         <section id="get-rate">
                             <EndpointBlock
                                 method="GET"

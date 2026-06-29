@@ -66,7 +66,7 @@ export default function GetStartedPage() {
                             </Link>
                             <Link href="/developers/guides" className="flex items-center gap-2 p-3 rounded-lg border bg-muted/30 hover:bg-muted transition-colors group">
                                 <div className="p-2 bg-green-500/10 rounded-md text-green-500 opacity-80 group-hover:opacity-100 transition-opacity"><BookOpen className="w-4 h-4" /></div>
-                                <span className="text-sm font-medium">View Guides</span>
+                                <span className="text-sm font-medium">Pick integration model</span>
                             </Link>
                         </div>
                     </div>
@@ -210,7 +210,10 @@ export default function GetStartedPage() {
                     </h2>
                     <div className="pl-0 md:pl-11">
                         <p className="text-muted-foreground mb-6">
-                            Let&apos;s fetch the current FX rates to verify your credentials are working. You can simulate the request directly from your browser.
+                            Verify your credentials with a rate lookup. Full request/response specs:{" "}
+                            <Link href="/developers/api-reference/process-forex#exchange-rates" className="text-primary font-semibold hover:underline">
+                                GET /exchange/rates
+                            </Link>
                         </p>
 
                         <div className="flex flex-col lg:flex-row bg-card border shadow-sm rounded-xl overflow-hidden mb-8">

@@ -1,31 +1,67 @@
 "use client";
 
 import { DocsLayout } from "@/components/layout/DocsLayout";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { FlowNode, FlowArrow, FlowDiagram } from "@/components/developers/Flows";
 
 export default function FileIntegrationPage() {
     return (
         <DocsLayout>
             <div className="max-w-4xl">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">File / FTP Integration</h1>
-                <p className="text-xl text-muted-foreground mb-12">
-                    For legacy systems or high-volume batch processing, MITO supports secure SFTP file exchanges.
+                <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">Integration method · File / SFTP</p>
+                <h1 className="text-4xl font-extrabold tracking-tight mb-4">File integration overview</h1>
+                <p className="text-xl text-muted-foreground mb-8">
+                    For high-volume or legacy systems, MITO supports secure SFTP file exchange instead of real-time REST APIs.
                 </p>
 
-                <section className="mb-16">
-                    <h2 className="text-2xl font-bold mb-6">Overview</h2>
-                    <p className="text-muted-foreground leading-relaxed mb-6">
-                        If your systems cannot support real-time REST APIs, you can drop CSV or XML files into a securely provisioned MITO SFTP folder. Our engine polls this folder every 15 minutes, processes the batch, and drops a reconciliation result file back into your Outbox.
-                    </p>
+                <section className="mb-12">
+                    <h2 className="text-2xl font-bold mb-4">When to use file integration</h2>
+                    <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
+                        <li>MTO partners submitting bulk transactions (hundreds per batch)</li>
+                        <li>Backend systems that cannot maintain persistent API connections</li>
+                        <li>Scheduled reconciliation and status polling via outbound files</li>
+                    </ul>
+                </section>
 
-                    <div className="bg-[#0d1117] text-[#c9d1d9] p-6 rounded-lg font-mono text-sm">
-                        <div className="font-bold text-white mb-2">Folder Structure:</div>
-                        <div className="pl-4 text-green-400">/inbox</div>
-                        <div className="pl-8 text-muted-foreground">Drop your transfer request files here.</div>
-                        <div className="pl-4 text-blue-400 mt-2">/outbox</div>
-                        <div className="pl-8 text-muted-foreground">Retrieve status reports and settlement files here.</div>
-                        <div className="pl-4 text-red-400 mt-2">/error</div>
-                        <div className="pl-8 text-muted-foreground">Files with structural validation errors are moved here.</div>
+                <section className="mb-12">
+                    <h2 className="text-2xl font-bold mb-6">Folder structure</h2>
+                    <FlowDiagram title="SFTP directories">
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+                            <FlowNode label="/inbox or /Inbound" sublabel="You → MITO" type="user" />
+                            <FlowArrow direction="right" label="Process" />
+                            <FlowNode label="MITO engine" type="MITO" />
+                            <FlowArrow direction="right" label="Results" />
+                            <FlowNode label="/outbox or /Outbound" sublabel="MITO → You" type="secondary" />
+                        </div>
+                    </FlowDiagram>
+                    <div className="mt-6 bg-muted/40 border rounded-xl p-6 font-mono text-sm space-y-2">
+                        <div><span className="text-green-600 font-semibold">/inbound</span> — drop transfer request files</div>
+                        <div><span className="text-blue-600 font-semibold">/upload</span> — compliance documents + manifest</div>
+                        <div><span className="text-primary font-semibold">/outbound</span> — status, rates, static data</div>
+                        <div><span className="text-red-600 font-semibold">/error</span> — structurally invalid files</div>
                     </div>
+                </section>
+
+                <section className="mb-12">
+                    <h2 className="text-2xl font-bold mb-4">Documentation</h2>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                        <Link href="/developers/file-integration/mto-ftp" className="p-5 rounded-xl border hover:border-primary/40 hover:bg-primary/5 transition-colors group">
+                            <p className="font-semibold group-hover:text-primary">MTO FTP batch flow</p>
+                            <p className="text-sm text-muted-foreground mt-1">Collect → Process / Forex → Disburse via SFTP</p>
+                        </Link>
+                        <Link href="/developers/api-reference/ftp" className="p-5 rounded-xl border hover:border-primary/40 hover:bg-primary/5 transition-colors group">
+                            <p className="font-semibold group-hover:text-primary">FTP file specifications</p>
+                            <p className="text-sm text-muted-foreground mt-1">Inbound, upload, and outbound formats</p>
+                        </Link>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 className="text-2xl font-bold mb-4">Related</h2>
+                    <Link href="/developers/guides/mto" className="text-primary font-semibold hover:underline inline-flex items-center gap-1">
+                        MTO partner integration (REST) <ArrowRight className="w-4 h-4" />
+                    </Link>
                 </section>
             </div>
         </DocsLayout>

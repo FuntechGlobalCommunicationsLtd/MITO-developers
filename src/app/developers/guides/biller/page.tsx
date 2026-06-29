@@ -1,107 +1,105 @@
 "use client";
 
 import { DocsLayout } from "@/components/layout/DocsLayout";
-import { FlowDiagram, FlowNode, FlowArrow, StepFlow } from "@/components/developers/Flows";
-import { CodeBlock } from "@/components/developers/CodeBlocks";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { IntegrationGuide } from "@/components/developers/IntegrationGuide";
+import { FlowNode, FlowArrow } from "@/components/developers/Flows";
 
 export default function BillerAffiliateGuidePage() {
     return (
         <DocsLayout>
-            <div className="max-w-4xl">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Biller Submission Guide</h1>
-                <p className="text-xl text-muted-foreground mb-4">
-                    As a Biller Submission, you sell goods or services and use MITO to collect funds and settle them to your local bank account.
-                </p>
-                <p className="text-base text-muted-foreground mb-12">
-                    For detailed endpoint specifications and schemas, please refer to the <Link href="/developers/api-reference/biller-api" className="text-primary hover:underline font-semibold inline-flex items-center gap-1">Biller API Reference <ArrowRight className="w-3.5 h-3.5" /></Link>.
-                </p>
-
-                <section className="mb-16">
-                    <h2 className="text-2xl font-bold mb-6">Integration Architecture</h2>
-                    <FlowDiagram title="Biller Collection & Settlement">
+            <IntegrationGuide
+                content={{
+                    title: "Biller integration",
+                    partnerLabel: "Integration model · Biller",
+                    description:
+                        "Collect payments on your website for goods or services. MITO handles payment capture; you settle to your corporate bank account. Every transaction must include your registered Biller ID.",
+                    prerequisites: [
+                        "Signed biller contract and sandbox credentials.",
+                        "Registered Biller ID — your unique merchant reference on MITO (required on every transaction).",
+                        "Approved payout bank account for settlements.",
+                        "Webhook endpoint configured to receive payment confirmations.",
+                    ],
+                    integrationMethods: [
+                        { label: "REST API", href: "/developers/guides/biller", description: "Server-side collection initiation." },
+                        { label: "Hosted checkout", href: "/developers/hosted-flows", description: "Redirect customers to MITO payment pages." },
+                        { label: "SDK", href: "/developers/guides/sdk", description: "Embedded modal checkout on your site." },
+                    ],
+                    diagramTitle: "Biller collection & settlement",
+                    diagram: (
                         <div className="flex flex-col md:flex-row items-center justify-center">
-                            <FlowNode label="Customer Checkout" sublabel="Card or Pay by Bank" type="user" />
+                            <FlowNode label="Customer checkout" sublabel="Card or pay by bank" type="user" />
                             <FlowArrow direction="right" label="Pay" />
-                            <FlowNode label="MITO Engine" sublabel="Biller Collection API" type="MITO" />
-                            <FlowArrow direction="right" label="Settlement" />
-                            <FlowNode label="Your Corporate Bank" sublabel="Daily Payout" type="secondary" />
+                            <FlowNode label="MITO" sublabel="Collection API" type="MITO" />
+                            <FlowArrow direction="right" label="Settle" />
+                            <FlowNode label="Your bank" sublabel="Corporate payout" type="secondary" />
                         </div>
-                    </FlowDiagram>
-                </section>
- 
-                <section className="mb-16">
-                    <h2 className="text-2xl font-bold mb-6">Step-by-Step Implementation</h2>
-                    <StepFlow
-                        steps={[
+                    ),
+                    phases: {
+                        collect: [
                             {
-                                title: "1. Trigger Collection",
-                                description: "When a customer checks out, call POST /api/v2/Business/InitiateTransactions with the paymentMode set to Card (CARDCHECKOUT) or Pay by Bank (BANKPAYMENT or PLAID) to generate a payment session."
+                                title: "Initiate collection",
+                                description:
+                                    "When a customer checks out, initiate a payment session with your Biller ID, amount, and payment mode (card or bank pay).",
+                                apiLinks: [
+                                    { label: "InitiateTransactions", href: "/developers/api-reference/biller-api#api-v2-Business-InitiateTransactions" },
+                                ],
                             },
                             {
-                                title: "2. Listen for Confirmation",
-                                description: "Wait for the transaction webhook callback (PAYMENT_CAPTURED or TRANSACTION_COMPLETED) or query status using GET /api/v2/Business/GetTransactionStatus before releasing goods or services."
+                                title: "Customer completes payment",
+                                description:
+                                    "Customer pays via hosted page, SDK modal, or inline flow depending on your integration method.",
+                                apiLinks: [
+                                    { label: "Hosted checkout guide", href: "/developers/hosted-flows" },
+                                    { label: "SDK guide", href: "/developers/guides/sdk" },
+                                ],
+                            },
+                        ],
+                        processForex: [
+                            {
+                                title: "Confirm payment captured",
+                                description:
+                                    "Wait for webhook confirmation or poll transaction status before releasing goods or services. Always verify server-side.",
+                                apiLinks: [
+                                    { label: "GetTransactionStatus", href: "/developers/api-reference/biller-api#api-v2-Business-GetTransactionStatus" },
+                                ],
+                                webhookLinks: [
+                                    { label: "PAYMENT_CAPTURED", href: "/developers/webhooks" },
+                                    { label: "TRANSACTION_COMPLETED", href: "/developers/webhooks" },
+                                ],
                             },
                             {
-                                title: "3. Reconcile Balance",
-                                description: "The collected funds (minus MITO fees) will instantly reflect in your Biller wallet balance."
+                                title: "Reconcile wallet balance",
+                                description: "Collected funds (minus MITO fees) reflect in your biller wallet balance.",
+                                apiLinks: [
+                                    { label: "Balances", href: "/developers/api-reference/biller-api#api-v2-Business-balances" },
+                                ],
                             },
+                        ],
+                        disburse: [
                             {
-                                title: "4. Settle / Payout",
-                                description: "Use the POST /api/v2/payout/CreatePayout endpoint to withdraw your aggregated wallet balance to your approved corporate bank account."
-                            }
-                        ]}
-                    />
-                </section>
-
-                <section className="mb-16">
-                    <div className="bg-primary/5 border border-primary/20 rounded-xl p-8">
-                        <h2 className="text-2xl font-bold mb-4">New: MITO SDK Integration</h2>
-                        <p className="text-muted-foreground mb-6">
-                            Streamline your checkout with the MITO Link SDK. Perfect for embedding a native-feel checkout experience directly into your web application.
-                        </p>
-                        
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-semibold">1. Install Package</h3>
-                                <CodeBlock code="npm install @mito-money/mito-link" language="bash" />
-                                
-                                <h3 className="text-lg font-semibold mt-6">2. Initialize on Frontend</h3>
-                                <CodeBlock 
-                                    code={`import { useMitoLink } from '@mito-money/mito-link';
-
-const { open } = useMitoLink({
-  linkToken: 'token_from_your_backend',
-  publishableKey: 'pk_test_...',
-  environment: 'sandbox',
-  linkType: 'bill-payment'
-});`} 
-                                    language="javascript" 
-                                />
-                            </div>
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-semibold">Backend Initiation</h3>
-                                <p className="text-sm text-muted-foreground">First, call our API from your server to initiate a collection transaction and obtain a redirect/payment URL:</p>
-                                <CodeBlock 
-                                    code={`POST /api/v2/Business/InitiateTransactions
-{
-  "billerId": "bill_778899",
-  "partnerReferenceNumber": "INV-2026-001",
-  "sendAmount": 100,
-  "senderFirstName": "John",
-  "senderLastName": "Doe",
-  "senderMobileNumber": "+447700900088",
-  "paymentMode": "CARDCHECKOUT",
-  "callbackurl": "https://yourwebsite.com/api/webhooks/mito"
-}`} 
-                                    language="json" 
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+                                title: "Payout to bank",
+                                description: "Withdraw aggregated wallet balance to your approved corporate bank account.",
+                                apiLinks: [
+                                    { label: "CreatePayout", href: "/developers/api-reference/biller-api#api-v2-payout-CreatePayout" },
+                                    { label: "AddPayoutAccount", href: "/developers/api-reference/biller-api#api-v2-Payout-AddPayoutAccount" },
+                                ],
+                            },
+                        ],
+                    },
+                    webhookEvents: [
+                        { name: "PAYMENT_CAPTURED", href: "/developers/webhooks", when: "Payment successfully captured." },
+                        { name: "TRANSACTION_COMPLETED", href: "/developers/webhooks", when: "Transaction fully completed." },
+                    ],
+                    statusFlow: ["pending", "processing", "completed", "failed"],
+                    credentialsService: "biller",
+                    apisInvolved: [
+                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Initiate collection", href: "/developers/api-reference/collect#api-v2-Business-InitiateTransactions" },
+                        { method: "GET", path: "/api/v2/Business/GetTransactionStatus", title: "Transaction status", href: "/developers/api-reference/manage#api-v2-Business-GetTransactionStatus" },
+                        { method: "GET", path: "/api/v2/Business/balances", title: "Wallet balances", href: "/developers/api-reference/manage#api-v2-Business-balances" },
+                        { method: "POST", path: "/api/v2/payout/CreatePayout", title: "Create payout", href: "/developers/api-reference/disburse#api-v2-payout-CreatePayout" },
+                    ],
+                }}
+            />
         </DocsLayout>
     );
 }

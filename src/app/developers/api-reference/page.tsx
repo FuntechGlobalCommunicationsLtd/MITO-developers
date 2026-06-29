@@ -2,48 +2,57 @@
 
 import { DocsLayout } from "@/components/layout/DocsLayout";
 import { IntegrationTypeCard } from "@/components/developers/HeroCards";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { PARTNER_API_PAGES } from "@/lib/api-endpoints";
 
 export default function ApiReferenceLandingPage() {
     return (
         <DocsLayout>
             <div className="max-w-4xl">
                 <h1 className="text-4xl font-extrabold tracking-tight mb-4">API Reference</h1>
-                <p className="text-xl text-muted-foreground mb-12">
-                    Explore MITO&apos;s RESTful API endpoints. Our APIs are organized around REST, have predictable resource-oriented URLs, accept JSON-encoded request bodies, and return JSON-encoded responses.
+                <p className="text-xl text-muted-foreground mb-4">
+                    Endpoints grouped by capability (Collect → Process / Forex → Disburse → Manage). Full specs per partner below.
+                </p>
+                <p className="text-muted-foreground mb-12">
+                    Integration flows:{" "}
+                    <Link href="/developers/guides" className="text-primary font-semibold hover:underline inline-flex items-center gap-1">
+                        Documentation <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
                 </p>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                    <IntegrationTypeCard
-                        title="Transfers API"
-                        description="Fetch FX quotes and initiate cross-border money transfers to bank accounts or mobile wallets."
-                        href="/developers/api-reference/transfers"
-                    />
-                    <IntegrationTypeCard
-                        title="Collections API"
-                        description="Request payments from customers via Mobile Money STK push or bank transfer."
-                        href="/developers/api-reference/collections"
-                    />
-                    <IntegrationTypeCard
-                        title="FX API"
-                        description="Perform instant currency conversions between your MITO wallet balances."
-                        href="/developers/api-reference/fx"
-                    />
-                    <IntegrationTypeCard
-                        title="Payouts API"
-                        description="Withdraw settled funds from your MITO wallets to your external bank accounts."
-                        href="/developers/api-reference/payouts"
-                    />
-                    <IntegrationTypeCard
-                        title="Compliance API"
-                        description="Submit user details and documents to satisfy AML, KYC, and sanctions screening requirements."
-                        href="/developers/api-reference/compliance"
-                    />
-                    <IntegrationTypeCard
-                        title="Webhooks"
-                        description="Listen for asynchronous events like transfer completions or compliance approvals."
-                        href="/developers/webhooks"
-                    />
-                </div>
+                <section className="mb-12">
+                    <h2 className="text-2xl font-bold mb-6">By capability</h2>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <IntegrationTypeCard title="Collect" description="Initiate payments and transactions." href="/developers/api-reference/collect" />
+                        <IntegrationTypeCard title="Process / Forex" description="Corridors, rates, providers." href="/developers/api-reference/process-forex" />
+                        <IntegrationTypeCard title="Disburse" description="Payouts, beneficiaries, settlement." href="/developers/api-reference/disburse" />
+                        <IntegrationTypeCard title="Manage" description="Auth, balances, status, webhooks." href="/developers/api-reference/manage" />
+                        <IntegrationTypeCard title="SDK" description="MITO Link install and config." href="/developers/api-reference/sdk" />
+                        <IntegrationTypeCard title="Hosted checkout" description="POST /transactions (HOSTEDPAGE)." href="/developers/api-reference/hosted" />
+                        <IntegrationTypeCard title="FTP file formats" description="MTO batch CSV specs." href="/developers/api-reference/ftp" />
+                    </div>
+                </section>
+
+                <section>
+                    <h2 className="text-2xl font-bold mb-6">Full partner references</h2>
+                    <div className="space-y-4">
+                        {Object.entries(PARTNER_API_PAGES).map(([key, p]) => (
+                            <div key={key} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 border rounded-xl">
+                                <div>
+                                    <Link href={p.href} className="font-semibold hover:text-primary">{p.title}</Link>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        Redoc:{" "}
+                                        <a href={p.external} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">{p.external.replace("https://", "")}</a>
+                                    </p>
+                                </div>
+                                <Link href={p.href} className="text-sm text-primary font-medium hover:underline shrink-0">
+                                    Open →
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
+                </section>
             </div>
         </DocsLayout>
     );
