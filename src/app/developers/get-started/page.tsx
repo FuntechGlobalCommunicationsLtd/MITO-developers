@@ -203,6 +203,52 @@ export default function GetStartedPage() {
                     </div>
                 </section>
 
+                <section className="scroll-mt-24" id="errors">
+                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                        Errors
+                    </h2>
+                    <div className="pl-0 md:pl-11">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                            {/* Left Column: Description */}
+                            <div className="lg:col-span-5 space-y-4">
+                                <p className="text-muted-foreground leading-relaxed">
+                                    MITO uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the <code className="bg-muted dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs text-foreground font-semibold">2xx</code> range indicate success. Codes in the <code className="bg-muted dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs text-foreground font-semibold">4xx</code> range indicate an error that failed given the information provided (e.g., a required parameter was omitted, a charge failed, etc.). Codes in the <code className="bg-muted dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs text-foreground font-semibold">5xx</code> range indicate an error with MITO&apos;s servers (these are rare).
+                                </p>
+                                <p className="text-muted-foreground leading-relaxed">
+                                    Some <code className="bg-muted dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs text-foreground font-semibold">4xx</code> errors that could be handled programmatically (e.g., a card is <Link href="#" className="text-primary hover:underline font-semibold">declined</Link>) include an <Link href="#" className="text-primary hover:underline font-semibold">error code</Link> that briefly explains the error reported.
+                                </p>
+                            </div>
+
+                            {/* Right Column: Status Code Summary */}
+                            <div className="lg:col-span-7 rounded-xl border bg-card/30 dark:bg-zinc-950/20 shadow-sm overflow-hidden border-border/80">
+                                <div className="bg-muted/50 dark:bg-zinc-900/50 px-6 py-4 border-b border-border/80 text-xs font-bold tracking-wider text-slate-400 uppercase">
+                                    HTTP Status Code Summary
+                                </div>
+                                <div className="p-6 overflow-x-auto">
+                                    <table className="w-full text-sm text-left border-collapse">
+                                        <tbody>
+                                            {[
+                                                { code: "200", status: "OK", desc: "Everything worked as expected." },
+                                                { code: "400", status: "Bad Request", desc: "The request was unacceptable, often due to missing a required parameter." },
+                                                { code: "401", status: "Unauthorized", desc: "No valid API key provided." },
+                                                { code: "402", status: "Request Failed", desc: "The parameters were valid but the request failed." },
+                                                { code: "403", status: "Forbidden", desc: "The API key doesn't have permissions to perform the request." },
+                                                { code: "404", status: "Not Found", desc: "The requested resource doesn't exist." }
+                                            ].map((item, idx) => (
+                                                <tr key={idx} className="align-top hover:bg-muted/10 transition-colors">
+                                                    <td className="py-2.5 pr-4 font-mono font-bold text-foreground w-12">{item.code}</td>
+                                                    <td className="py-2.5 pr-4 font-semibold text-foreground/85 w-32">{item.status}</td>
+                                                    <td className="py-2.5 text-muted-foreground text-xs leading-relaxed">{item.desc}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <section className="scroll-mt-24" id="first-request">
                     <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
                         <span className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-sm">4</span>
