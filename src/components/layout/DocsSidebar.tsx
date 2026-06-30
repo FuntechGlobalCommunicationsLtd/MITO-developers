@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -33,7 +34,19 @@ const docsConfig: NavGroup[] = [
         title: "Getting Started",
         items: [
             { title: "Introduction", href: "/developers", icon: <Book className="w-4 h-4" /> },
-            { title: "Getting Started", href: "/developers/get-started", icon: <Milestone className="w-4 h-4" /> },
+            {
+                title: "Getting Started",
+                href: "/developers/get-started",
+                icon: <Milestone className="w-4 h-4" />,
+                items: [
+                    { title: "Integration Journey", href: "/developers/get-started#journey" },
+                    { title: "Environments & Keys", href: "/developers/get-started#environments" },
+                    { title: "Authentication", href: "/developers/get-started#authentication" },
+                    { title: "Authorization", href: "/developers/get-started#authorization" },
+                    { title: "Errors", href: "/developers/get-started#errors" },
+                    { title: "Your First Request", href: "/developers/get-started#first-request" },
+                ],
+            },
             { title: "API Credentials", href: "/developers/credentials", icon: <Key className="w-4 h-4" /> },
             { title: "Pre-Live Testing", href: "/developers/pre-live-testing", icon: <Landmark className="w-4 h-4" /> },
         ],
@@ -110,7 +123,19 @@ const docsConfig: NavGroup[] = [
 
 function NavLink({ item, nested }: { item: NavItem; nested?: boolean }) {
     const pathname = usePathname();
-    const active = isNavItemActive(pathname, item.href);
+    const [hash, setHash] = useState("");
+
+    useEffect(() => {
+        setHash(window.location.hash);
+        const handleHashChange = () => setHash(window.location.hash);
+        window.addEventListener("hashchange", handleHashChange, { passive: true });
+        return () => window.removeEventListener("hashchange", handleHashChange);
+    }, []);
+
+    const isHashLink = item.href.includes("#");
+    const active = isHashLink 
+        ? pathname === item.href.split("#")[0] && hash === "#" + item.href.split("#")[1]
+        : isNavItemActive(pathname, item.href);
 
     return (
         <Link
@@ -118,7 +143,13 @@ function NavLink({ item, nested }: { item: NavItem; nested?: boolean }) {
             className={cn(
                 "flex items-center gap-2 rounded-md px-2 py-1.5 font-medium transition-colors hover:bg-muted hover:text-primary",
                 nested ? "text-xs py-1" : "text-sm",
-                active ? "bg-primary/10 text-primary" : nested ? "text-muted-foreground/70" : "text-muted-foreground",
+                active 
+                    ? nested 
+                        ? "text-primary font-semibold bg-transparent" 
+                        : "bg-primary/10 text-primary" 
+                    : nested 
+                        ? "text-muted-foreground/70" 
+                        : "text-muted-foreground",
                 item.disabled && "cursor-not-allowed opacity-60"
             )}
         >
@@ -129,28 +160,34 @@ function NavLink({ item, nested }: { item: NavItem; nested?: boolean }) {
 }
 
 export function DocsSidebar() {
+    const pathname = usePathname();
+
     return (
         <aside className="fixed top-16 z-30 -ml-2 hidden h-[calc(100vh-4rem)] w-full shrink-0 md:sticky md:block md:w-64 lg:w-72">
             <ScrollArea className="h-full py-6 pr-6 lg:py-8 border-r">
                 <div className="flex flex-col gap-6 px-4">
-                    {docsConfig.map((group, index) => (
-                        <div key={index} className="flex flex-col gap-2">
+                    {docsConfig.map((group, groupIdx) => (
+                        <div key={groupIdx} className="flex flex-col gap-2">
                             <h4 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground ml-2">
                                 {group.title}
                             </h4>
                             <div className="flex flex-col gap-1">
-                                {group.items.map((item, itemIndex) => (
-                                    <div key={itemIndex} className="flex flex-col gap-1">
-                                        <NavLink item={item} />
-                                        {item.items && (
-                                            <div className="flex flex-col gap-1 ml-6 border-l pl-4">
-                                                {item.items.map((subItem, subIndex) => (
-                                                    <NavLink key={subIndex} item={subItem} nested />
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                                {group.items.map((item, itemIdx) => {
+                                    // Collapse by default: expand sub-items only when parent path matches current URL
+                                    const isParentActive = isNavItemActive(pathname, item.href) || pathname === item.href;
+                                    return (
+                                        <div key={itemIdx} className="flex flex-col gap-1">
+                                            <NavLink item={item} />
+                                            {item.items && isParentActive && (
+                                                <div className="flex flex-col gap-1 ml-6 border-l pl-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                                                    {item.items.map((subItem, subIdx) => (
+                                                        <NavLink key={subIdx} item={subItem} nested />
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     ))}

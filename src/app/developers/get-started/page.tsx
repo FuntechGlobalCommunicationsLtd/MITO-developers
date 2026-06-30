@@ -73,7 +73,7 @@ export default function GetStartedPage() {
                     </div>
                 </div>
 
-                <section className="scroll-mt-24">
+                <section className="scroll-mt-24" id="journey">
                     <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
                         <span className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-sm">1</span>
                         Integration Journey
