@@ -57,7 +57,6 @@ const docsConfig: NavGroup[] = [
                     { title: "Your First Request", href: "/developers/get-started#first-request" },
                 ],
             },
-            { title: "API Credentials", href: "/developers/credentials", icon: <Key className="w-4 h-4" /> },
             { title: "Pre-Live Testing", href: "/developers/pre-live-testing", icon: <Landmark className="w-4 h-4" /> },
         ],
     },
