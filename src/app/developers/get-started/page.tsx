@@ -197,6 +197,18 @@ export default function GetStartedPage() {
                                         <td className="px-4 py-4 font-mono text-primary">X-Mito-Idempotency-Key</td>
                                         <td className="px-4 py-4 text-muted-foreground">Required for all POST requests to prevent double-charging or duplicate transfers. Should be a unique UUID v4.</td>
                                     </tr>
+                                    <tr>
+                                        <td className="px-4 py-4 font-mono text-primary">accessAffiliateNumber</td>
+                                        <td className="px-4 py-4 text-muted-foreground">
+                                            Partner account identification number (e.g. <code className="bg-muted px-1.5 py-0.5 rounded text-foreground font-medium">1049</code>).
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="px-4 py-4 font-mono text-primary">accessServiceNumber</td>
+                                        <td className="px-4 py-4 text-muted-foreground">
+                                            Corridor service identification number (e.g. <code className="bg-muted px-1.5 py-0.5 rounded text-foreground font-medium">21028</code>).
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
