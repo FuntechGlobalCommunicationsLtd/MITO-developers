@@ -1,12 +1,11 @@
 "use client";
 
 import { DocsLayout } from "@/components/layout/DocsLayout";
-import { Landmark, Search, Copy, Check, Info } from "lucide-react";
+import { Landmark, Search, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface BeneficiaryAccount {
     currency: string;
@@ -67,14 +66,7 @@ export default function PreLiveTestingPage() {
                     </div>
                 </div>
 
-                {/* Info Note */}
-                <Alert className="bg-primary/5 border-primary/20 animate-in fade-in duration-700">
-                    <Info className="h-4 w-4 text-primary" />
-                    <AlertTitle className="font-bold text-foreground">Sandbox & Testing Guide</AlertTitle>
-                    <AlertDescription className="text-sm text-muted-foreground">
-                        Ensure you are using your sandbox API keys to make calls referencing these accounts. Using live keys on these accounts may lead to errors or unintended actual transactions.
-                    </AlertDescription>
-                </Alert>
+
 
                 {/* Filter and Table */}
                 <div className="space-y-4 pt-4 animate-in fade-in duration-1000">
