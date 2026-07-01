@@ -153,8 +153,33 @@ const docsConfig: NavGroup[] = [
     {
         title: "Integration methods",
         items: [
-            { title: "Hosted checkout", href: "/developers/hosted-flows", icon: <TerminalSquare className="w-4 h-4" /> },
-            { title: "SDK & widget", href: "/developers/guides/sdk", icon: <FileCode2 className="w-4 h-4" /> },
+            {
+                title: "Hosted checkout",
+                href: "/developers/hosted-flows",
+                icon: <TerminalSquare className="w-4 h-4" />,
+                items: [
+                    { title: "Integration methods", href: "/developers/hosted-flows#integration-methods" },
+                    { title: "Prerequisites", href: "/developers/hosted-flows#prerequisites" },
+                    { title: "Architecture", href: "/developers/hosted-flows#architecture" },
+                    { title: "Integration flow", href: "/developers/hosted-flows#integration-flow" },
+                    { title: "Webhooks", href: "/developers/hosted-flows#webhooks" },
+                    { title: "Status lifecycle", href: "/developers/hosted-flows#status-lifecycle" },
+                    { title: "APIs involved", href: "/developers/hosted-flows#apis-involved" },
+                ],
+            },
+            {
+                title: "SDK & widget",
+                href: "/developers/guides/sdk",
+                icon: <FileCode2 className="w-4 h-4" />,
+                items: [
+                    { title: "Integration methods", href: "/developers/guides/sdk#integration-methods" },
+                    { title: "Prerequisites", href: "/developers/guides/sdk#prerequisites" },
+                    { title: "Integration flow", href: "/developers/guides/sdk#integration-flow" },
+                    { title: "Webhooks", href: "/developers/guides/sdk#webhooks" },
+                    { title: "Status lifecycle", href: "/developers/guides/sdk#status-lifecycle" },
+                    { title: "APIs involved", href: "/developers/guides/sdk#apis-involved" },
+                ],
+            },
         ],
     },
     {
