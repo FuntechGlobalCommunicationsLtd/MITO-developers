@@ -124,7 +124,18 @@ const docsConfig: NavGroup[] = [
                 href: "/developers/guides/mto",
                 icon: <Landmark className="w-4 h-4" />,
                 items: [
-                    { title: "FTP batch", href: "/developers/file-integration/mto-ftp" },
+                    {
+                        title: "FTP batch",
+                        href: "/developers/file-integration/mto-ftp",
+                        items: [
+                            { title: "Integration methods", href: "/developers/file-integration/mto-ftp#integration-methods" },
+                            { title: "Prerequisites", href: "/developers/file-integration/mto-ftp#prerequisites" },
+                            { title: "Architecture", href: "/developers/file-integration/mto-ftp#architecture" },
+                            { title: "Integration flow", href: "/developers/file-integration/mto-ftp#integration-flow" },
+                            { title: "Status lifecycle", href: "/developers/file-integration/mto-ftp#status-lifecycle" },
+                            { title: "APIs involved", href: "/developers/file-integration/mto-ftp#apis-involved" },
+                        ],
+                    },
                     {
                         title: "File integration",
                         href: "/developers/file-integration",
