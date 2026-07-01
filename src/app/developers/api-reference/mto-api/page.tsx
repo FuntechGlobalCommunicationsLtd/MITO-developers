@@ -39,24 +39,6 @@ export default function MtoApiReference() {
                         <ShieldCheck className="w-6 h-6 text-primary" /> Setup & Authorization
                     </h2>
                     <div className="prose prose-slate dark:prose-invert max-w-none space-y-4">
-                        <p className="text-muted-foreground">
-                            MITO MTO integrations support two primary connection methods depending on your volume and backend capabilities:
-                        </p>
-                        <div className="grid md:grid-cols-2 gap-6 my-6">
-                            <div className="bg-muted/30 p-6 rounded-xl border border-border">
-                                <h3 className="text-lg font-semibold mb-2">1. REST API (Real-time)</h3>
-                                <p className="text-sm text-muted-foreground mb-4">
-                                    Send payments instantly. Uses JSON-encoded payloads over HTTPS with Basic Authentication.
-                                </p>
-                            </div>
-                            <div className="bg-muted/30 p-6 rounded-xl border border-border">
-                                <h3 className="text-lg font-semibold mb-2">2. FTP Gateway (Batch)</h3>
-                                <p className="text-sm text-muted-foreground mb-4">
-                                    Process bulk transactions. Uses secure pipe-delimited CSV file exchanges over SFTP.
-                                </p>
-                            </div>
-                        </div>
-
                         <div className="bg-primary/5 p-6 rounded-xl border border-primary/20 space-y-4">
                             <h4 className="text-base font-bold text-foreground flex items-center gap-2 m-0">
                                 <Info className="w-5 h-5 text-primary shrink-0" /> REST API Auth Headers
