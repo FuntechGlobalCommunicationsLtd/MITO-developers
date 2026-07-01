@@ -91,8 +91,32 @@ const docsConfig: NavGroup[] = [
                 href: "/developers/guides/biller",
                 icon: <Store className="w-4 h-4" />,
                 items: [
-                    { title: "Wholesale biller", href: "/developers/guides/wholesale" },
-                    { title: "Merchant biller", href: "/developers/guides/merchant" },
+                    {
+                        title: "Wholesale biller",
+                        href: "/developers/guides/wholesale",
+                        items: [
+                            { title: "Integration methods", href: "/developers/guides/wholesale#integration-methods" },
+                            { title: "Prerequisites", href: "/developers/guides/wholesale#prerequisites" },
+                            { title: "Architecture", href: "/developers/guides/wholesale#architecture" },
+                            { title: "Integration flow", href: "/developers/guides/wholesale#integration-flow" },
+                            { title: "Webhooks", href: "/developers/guides/wholesale#webhooks" },
+                            { title: "Status lifecycle", href: "/developers/guides/wholesale#status-lifecycle" },
+                            { title: "APIs involved", href: "/developers/guides/wholesale#apis-involved" },
+                        ],
+                    },
+                    {
+                        title: "Merchant biller",
+                        href: "/developers/guides/merchant",
+                        items: [
+                            { title: "Integration methods", href: "/developers/guides/merchant#integration-methods" },
+                            { title: "Prerequisites", href: "/developers/guides/merchant#prerequisites" },
+                            { title: "Architecture", href: "/developers/guides/merchant#architecture" },
+                            { title: "Integration flow", href: "/developers/guides/merchant#integration-flow" },
+                            { title: "Webhooks", href: "/developers/guides/merchant#webhooks" },
+                            { title: "Status lifecycle", href: "/developers/guides/merchant#status-lifecycle" },
+                            { title: "APIs involved", href: "/developers/guides/merchant#apis-involved" },
+                        ],
+                    },
                 ],
             },
             {
