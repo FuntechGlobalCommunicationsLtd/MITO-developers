@@ -16,8 +16,11 @@ export default function BillerApiReference() {
                 {/* Page Header */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">Biller Submission API</h1>
-                    <p className="text-xl text-muted-foreground mb-6">
-                        Integrate MITO&apos;s Biller Collection engine to accept local payments, perform automatic FX conversions, and execute settled payouts to corporate bank accounts.
+                    <p className="text-xl text-muted-foreground mb-4">
+                        Biller collection, wallet, and payout APIs. Requires registered <strong>billerId</strong> on every transaction. Spec:{" "}
+                        <a href="https://furp02-pre-pord.funtechcom.com/affiliate-payment-collection.html" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">
+                            affiliate-payment-collection.html
+                        </a>
                     </p>
                     <Button asChild className="gap-2 bg-primary hover:bg-primary/90 text-white rounded-full px-6">
                         <a href="/biller-api.postman_collection.json" download="biller-api.postman_collection.json">
@@ -28,7 +31,7 @@ export default function BillerApiReference() {
 
                 {/* Authentication and Setup */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
-                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                    <h2 id="auth" className="text-2xl font-bold flex items-center gap-2">
                         <ShieldCheck className="w-6 h-6 text-primary" /> Biller Authentication
                     </h2>
                     <p className="text-muted-foreground">

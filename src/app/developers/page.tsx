@@ -43,7 +43,7 @@ export default function DevelopersLandingPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <Link href="/developers/guides" className="flex flex-col items-center justify-center p-6 bg-muted/30 rounded-xl hover:bg-primary/5 transition-colors group border border-border/50">
                             <BookOpen className="w-8 h-8 mb-3 text-muted-foreground group-hover:text-primary transition-colors" />
-                            <span className="font-medium text-sm">Guides</span>
+                            <span className="font-medium text-sm">Documentation</span>
                         </Link>
                         <Link href="/developers/guides/sdk" className="flex flex-col items-center justify-center p-6 bg-muted/30 rounded-xl hover:bg-primary/5 transition-colors group border border-border/50">
                             <FileCode2 className="w-8 h-8 mb-3 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -60,50 +60,43 @@ export default function DevelopersLandingPage() {
                     </div>
                 </section>
 
-                {/* Product Capabilities */}
+                {/* Transaction model */}
                 <section>
                     <div className="mb-10 text-center">
-                        <h2 className="text-3xl font-bold tracking-tight mb-4">Explore our capabilities</h2>
+                        <h2 id="transfer-phases" className="text-3xl font-bold tracking-tight mb-4">Every transfer has three phases</h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-                            Everything your business needs to pay, get paid, and grow globally, packaged into clean RESTful APIs.
+                            Collect funds, process and convert, then disburse — documented by flow in Documentation and by capability in API Reference.
                         </p>
                     </div>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <CapabilityCard
-                            title="Payments"
-                            description="Smooth and seamless payment APIs for local and international transfers and collections."
-                            icon={<CreditCard className="w-6 h-6" />}
-                        />
-                        <CapabilityCard
-                            title="Forex"
-                            description="Multi-currency conversion at the best rates, built directly into your payment flows."
-                            icon={<ArrowRightLeft className="w-6 h-6" />}
-                        />
-                        <CapabilityCard
-                            title="Verification"
-                            description="The safest way to transfer money. AML, KYC, and sanctions screening in no time."
-                            icon={<ShieldCheck className="w-6 h-6" />}
-                        />
-                        <CapabilityCard
-                            title="Affiliate"
-                            description="Integrate payment affiliates quickly using our dedicated portal and APIs."
-                            icon={<Network className="w-6 h-6" />}
-                        />
-                        <CapabilityCard
-                            title="Collections & Payouts"
-                            description="Collect payments from users and handle mass payouts to bank accounts globally."
-                            icon={<Terminal className="w-6 h-6" />}
-                        />
-                        <CapabilityCard
-                            title="Compliance APIs"
-                            description="Enterprise-grade compliance endpoints to manage case reviews and identity verification."
-                            icon={<FileCode2 className="w-6 h-6" />}
-                        />
-                        <CapabilityCard
-                            title="Web & Mobile SDKs"
-                            description="Integrate faster with our pre-built libraries for React and React Native."
-                            icon={<Laptop className="w-6 h-6" />}
-                        />
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <Link href="/developers/api-reference/collect">
+                            <CapabilityCard
+                                title="Collect"
+                                description="Card, bank pay, wallets, and hosted checkout across multiple currencies."
+                                icon={<CreditCard className="w-6 h-6" />}
+                            />
+                        </Link>
+                        <Link href="/developers/api-reference/process-forex">
+                            <CapabilityCard
+                                title="Process / Forex"
+                                description="FX quotes, corridor routing, compliance, and async processing."
+                                icon={<ArrowRightLeft className="w-6 h-6" />}
+                            />
+                        </Link>
+                        <Link href="/developers/api-reference/disburse">
+                            <CapabilityCard
+                                title="Disburse"
+                                description="Payouts to beneficiaries, biller settlements, and bank validation."
+                                icon={<Terminal className="w-6 h-6" />}
+                            />
+                        </Link>
+                        <Link href="/developers/api-reference/manage">
+                            <CapabilityCard
+                                title="Manage"
+                                description="Auth, balances, webhooks, status polling, and platform config."
+                                icon={<ShieldCheck className="w-6 h-6" />}
+                            />
+                        </Link>
                     </div>
                 </section>
 
@@ -111,24 +104,24 @@ export default function DevelopersLandingPage() {
                 <section className="bg-muted/20 rounded-3xl p-8 md:p-12 border">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div>
-                            <h2 className="text-3xl font-bold tracking-tight mb-6">Choose your integration type</h2>
+                            <h2 id="choose-model" className="text-3xl font-bold tracking-tight mb-6">Choose your integration model</h2>
                             <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                                Whether you are an established MTO, a local retailer, or a wholesale billing partner, MITO provides tailored integration models matching your business reality.
+                                Pick the partner path that matches your business — each guide walks through Collect → Process / Forex → Disburse for your integration method.
                             </p>
                             <div className="space-y-4">
                                 <IntegrationTypeCard
-                                    title="MTO Submission"
-                                    description="Use MITO for direct money transfer capabilities, handling KYC and FX."
+                                    title="MTO Partner"
+                                    description="Bulk remittance via REST API or FTP. You own the UI; MITO handles FX and payout rails."
                                     href="/developers/guides/mto"
                                 />
                                 <IntegrationTypeCard
-                                    title="Retail Submission"
-                                    description="Resell MITO money transfer services directly to end customers for commission."
+                                    title="Retail Affiliate"
+                                    description="C2C remittance via API, hosted checkout, SDK, or embedded widget."
                                     href="/developers/guides/retail"
                                 />
                                 <IntegrationTypeCard
-                                    title="Biller Submission"
-                                    description="Sell goods/services and use MITO to collect funds and settle to your bank account."
+                                    title="Biller"
+                                    description="Collect on your site with a registered Biller ID; settle to your bank account."
                                     href="/developers/guides/biller"
                                 />
                                 <IntegrationTypeCard
@@ -165,7 +158,7 @@ export default function DevelopersLandingPage() {
 
                 {/* CTA Section */}
                 <section className="text-center bg-primary text-primary-foreground rounded-2xl p-12 shadow-lg">
-                    <h2 className="text-3xl font-bold mb-4">Ready to test in Sandbox?</h2>
+                    <h2 id="ready-to-test" className="text-3xl font-bold mb-4">Ready to test in Sandbox?</h2>
                     <p className="max-w-2xl mx-auto text-primary-foreground/80 mb-8 text-lg">
                         Create a partner account, grab your test API keys, and start building with MITO in minutes.
                     </p>

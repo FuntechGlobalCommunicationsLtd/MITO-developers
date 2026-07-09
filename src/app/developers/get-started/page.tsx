@@ -5,7 +5,7 @@ import { StepFlow } from "@/components/developers/Flows";
 import { CodeTabs } from "@/components/developers/CodeBlocks";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { LightbulbIcon, Terminal, Play, CheckCircle2, Copy, Shield, BookOpen } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -13,17 +13,114 @@ import { cn } from "@/lib/utils";
 
 export default function GetStartedPage() {
     const [env, setEnv] = useState<"sandbox" | "live">("sandbox");
+    const [selectedService, setSelectedService] = useState<"mto" | "retail" | "biller">("mto");
     const [isSimulating, setIsSimulating] = useState(false);
     const [simulatedResponse, setSimulatedResponse] = useState<string | null>(null);
-    const [copied, setCopied] = useState(false);
+    const [copiedField, setCopiedField] = useState<string | null>(null);
+    const [showCredsPass, setShowCredsPass] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-    const baseUrl = env === "sandbox" ? "https://api.sandbox.mito.money/v1" : "https://api.mito.money/v1";
-    const apiKey = env === "sandbox" ? "sk_test_51Nx...8zL" : "sk_live_51Nx...9pR";
+    const serviceCredentials = useMemo(() => ({
+        mto: {
+            sandbox: {
+                baseUrl: "https://furp02-staging.funtechcom.com",
+                serviceNumber: "1014",
+                affiliateNumber: "21050",
+                username: "Omnex_MTO",
+                password: "5ySk2H7lDi9U6yKa3P6yUc_MTO"
+            },
+            live: {
+                baseUrl: "https://connect.funtechcom.com",
+                serviceNumber: "1014",
+                affiliateNumber: "21050",
+                username: "Omnex_MTO_Live",
+                password: "5ySk2H7lDi9U6yKa3P6yUc_MTO_Prod"
+            }
+        },
+        retail: {
+            sandbox: {
+                baseUrl: "https://furp02-staging.funtechcom.com",
+                serviceNumber: "1015",
+                affiliateNumber: "21050",
+                username: "Omnex_Retail",
+                password: "5ySk2H7lDi9U6yKa3P6yUc_Retail",
+                secretKey: "sk_test_51Nx...8zL"
+            },
+            live: {
+                baseUrl: "https://connect.funtechcom.com",
+                serviceNumber: "1015",
+                affiliateNumber: "21050",
+                username: "Omnex_Retail_Live",
+                password: "5ySk2H7lDi9U6yKa3P6yUc_Retail_Prod",
+                secretKey: "sk_live_51Nx...9pR"
+            }
+        },
+        biller: {
+            sandbox: {
+                baseUrl: "https://furp02-pre-pord.funtechcom.com",
+                serviceNumber: "1016",
+                affiliateNumber: "21050",
+                username: "Omnex_Biller",
+                password: "5ySk2H7lDi9U6yKa3P6yUc_Biller"
+            },
+            live: {
+                baseUrl: "https://connect.funtechcom.com",
+                serviceNumber: "1016",
+                affiliateNumber: "21050",
+                username: "Omnex_Biller_Live",
+                password: "5ySk2H7lDi9U6yKa3P6yUc_Biller_Prod"
+            }
+        }
+    }), []);
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(apiKey);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+    const activeCreds = serviceCredentials[selectedService][env];
+    const baseUrl = activeCreds.baseUrl;
+    const apiKey = selectedService === "retail" ? ((activeCreds as any).secretKey || "") : "";
+
+    const base64Auth = useMemo(() => {
+        const username = activeCreds.username || "";
+        const password = activeCreds.password || "";
+        if (typeof window !== "undefined") {
+            try {
+                return window.btoa(`${username}:${password}`);
+            } catch (e) {
+                return "";
+            }
+        }
+        return "T21uZXhfTVRPOjV5U2sySDdsRGk5VTZ5S2EzUDZ5VWNfTVRP";
+    }, [activeCreds.username, activeCreds.password]);
+
+    const curlHeaders = useMemo(() => {
+        if (selectedService === "retail") {
+            return `  -H "Authorization: Bearer ${apiKey || 'sk_test_51Nx...8zL'}"`;
+        }
+        return `  -H "Authorization: Basic ${base64Auth}" \\
+  -H "accessAffiliateNumber: ${activeCreds.affiliateNumber}" \\
+  -H "accessServiceNumber: ${activeCreds.serviceNumber}"`;
+    }, [selectedService, apiKey, base64Auth, activeCreds.affiliateNumber, activeCreds.serviceNumber]);
+
+    const nodeHeaders = useMemo(() => {
+        if (selectedService === "retail") {
+            return `    'Authorization': 'Bearer ${apiKey || 'sk_test_51Nx...8zL'}'`;
+        }
+        return `    'Authorization': 'Basic ${base64Auth}',
+    'accessAffiliateNumber': '${activeCreds.affiliateNumber}',
+    'accessServiceNumber': '${activeCreds.serviceNumber}'`;
+    }, [selectedService, apiKey, base64Auth, activeCreds.affiliateNumber, activeCreds.serviceNumber]);
+
+    const pythonHeaders = useMemo(() => {
+        if (selectedService === "retail") {
+            return `    "Authorization": "Bearer ${apiKey || 'sk_test_51Nx...8zL'}"`;
+        }
+        return `    "Authorization": "Basic ${base64Auth}",
+    "accessAffiliateNumber": "${activeCreds.affiliateNumber}",
+    "accessServiceNumber": "${activeCreds.serviceNumber}"`;
+    }, [selectedService, apiKey, base64Auth, activeCreds.affiliateNumber, activeCreds.serviceNumber]);
+
+    const handleCopy = (text: string, fieldName: string) => {
+        navigator.clipboard.writeText(text);
+        setCopiedField(fieldName);
+        setTimeout(() => setCopiedField(null), 2000);
     };
 
     const handleSimulate = () => {
@@ -66,13 +163,13 @@ export default function GetStartedPage() {
                             </Link>
                             <Link href="/developers/guides" className="flex items-center gap-2 p-3 rounded-lg border bg-muted/30 hover:bg-muted transition-colors group">
                                 <div className="p-2 bg-green-500/10 rounded-md text-green-500 opacity-80 group-hover:opacity-100 transition-opacity"><BookOpen className="w-4 h-4" /></div>
-                                <span className="text-sm font-medium">View Guides</span>
+                                <span className="text-sm font-medium">Pick integration model</span>
                             </Link>
                         </div>
                     </div>
                 </div>
 
-                <section className="scroll-mt-24">
+                <section className="scroll-mt-24" id="journey">
                     <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
                         <span className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-sm">1</span>
                         Integration Journey
@@ -111,45 +208,155 @@ export default function GetStartedPage() {
                         Environments & Keys
                     </h2>
                     <p className="text-muted-foreground mb-6 pl-0 md:pl-11">
-                        MITO provides two distinct environments. Use the toggle below to switch your context.
+                        MITO provides two distinct environments. Select your service capability and target environment context below.
                     </p>
 
                     <div className={cn(
                         "rounded-xl border shadow-sm overflow-hidden transition-all duration-300 ml-0 md:ml-11",
                         env === "sandbox" ? "border-muted" : "border-orange-200 shadow-orange-100"
                     )}>
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 bg-muted/30 border-b gap-4">
+                        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between p-6 bg-muted/30 border-b gap-4">
                             <div>
-                                <h3 className="font-semibold text-lg">Select Environment</h3>
-                                <p className="text-sm text-muted-foreground">This updates the code snippets below.</p>
+                                <h3 className="font-semibold text-lg">Select Environment & Service</h3>
+                                <p className="text-sm text-muted-foreground">Select the service and environment context to update credentials.</p>
                             </div>
-                            <Tabs value={env} onValueChange={(v) => setEnv(v as "sandbox" | "live")} className="w-[200px]">
-                                <TabsList className="w-full grid grid-cols-2 border">
-                                    <TabsTrigger value="sandbox" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Sandbox</TabsTrigger>
-                                    <TabsTrigger value="live" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">Live</TabsTrigger>
-                                </TabsList>
-                            </Tabs>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
+                                <Tabs value={selectedService} onValueChange={(v) => setSelectedService(v as "mto" | "retail" | "biller")} className="w-full sm:w-[280px]">
+                                    <TabsList className="w-full grid grid-cols-3 border bg-background/50">
+                                        <TabsTrigger value="mto" className="text-xs">MTO</TabsTrigger>
+                                        <TabsTrigger value="retail" className="text-xs">Retail</TabsTrigger>
+                                        <TabsTrigger value="biller" className="text-xs">Biller</TabsTrigger>
+                                    </TabsList>
+                                </Tabs>
+                                <Tabs value={env} onValueChange={(v) => setEnv(v as "sandbox" | "live")} className="w-full sm:w-[180px]">
+                                    <TabsList className="w-full grid grid-cols-2 border bg-background/50">
+                                        <TabsTrigger value="sandbox" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs">Sandbox</TabsTrigger>
+                                        <TabsTrigger value="live" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white text-xs">Live</TabsTrigger>
+                                    </TabsList>
+                                </Tabs>
+                            </div>
                         </div>
 
                         <div className="p-6 space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <span className="text-sm font-medium text-muted-foreground">Base URL</span>
-                                    <div className="p-3 bg-muted rounded-md border font-mono text-sm break-all h-[46px] flex items-center">
-                                        {baseUrl}
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <span className="text-sm font-medium text-muted-foreground">Your Secret Key</span>
-                                    <div className="px-3 bg-muted rounded-md border font-mono text-sm flex items-center justify-between group h-[46px]">
-                                        <span className={env === "live" ? "text-orange-600 dark:text-orange-400 font-bold" : "text-primary font-bold"}>
-                                            {apiKey}
-                                        </span>
-                                        <Button variant="ghost" size="sm" className="h-7 px-2 opacity-50 group-hover:opacity-100" onClick={handleCopy}>
-                                            {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                {/* Base URL */}
+                                <div className="space-y-2 col-span-1 md:col-span-2">
+                                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Base URL</span>
+                                    <div className="p-3 bg-muted rounded-lg border font-mono text-sm break-all flex items-center justify-between group">
+                                        <span>{activeCreds.baseUrl}</span>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 w-8 p-0 opacity-50 group-hover:opacity-100 shrink-0"
+                                            onClick={() => handleCopy(activeCreds.baseUrl, "baseUrl")}
+                                        >
+                                            {copiedField === "baseUrl" ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                                         </Button>
                                     </div>
                                 </div>
+
+                                {/* Affiliate Number */}
+                                <div className="space-y-2">
+                                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">accessAffiliateNumber</span>
+                                    <div className="p-3 bg-muted rounded-lg border font-mono text-sm flex items-center justify-between group">
+                                        <span>{activeCreds.affiliateNumber}</span>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 w-8 p-0 opacity-50 group-hover:opacity-100 shrink-0"
+                                            onClick={() => handleCopy(activeCreds.affiliateNumber, "affiliateNumber")}
+                                        >
+                                            {copiedField === "affiliateNumber" ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                {/* Service Number */}
+                                <div className="space-y-2">
+                                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">accessServiceNumber</span>
+                                    <div className="p-3 bg-muted rounded-lg border font-mono text-sm flex items-center justify-between group">
+                                        <span>{activeCreds.serviceNumber}</span>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 w-8 p-0 opacity-50 group-hover:opacity-100 shrink-0"
+                                            onClick={() => handleCopy(activeCreds.serviceNumber, "serviceNumber")}
+                                        >
+                                            {copiedField === "serviceNumber" ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                {selectedService === "retail" ? (
+                                    /* Secret Key for Retail */
+                                    <div className="space-y-2 col-span-1 md:col-span-2 animate-in fade-in duration-300">
+                                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Secret Key (Bearer Token)</span>
+                                        <div className="p-3 bg-muted rounded-lg border font-mono text-sm flex items-center justify-between group">
+                                            <span className={env === "live" ? "text-orange-600 dark:text-orange-400 font-bold" : "text-primary font-bold"}>
+                                                {(activeCreds as any).secretKey}
+                                            </span>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 w-8 p-0 opacity-50 group-hover:opacity-100 shrink-0"
+                                                onClick={() => handleCopy((activeCreds as any).secretKey || "", "secretKey")}
+                                            >
+                                                {copiedField === "secretKey" ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    /* Basic Auth Credentials for MTO/Biller */
+                                    <>
+                                        <div className="space-y-2 animate-in fade-in duration-300">
+                                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Basic Auth Username</span>
+                                            <div className="p-3 bg-muted rounded-lg border font-mono text-sm flex items-center justify-between group">
+                                                <span>{activeCreds.username}</span>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-8 w-8 p-0 opacity-50 group-hover:opacity-100 shrink-0"
+                                                    onClick={() => handleCopy(activeCreds.username || "", "username")}
+                                                >
+                                                    {copiedField === "username" ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2 animate-in fade-in duration-300">
+                                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Basic Auth Password</span>
+                                            <div className="p-3 bg-muted rounded-lg border font-mono text-sm flex items-center justify-between group">
+                                                <span>{showCredsPass ? activeCreds.password : "••••••••••••••••••••"}</span>
+                                                <div className="flex items-center gap-1 shrink-0">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                                                        onClick={() => setShowCredsPass(!showCredsPass)}
+                                                    >
+                                                        {showCredsPass ? (
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                                                            </svg>
+                                                        ) : (
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.43 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            </svg>
+                                                        )}
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="h-8 w-8 p-0 opacity-50 group-hover:opacity-100"
+                                                        onClick={() => handleCopy(activeCreds.password || "", "password")}
+                                                    >
+                                                        {copiedField === "password" ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -184,12 +391,6 @@ export default function GetStartedPage() {
                                 </thead>
                                 <tbody className="divide-y">
                                     <tr>
-                                        <td className="px-4 py-4 font-mono text-primary flex items-center gap-2">
-                                            Authorization
-                                        </td>
-                                        <td className="px-4 py-4 text-muted-foreground">Bearer <span className="bg-muted px-1.5 py-0.5 rounded font-mono text-xs text-foreground font-medium">{apiKey}</span></td>
-                                    </tr>
-                                    <tr>
                                         <td className="px-4 py-4 font-mono text-primary">Content-Type</td>
                                         <td className="px-4 py-4 text-muted-foreground">Must be <code className="bg-muted px-1.5 py-0.5 rounded text-foreground font-medium">application/json</code> for POST/PUT/PATCH requests.</td>
                                     </tr>
@@ -197,8 +398,66 @@ export default function GetStartedPage() {
                                         <td className="px-4 py-4 font-mono text-primary">X-Mito-Idempotency-Key</td>
                                         <td className="px-4 py-4 text-muted-foreground">Required for all POST requests to prevent double-charging or duplicate transfers. Should be a unique UUID v4.</td>
                                     </tr>
+                                    <tr>
+                                        <td className="px-4 py-4 font-mono text-primary">accessAffiliateNumber</td>
+                                        <td className="px-4 py-4 text-muted-foreground">
+                                            Partner account identification number (e.g. <code className="bg-muted px-1.5 py-0.5 rounded text-foreground font-medium">1049</code>).
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="px-4 py-4 font-mono text-primary">accessServiceNumber</td>
+                                        <td className="px-4 py-4 text-muted-foreground">
+                                            Corridor service identification number (e.g. <code className="bg-muted px-1.5 py-0.5 rounded text-foreground font-medium">21028</code>).
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="scroll-mt-24" id="errors">
+                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                        Errors
+                    </h2>
+                    <div className="pl-0 md:pl-11">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                            {/* Left Column: Description */}
+                            <div className="lg:col-span-5 space-y-4">
+                                <p className="text-muted-foreground leading-relaxed">
+                                    MITO uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the <code className="bg-muted dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs text-foreground font-semibold">2xx</code> range indicate success. Codes in the <code className="bg-muted dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs text-foreground font-semibold">4xx</code> range indicate an error that failed given the information provided (e.g., a required parameter was omitted, a charge failed, etc.). Codes in the <code className="bg-muted dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs text-foreground font-semibold">5xx</code> range indicate an error with MITO&apos;s servers (these are rare).
+                                </p>
+                                <p className="text-muted-foreground leading-relaxed">
+                                    Some <code className="bg-muted dark:bg-zinc-800 px-1.5 py-0.5 rounded font-mono text-xs text-foreground font-semibold">4xx</code> errors that could be handled programmatically (e.g., a card is <Link href="#" className="text-primary hover:underline font-semibold">declined</Link>) include an <Link href="#" className="text-primary hover:underline font-semibold">error code</Link> that briefly explains the error reported.
+                                </p>
+                            </div>
+
+                            {/* Right Column: Status Code Summary */}
+                            <div className="lg:col-span-7 rounded-xl border bg-card/30 dark:bg-zinc-950/20 shadow-sm overflow-hidden border-border/80">
+                                <div className="bg-muted/50 dark:bg-zinc-900/50 px-6 py-4 border-b border-border/80 text-xs font-bold tracking-wider text-slate-400 uppercase">
+                                    HTTP Status Code Summary
+                                </div>
+                                <div className="p-6 overflow-x-auto">
+                                    <table className="w-full text-sm text-left border-collapse">
+                                        <tbody>
+                                            {[
+                                                { code: "200", status: "OK", desc: "Everything worked as expected." },
+                                                { code: "400", status: "Bad Request", desc: "The request was unacceptable, often due to missing a required parameter." },
+                                                { code: "401", status: "Unauthorized", desc: "No valid API key provided." },
+                                                { code: "402", status: "Request Failed", desc: "The parameters were valid but the request failed." },
+                                                { code: "403", status: "Forbidden", desc: "The API key doesn't have permissions to perform the request." },
+                                                { code: "404", status: "Not Found", desc: "The requested resource doesn't exist." }
+                                            ].map((item, idx) => (
+                                                <tr key={idx} className="align-top hover:bg-muted/10 transition-colors">
+                                                    <td className="py-2.5 pr-4 font-mono font-bold text-foreground w-12">{item.code}</td>
+                                                    <td className="py-2.5 pr-4 font-semibold text-foreground/85 w-32">{item.status}</td>
+                                                    <td className="py-2.5 text-muted-foreground text-xs leading-relaxed">{item.desc}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -210,7 +469,10 @@ export default function GetStartedPage() {
                     </h2>
                     <div className="pl-0 md:pl-11">
                         <p className="text-muted-foreground mb-6">
-                            Let&apos;s fetch the current FX rates to verify your credentials are working. You can simulate the request directly from your browser.
+                            Verify your credentials with a rate lookup. Full request/response specs:{" "}
+                            <Link href="/developers/api-reference/process-forex#exchange-rates" className="text-primary font-semibold hover:underline">
+                                GET /exchange/rates
+                            </Link>
                         </p>
 
                         <div className="flex flex-col lg:flex-row bg-card border shadow-sm rounded-xl overflow-hidden mb-8">
@@ -228,7 +490,7 @@ export default function GetStartedPage() {
                                             label: "cURL",
                                             language: "bash",
                                             code: `curl -X GET "${baseUrl}/fx/rates?base=GBP&target=KES" \\
-  -H "Authorization: Bearer ${apiKey}"`
+${curlHeaders}`
                                         },
                                         {
                                             label: "Node.js",
@@ -238,7 +500,7 @@ export default function GetStartedPage() {
 const response = await fetch('${baseUrl}/fx/rates?base=GBP&target=KES', {
   method: 'GET',
   headers: {
-    'Authorization': 'Bearer ${apiKey}'
+${nodeHeaders}
   }
 });
 
@@ -252,7 +514,7 @@ console.log(data);`
 
 url = "${baseUrl}/fx/rates"
 headers = {
-    "Authorization": "Bearer ${apiKey}"
+${pythonHeaders}
 }
 params = {
     "base": "GBP",

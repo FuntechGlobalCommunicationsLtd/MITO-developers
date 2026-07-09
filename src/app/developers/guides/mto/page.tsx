@@ -1,109 +1,95 @@
 "use client";
 
-import { ApiReferenceLayout } from "@/components/layout/ApiReferenceLayout";
-import { EndpointBlock } from "@/components/developers/ApiBlocks";
-import { CodeTabs } from "@/components/developers/CodeBlocks";
-import { FlowDiagram, FlowNode, FlowArrow, StepFlow } from "@/components/developers/Flows";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { DocsLayout } from "@/components/layout/DocsLayout";
+import { IntegrationGuide } from "@/components/developers/IntegrationGuide";
+import { FlowNode, FlowArrow } from "@/components/developers/Flows";
 
 export default function MtoGuidePage() {
     return (
-        <ApiReferenceLayout>
-            <div className="flex flex-col w-full">
-                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
-                    <h1 className="text-4xl font-extrabold tracking-tight mb-4">MTO Submission Guide</h1>
-                    <p className="text-xl text-muted-foreground mb-4">
-                        As a Money Transfer Operator (MTO), you own the customer relationship and UI. You use MITO&apos;s APIs strictly for backend remittance execution, routing, and FX.
-                    </p>
-                    <p className="text-base text-muted-foreground">
-                        For detailed endpoint specifications and schemas, please refer to the <Link href="/developers/api-reference/mto-api" className="text-primary hover:underline font-semibold inline-flex items-center gap-1">MTO API Reference <ArrowRight className="w-3.5 h-3.5" /></Link>.
-                    </p>
-                </div>
-
-                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl">
-                    <section className="mb-0">
-                        <h2 className="text-2xl font-bold mb-6">Integration Architecture</h2>
-                        <FlowDiagram title="MTO Remittance Flow">
-                            <div className="flex flex-col md:flex-row items-center justify-center">
-                                <FlowNode label="Your App" sublabel="Customer UI" type="user" />
-                                <FlowArrow direction="both" label="REST APIs" />
-                                <FlowNode label="MITO Engine" sublabel="FX & Routing Engine" type="MITO" />
-                                <FlowArrow direction="right" label="Settlement" />
-                                <FlowNode label="Destination Bank" sublabel="Payout Network" type="secondary" />
-                            </div>
-                        </FlowDiagram>
-                    </section>
-                </div>
-
-                <EndpointBlock
-                    method="POST"
-                    path="/v1/transfers"
-                    title="Implementation Pipeline"
-                    description="Follow these steps to integrate the MTO remittance flow into your application."
-                    requestSamples={
-                        <CodeTabs
-                            tabs={[
-                                {
-                                    label: "JSON",
-                                    language: "json",
-                                    code: `{
-  "quote_id": "qte_778899",
-  "recipient": { ... }
-}`
-                                }
-                            ]}
-                        />
-                    }
-                >
-                    <div className="space-y-8">
-                        <StepFlow
-                            steps={[
-                                {
-                                    title: "1. Onboard Corridors",
-                                    description: "Work with MITO to activate your required source and destination countries."
-                                },
-                                {
-                                    title: "2. Fetch FX Rates",
-                                    description: "Call POST /v1/transfers/quote to get live rates."
-                                },
-                                {
-                                    title: "3. Create Transfer",
-                                    description: "Submit legacy payout details to /v1/transfers."
-                                },
-                                {
-                                    title: "4. Webhooks",
-                                    description: "Listen for asynchronous status updates."
-                                }
-                            ]}
-                        />
-
-                        <div className="pt-8 border-t space-y-6">
-                            <div>
-                                <h2 className="text-2xl font-bold mb-4">Prerequisites</h2>
-                                <ul className="list-disc pl-6 space-y-2 text-muted-foreground text-sm">
-                                    <li>A signed MTO Submission contract.</li>
-                                    <li>A pre-funded MITO operational wallet.</li>
-                                    <li>PCI-compliant architecture for card payments.</li>
-                                </ul>
-                            </div>
-                            
-                            <div className="pt-6 border-t flex flex-col sm:flex-row justify-between items-center gap-4 bg-muted/20 p-5 rounded-xl border border-border/60">
-                                <div className="space-y-1">
-                                    <h3 className="font-bold text-sm text-foreground">Explore MTO API Reference</h3>
-                                    <p className="text-xs text-muted-foreground">Check out the request formats, parameters, and full schema responses for all MTO endpoints.</p>
-                                </div>
-                                <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white shrink-0 rounded-full px-5">
-                                    <Link href="/developers/api-reference/mto-api" className="flex items-center gap-1.5 font-semibold">
-                                        MTO API Reference <ArrowRight className="w-3.5 h-3.5" />
-                                    </Link>
-                                </Button>
-                            </div>
+        <DocsLayout>
+            <IntegrationGuide
+                content={{
+                    title: "MTO partner integration",
+                    partnerLabel: "Integration model · MTO",
+                    description:
+                        "Send bulk remittance transactions via REST API or FTP batch. You own the customer UI; MITO handles FX routing and payout execution. Senders and beneficiaries are included in the transaction payload — sender registration in MITO is not required today.",
+                    prerequisites: [
+                        "Signed MTO partner contract.",
+                        "Credentials from onboarding email (POST /api/v1/Auth/Login).",
+                        "Pre-funded MITO operational wallet.",
+                        "Activated corridors and payout bank account.",
+                    ],
+                    integrationMethods: [
+                        { label: "REST API", href: "/developers/api-reference/mto-api", description: "Real-time transaction submission." },
+                        { label: "FTP batch", href: "/developers/file-integration/mto-ftp", description: "Bulk pipe-delimited CSV over SFTP." },
+                    ],
+                    diagramTitle: "MTO remittance flow",
+                    diagram: (
+                        <div className="flex flex-col md:flex-row items-center justify-center">
+                            <FlowNode label="Your app" sublabel="Customer UI" type="user" />
+                            <FlowArrow direction="both" label="REST / FTP" />
+                            <FlowNode label="MITO" sublabel="FX & routing" type="MITO" />
+                            <FlowArrow direction="right" label="Payout" />
+                            <FlowNode label="Destination" sublabel="Bank / wallet" type="secondary" />
                         </div>
-                    </div>
-                </EndpointBlock>
-            </div>
-        </ApiReferenceLayout>
+                    ),
+                    phases: {
+                        collect: [
+                            {
+                                title: "Fund operational wallet",
+                                description: "Ensure your MITO wallet has sufficient balance to cover submitted transfers and fees.",
+                            },
+                        ],
+                        processForex: [
+                            {
+                                title: "Activate corridors",
+                                description: "Work with MITO to enable required source and destination country pairs.",
+                            },
+                            {
+                                title: "Fetch FX rate",
+                                description: "Get corridors then request rate for corridor, provider, and amount.",
+                                apiLinks: [
+                                    { label: "GET Exchange/corridors", href: "/developers/api-reference/mto-api#exchange-corridors" },
+                                    { label: "POST Exchange/rates", href: "/developers/api-reference/mto-api#exchange-rates" },
+                                ],
+                            },
+                            {
+                                title: "Get payout provider",
+                                description: "Lookup provider by country, currency, and service code.",
+                                apiLinks: [{ label: "GET Lookups/provider", href: "/developers/api-reference/mto-api#lookups-provider" }],
+                            },
+                        ],
+                        disburse: [
+                            {
+                                title: "Add settlement account",
+                                description: "Register bank account for scheduled payouts.",
+                                apiLinks: [{ label: "AddSettlementAccount", href: "/developers/api-reference/mto-api#add-settlement-account" }],
+                            },
+                            {
+                                title: "Track payouts & status",
+                                description: "Poll payout history or receive payout_initiated / payout_completed / payout_failed webhooks.",
+                                apiLinks: [
+                                    { label: "GET Mto/Payouts", href: "/developers/api-reference/mto-api#mto-payouts" },
+                                ],
+                                webhookLinks: [{ label: "MTO payout webhooks", href: "/developers/webhooks#events" }],
+                            },
+                        ],
+                    },
+                    webhookEvents: [
+                        { name: "payout_initiated", href: "/developers/webhooks#events", when: "Settlement debited, payout enqueued." },
+                        { name: "payout_completed", href: "/developers/webhooks#events", when: "Payout reached successful terminal status." },
+                        { name: "payout_failed", href: "/developers/webhooks#events", when: "Payout failed or unresolved." },
+                    ],
+                    statusFlow: ["pending", "processing", "completed", "failed"],
+                    credentialsService: "mto",
+                    apisInvolved: [
+                        { method: "POST", path: "/api/v1/Auth/Login", title: "Authenticate", href: "/developers/api-reference/mto-api#auth-login" },
+                        { method: "GET", path: "/api/v1/mito/Exchange/corridors", title: "Corridors", href: "/developers/api-reference/mto-api#exchange-corridors" },
+                        { method: "POST", path: "/api/v1/mito/Exchange/rates", title: "Exchange rate", href: "/developers/api-reference/mto-api#exchange-rates" },
+                        { method: "GET", path: "/api/v1/mito/Mto/Payouts", title: "Payout history", href: "/developers/api-reference/mto-api#mto-payouts" },
+                    ],
+                }}
+            />
+        </DocsLayout>
     );
 }

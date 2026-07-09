@@ -16,8 +16,11 @@ export default function RetailApiReference() {
                 {/* Page Title */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">Retail Submission API</h1>
-                    <p className="text-xl text-muted-foreground mb-6">
-                        Integrate MITO&apos;s White-labelled payment and money transfer engine. This API powers customer onboarding, FX validations, and checkout session management.
+                    <p className="text-xl text-muted-foreground mb-4">
+                        Furp retail API — users, corridors, rates, beneficiaries, transactions. Spec:{" "}
+                        <a href="https://furp02-staging.funtechcom.com/mito.html" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">mito.html</a>
+                        {" · "}SDK:{" "}
+                        <a href="https://furp02-staging.funtechcom.com/mito/mito.html#tag/SDK-Integration" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">SDK Integration</a>
                     </p>
                     <Button asChild className="gap-2 bg-primary hover:bg-primary/90 text-white rounded-full px-6">
                         <a href="/retail-api.postman_collection.json" download="retail-api.postman_collection.json">
@@ -28,7 +31,7 @@ export default function RetailApiReference() {
 
                 {/* Authentication Info */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
-                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                    <h2 id="auth" className="text-2xl font-bold flex items-center gap-2">
                         <Key className="w-6 h-6 text-primary" /> API Authentication
                     </h2>
                     <p className="text-muted-foreground">
@@ -57,47 +60,20 @@ export default function RetailApiReference() {
 
                     {/* Pre-Live Testing Accounts */}
                     <div className="pt-8 border-t mt-8 space-y-4">
-                        <h3 className="text-xl font-bold text-foreground flex items-center gap-2 m-0">
-                            <Landmark className="w-5 h-5 text-primary shrink-0" /> Pre-Live Testing Beneficiary Accounts
-                        </h3>
-                        <p className="text-sm text-muted-foreground m-0">
-                            Before going LIVE to your customers, please use the following verified beneficiary accounts to perform real-world end-to-end tests for the corresponding corridors:
-                        </p>
-                        <div className="w-full overflow-x-auto rounded-lg border bg-card text-card-foreground shadow-sm">
-                            <table className="w-full text-sm text-left">
-                                <thead className="bg-muted/50 text-muted-foreground border-b uppercase text-xs">
-                                    <tr>
-                                        <th className="px-4 py-3 font-medium">Currency</th>
-                                        <th className="px-4 py-3 font-medium">Country</th>
-                                        <th className="px-4 py-3 font-medium">Type</th>
-                                        <th className="px-4 py-3 font-medium">Bank/Network</th>
-                                        <th className="px-4 py-3 font-medium">Account/Wallet No.</th>
-                                        <th className="px-4 py-3 font-medium">Beneficiary Name</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y relative">
-                                    {[
-                                        { currency: "NGN", country: "Nigeria", type: "Bank Account", provider: "United Bank of Africa", number: "101 831 6888", name: "Topupnigeria.com nig Ltd" },
-                                        { currency: "XOF", country: "Mali", type: "Mobile Money", provider: "Orange", number: "+22394023155", name: "-" },
-                                        { currency: "XOF", country: "Guinea Conakry", type: "Mobile Money", provider: "Orange Guinea", number: "+224621499214", name: "-" },
-                                        { currency: "XAF", country: "Cameroon", type: "Mobile Money", provider: "MTN", number: "+237655737037", name: "Boubacar Diallo" },
-                                        { currency: "XOF", country: "Senegal", type: "Mobile Money", provider: "Orange Senegal", number: "+221775913063", name: "-" },
-                                        { currency: "GHS", country: "Ghana", type: "Mobile Money", provider: "MTN", number: "0244582582", name: "Emmanuel Kofi" },
-                                        { currency: "KES", country: "Kenya", type: "Bank Account", provider: "Equity Bank", number: "1710185926608", name: "ASHLEY KASISI" },
-                                        { currency: "KES", country: "Kenya", type: "Mobile Money", provider: "Mpesa", number: "254728893174", name: "WAITERE MUTAH" },
-                                        { currency: "TZS", country: "Tanzania", type: "Mobile Money", provider: "Tigopesa", number: "255765412309", name: "SALUMU SHUKIA" }
-                                    ].map((acc, index) => (
-                                        <tr key={index} className="hover:bg-muted/30 transition-colors">
-                                            <td className="px-4 py-3 font-mono font-semibold">{acc.currency}</td>
-                                            <td className="px-4 py-3">{acc.country}</td>
-                                            <td className="px-4 py-3 text-xs">{acc.type}</td>
-                                            <td className="px-4 py-3">{acc.provider}</td>
-                                            <td className="px-4 py-3 font-mono text-xs">{acc.number}</td>
-                                            <td className="px-4 py-3 text-muted-foreground">{acc.name}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border bg-primary/5 border-primary/20">
+                            <div className="space-y-1">
+                                <h4 className="font-bold text-foreground flex items-center gap-2 m-0">
+                                    <Landmark className="w-5 h-5 text-primary shrink-0" /> Pre-Live Testing Beneficiary Accounts
+                                </h4>
+                                <p className="text-xs text-muted-foreground m-0">
+                                    Use our verified test beneficiary accounts to perform real-world end-to-end sandbox transactions.
+                                </p>
+                            </div>
+                            <Button asChild size="sm" className="shrink-0">
+                                <Link href="/developers/pre-live-testing" className="flex items-center gap-1">
+                                    View Test Accounts <ArrowRight className="w-4 h-4" />
+                                </Link>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -815,7 +791,7 @@ export default function RetailApiReference() {
 
                 {/* Frontend SDK */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-t space-y-6">
-                    <h2 className="text-3xl font-extrabold tracking-tight flex items-center gap-2">
+                    <h2 id="sdks" className="text-3xl font-extrabold tracking-tight flex items-center gap-2">
                         <Zap className="w-8 h-8 text-yellow-500" /> Mito Link SDKs
                     </h2>
                     <p className="text-lg text-muted-foreground">

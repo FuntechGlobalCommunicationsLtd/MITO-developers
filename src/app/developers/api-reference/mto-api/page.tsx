@@ -8,6 +8,7 @@ import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, FileText, FolderSync, Info, ShieldCheck, Landmark, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MtoForexApiSections } from "@/components/developers/MtoForexApiSections";
 import Link from "next/link";
 
 export default function MtoApiReference() {
@@ -18,9 +19,12 @@ export default function MtoApiReference() {
             <div className="flex flex-col w-full">
                 {/* Header */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">MTO Submission API & FTP Reference</h1>
-                    <p className="text-xl text-muted-foreground mb-6">
-                        Secure, production-ready REST endpoints and FTP Gateway interfaces for Money Transfer Operators integrating with the MITO Unified Remittance Network.
+                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">MTO API Reference</h1>
+                    <p className="text-xl text-muted-foreground mb-4">
+                        Forex, collections, and payouts for MTO partners. Primary spec:{" "}
+                        <a href="https://furp02-staging.funtechcom.com/mtoforex.html" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">
+                            mtoforex.html
+                        </a>
                     </p>
                     <Button asChild className="gap-2 bg-primary hover:bg-primary/90 text-white rounded-full px-6">
                         <a href="/mto-api.postman_collection.json" download="mto-api.postman_collection.json">
@@ -31,28 +35,10 @@ export default function MtoApiReference() {
 
                 {/* Authentication & Setup Overview */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
-                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <h2 id="setup" className="text-2xl font-bold mb-6 flex items-center gap-2">
                         <ShieldCheck className="w-6 h-6 text-primary" /> Setup & Authorization
                     </h2>
                     <div className="prose prose-slate dark:prose-invert max-w-none space-y-4">
-                        <p className="text-muted-foreground">
-                            MITO MTO integrations support two primary connection methods depending on your volume and backend capabilities:
-                        </p>
-                        <div className="grid md:grid-cols-2 gap-6 my-6">
-                            <div className="bg-muted/30 p-6 rounded-xl border border-border">
-                                <h3 className="text-lg font-semibold mb-2">1. REST API (Real-time)</h3>
-                                <p className="text-sm text-muted-foreground mb-4">
-                                    Send payments instantly. Uses JSON-encoded payloads over HTTPS with Basic Authentication.
-                                </p>
-                            </div>
-                            <div className="bg-muted/30 p-6 rounded-xl border border-border">
-                                <h3 className="text-lg font-semibold mb-2">2. FTP Gateway (Batch)</h3>
-                                <p className="text-sm text-muted-foreground mb-4">
-                                    Process bulk transactions. Uses secure pipe-delimited CSV file exchanges over SFTP.
-                                </p>
-                            </div>
-                        </div>
-
                         <div className="bg-primary/5 p-6 rounded-xl border border-primary/20 space-y-4">
                             <h4 className="text-base font-bold text-foreground flex items-center gap-2 m-0">
                                 <Info className="w-5 h-5 text-primary shrink-0" /> REST API Auth Headers
@@ -82,47 +68,20 @@ export default function MtoApiReference() {
 
                         {/* Testing Accounts Section */}
                         <div className="pt-8 border-t mt-8 space-y-4">
-                            <h3 className="text-xl font-bold text-foreground flex items-center gap-2 m-0">
-                                <Landmark className="w-5 h-5 text-primary shrink-0" /> Pre-Live Testing Beneficiary Accounts
-                            </h3>
-                            <p className="text-sm text-muted-foreground m-0">
-                                Before going LIVE to your customers, please use the following verified beneficiary accounts to perform real-world end-to-end tests for the corresponding corridors:
-                            </p>
-                            <div className="w-full overflow-x-auto rounded-lg border bg-card text-card-foreground shadow-sm">
-                                <table className="w-full text-sm text-left">
-                                    <thead className="bg-muted/50 text-muted-foreground border-b uppercase text-xs">
-                                        <tr>
-                                            <th className="px-4 py-3 font-medium">Currency</th>
-                                            <th className="px-4 py-3 font-medium">Country</th>
-                                            <th className="px-4 py-3 font-medium">Type</th>
-                                            <th className="px-4 py-3 font-medium">Bank/Network</th>
-                                            <th className="px-4 py-3 font-medium">Account/Wallet No.</th>
-                                            <th className="px-4 py-3 font-medium">Beneficiary Name</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y relative">
-                                        {[
-                                            { currency: "NGN", country: "Nigeria", type: "Bank Account", provider: "United Bank of Africa", number: "101 831 6888", name: "Topupnigeria.com nig Ltd" },
-                                            { currency: "XOF", country: "Mali", type: "Mobile Money", provider: "Orange", number: "+22394023155", name: "-" },
-                                            { currency: "XOF", country: "Guinea Conakry", type: "Mobile Money", provider: "Orange Guinea", number: "+224621499214", name: "-" },
-                                            { currency: "XAF", country: "Cameroon", type: "Mobile Money", provider: "MTN", number: "+237655737037", name: "Boubacar Diallo" },
-                                            { currency: "XOF", country: "Senegal", type: "Mobile Money", provider: "Orange Senegal", number: "+221775913063", name: "-" },
-                                            { currency: "GHS", country: "Ghana", type: "Mobile Money", provider: "MTN", number: "0244582582", name: "Emmanuel Kofi" },
-                                            { currency: "KES", country: "Kenya", type: "Bank Account", provider: "Equity Bank", number: "1710185926608", name: "ASHLEY KASISI" },
-                                            { currency: "KES", country: "Kenya", type: "Mobile Money", provider: "Mpesa", number: "254728893174", name: "WAITERE MUTAH" },
-                                            { currency: "TZS", country: "Tanzania", type: "Mobile Money", provider: "Tigopesa", number: "255765412309", name: "SALUMU SHUKIA" }
-                                        ].map((acc, index) => (
-                                            <tr key={index} className="hover:bg-muted/30 transition-colors">
-                                                <td className="px-4 py-3 font-mono font-semibold">{acc.currency}</td>
-                                                <td className="px-4 py-3">{acc.country}</td>
-                                                <td className="px-4 py-3 text-xs">{acc.type}</td>
-                                                <td className="px-4 py-3">{acc.provider}</td>
-                                                <td className="px-4 py-3 font-mono text-xs">{acc.number}</td>
-                                                <td className="px-4 py-3 text-muted-foreground">{acc.name}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border bg-primary/5 border-primary/20">
+                                <div className="space-y-1">
+                                    <h4 className="font-bold text-foreground flex items-center gap-2 m-0">
+                                        <Landmark className="w-5 h-5 text-primary shrink-0" /> Pre-Live Testing Beneficiary Accounts
+                                    </h4>
+                                    <p className="text-xs text-muted-foreground m-0">
+                                        Use our verified test beneficiary accounts to perform real-world end-to-end sandbox transactions.
+                                    </p>
+                                </div>
+                                <Button asChild size="sm" className="shrink-0">
+                                    <Link href="/developers/pre-live-testing" className="flex items-center gap-1">
+                                        View Test Accounts <ArrowRight className="w-4 h-4" />
+                                    </Link>
+                                </Button>
                             </div>
                         </div>
                     </div>
@@ -143,7 +102,8 @@ export default function MtoApiReference() {
 
                     {/* REST API Endpoints Section */}
                     <TabsContent value="rest" className="mt-0 space-y-0">
-                        {/* Get Live FX Rate */}
+                        <MtoForexApiSections />
+                        {/* Get Live FX Rate — legacy */}
                         <section id="get-rate">
                             <EndpointBlock
                                 method="GET"

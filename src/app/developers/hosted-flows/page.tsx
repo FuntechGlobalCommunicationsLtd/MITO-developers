@@ -1,70 +1,86 @@
 "use client";
 
-import { ApiReferenceLayout } from "@/components/layout/ApiReferenceLayout";
-import { EndpointBlock } from "@/components/developers/ApiBlocks";
-import { CodeTabs } from "@/components/developers/CodeBlocks";
+import { DocsLayout } from "@/components/layout/DocsLayout";
+import { IntegrationGuide } from "@/components/developers/IntegrationGuide";
+import { FlowNode, FlowArrow } from "@/components/developers/Flows";
 
 export default function HostedFlowsPage() {
     return (
-        <ApiReferenceLayout>
-            <div className="flex flex-col w-full">
-                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
-                    <h1 className="text-4xl font-extrabold tracking-tight mb-4">Hosted Payment Flows</h1>
-                    <p className="text-xl text-muted-foreground">
-                        Offload PCI compliance, 3D Secure authentication, and KYC document collection by using MITO&apos;s secure Hosted Payment Pages.
-                    </p>
-                </div>
-
-                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl">
-                    <section className="mb-0">
-                        <h2 className="text-2xl font-bold mb-6">How it works</h2>
-                        <div className="space-y-4 text-muted-foreground leading-relaxed">
-                            <p>1. Your server makes an API call to create a Checkout Session.</p>
-                            <p>2. You receive a unique MITO URL and redirect your user to it.</p>
-                            <p>3. MITO displays your customized payment form, handling card input and bank authentication.</p>
-                            <p>4. Upon completion (success or failure), the user is redirected back to your website.</p>
-                            <p>5. MITO sends a secure webhook to your server confirming the payment status.</p>
+        <DocsLayout>
+            <IntegrationGuide
+                content={{
+                    title: "Hosted checkout",
+                    partnerLabel: "Integration method · Hosted",
+                    description:
+                        "Redirect customers to MITO-hosted payment pages. MITO handles PCI scope, 3D Secure, and KYC document collection on secure infrastructure.",
+                    prerequisites: [
+                        "Partner credentials and enabled payment methods for your corridors.",
+                        "success_url and cancel_url configured on your domain.",
+                        "Webhook endpoint to confirm payment before fulfilling orders.",
+                    ],
+                    integrationMethods: [
+                        { label: "Retail flow", href: "/developers/guides/retail", description: "C2C remittance via redirect." },
+                        { label: "Biller flow", href: "/developers/guides/biller", description: "Collection via redirect." },
+                        { label: "Hosted API reference", href: "/developers/api-reference/hosted", description: "Session creation endpoint and samples." },
+                    ],
+                    diagramTitle: "Web redirect checkout",
+                    diagram: (
+                        <div className="flex flex-col md:flex-row items-center justify-center">
+                            <FlowNode label="Your site" sublabel="Create session" type="user" />
+                            <FlowArrow direction="right" label="Redirect" />
+                            <FlowNode label="MITO checkout" sublabel="Pay + KYC" type="MITO" />
+                            <FlowArrow direction="right" label="Return URL" />
+                            <FlowNode label="Your site" sublabel="Success / cancel" type="secondary" />
                         </div>
-                    </section>
-                </div>
-
-                <EndpointBlock
-                    method="POST"
-                    path="/v1/checkout/sessions"
-                    title="Create a Session"
-                    description="Generate a secure URL to accept payments."
-                    requestSamples={
-                        <CodeTabs
-                            tabs={[
-                                {
-                                    label: "JSON",
-                                    language: "json",
-                                    code: `{
-  "amount": 5000,
-  "currency": "USD",
-  "success_url": "https://example.com/success",
-  "cancel_url": "https://example.com/cancel"
-}`
-                                }
-                            ]}
-                        />
-                    }
-                    responseSamples={
-                        <CodeTabs
-                            tabs={[
-                                {
-                                    label: "201 Created",
-                                    language: "json",
-                                    code: `{
-  "id": "cs_test_123",
-  "url": "https://checkout.mito.com/pay/cs_test_123"
-}`
-                                }
-                            ]}
-                        />
-                    }
-                />
-            </div>
-        </ApiReferenceLayout>
+                    ),
+                    phases: {
+                        collect: [
+                            {
+                                title: "Create checkout session (server-side)",
+                                description: "Your backend calls the session API and receives a MITO checkout URL.",
+                                apiLinks: [
+                                    { label: "POST /v1/checkout/sessions", href: "/developers/api-reference/hosted#v1-checkout-sessions" },
+                                    { label: "Biller: InitiateTransactions", href: "/developers/api-reference/biller-api#api-v2-Business-InitiateTransactions" },
+                                ],
+                            },
+                            {
+                                title: "Redirect customer",
+                                description: "Send the customer to the MITO URL. They complete payment on MITO infrastructure.",
+                            },
+                        ],
+                        processForex: [
+                            {
+                                title: "Customer completes on MITO",
+                                description: "MITO processes card/bank authentication, FX where applicable, and compliance checks.",
+                            },
+                            {
+                                title: "Return to your site",
+                                description: "Customer is redirected to success_url or cancel_url. Do not rely on redirect alone for fulfillment.",
+                                webhookLinks: [{ label: "Webhook events", href: "/developers/webhooks" }],
+                            },
+                        ],
+                        disburse: [
+                            {
+                                title: "Confirm via webhook",
+                                description: "Verify payment server-side via webhook before releasing goods or marking transfer complete.",
+                                apiLinks: [
+                                    { label: "GetTransactionStatus", href: "/developers/api-reference/biller-api#api-v2-Business-GetTransactionStatus" },
+                                ],
+                            },
+                        ],
+                    },
+                    webhookEvents: [
+                        { name: "PAYMENT_CAPTURED", href: "/developers/webhooks#events", when: "Biller collection captured." },
+                        { name: "collection.completed", href: "/developers/webhooks#events", when: "Collection request paid." },
+                        { name: "transfer.completed", href: "/developers/webhooks#events", when: "Retail transfer completed." },
+                    ],
+                    statusFlow: ["session.created", "processing", "completed", "failed"],
+                    apisInvolved: [
+                        { method: "POST", path: "/v1/checkout/sessions", title: "Create checkout session", href: "/developers/api-reference/hosted#v1-checkout-sessions" },
+                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Biller collection (hosted redirect URL)", href: "/developers/api-reference/collect#api-v2-Business-InitiateTransactions" },
+                    ],
+                }}
+            />
+        </DocsLayout>
     );
 }
