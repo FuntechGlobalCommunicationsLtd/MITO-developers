@@ -54,7 +54,7 @@ export function EndpointBlock({
     const finalResponseSamples = responseSamples || exampleResponse;
 
     return (
-        <div className="flex flex-col xl:flex-row border-b last:border-0" id={id}>
+        <div className="flex flex-col lg:flex-row border-b last:border-0" id={id}>
             {/* Middle Column: Documentation */}
             <div className="flex-1 min-w-0 py-12 px-4 sm:px-6 lg:px-8 max-w-4xl">
                 <div className="flex items-center gap-4 mb-3">
@@ -77,7 +77,7 @@ export function EndpointBlock({
             </div>
 
             {/* Right Column: Samples */}
-            <div className="xl:w-[45%] xl:min-w-[450px] bg-[#0f172a] dark:bg-slate-900/50 p-6 lg:p-8 xl:sticky xl:top-16 xl:h-[calc(100vh-4rem)] overflow-y-auto border-l border-slate-800">
+            <div className="lg:w-[45%] lg:min-w-[450px] bg-[#0f172a] dark:bg-slate-900/50 p-6 lg:p-8 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] overflow-y-auto border-l border-slate-800">
                 <div className="space-y-12">
                     {/* Request Samples Section */}
                     <div className="space-y-4">
