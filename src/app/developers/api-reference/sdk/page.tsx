@@ -24,7 +24,7 @@ export default function SdkApiReferencePage() {
 
                 <EndpointBlock
                     method="POST"
-                    path="/transactions"
+                    path="/api/v1/mito/Transactions"
                     title="Prerequisite: create transaction"
                     description="Call this from your backend before opening the SDK. Use the linkToken from the response in useMitoLink. For biller flows, use InitiateTransactions instead."
                     requestSamples={
@@ -33,7 +33,7 @@ export default function SdkApiReferencePage() {
                                 {
                                     label: "Retail",
                                     language: "json",
-                                    code: `POST /transactions
+                                    code: `POST /api/v1/mito/Transactions
 {
   "sendAmount": 100,
   "sendCurrency": "USD",
@@ -67,7 +67,7 @@ export default function SdkApiReferencePage() {
                             Retail API <ArrowRight className="w-3 h-3" />
                         </Link>
                         {" · "}
-                        <Link href="/developers/api-reference/biller-api#api-v2-Business-InitiateTransactions" className="text-primary font-semibold hover:underline inline-flex items-center gap-1">
+                        <Link href="/developers/api-reference/biller-api#initiate-transaction" className="text-primary font-semibold hover:underline inline-flex items-center gap-1">
                             Biller API <ArrowRight className="w-3 h-3" />
                         </Link>
                     </p>

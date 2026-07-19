@@ -31,8 +31,8 @@ export default function SDKIntegrationGuidePage() {
                                 description:
                                     "Your backend calls the transaction API to obtain a linkToken. Never expose secret keys in the frontend.",
                                 apiLinks: [
-                                    { label: "POST /transactions — API Reference", href: "/developers/api-reference/retail-api#transactions" },
-                                    { label: "Biller: InitiateTransactions", href: "/developers/api-reference/biller-api#api-v2-Business-InitiateTransactions" },
+                                    { label: "POST /api/v1/mito/Transactions — API Reference", href: "/developers/api-reference/retail-api#create-transaction" },
+                                    { label: "Biller: InitiateTransactions", href: "/developers/api-reference/biller-api#initiate-transaction" },
                                 ],
                             },
                             {
@@ -72,9 +72,9 @@ export default function SDKIntegrationGuidePage() {
                     statusFlow: ["pending", "processing", "completed", "failed"],
                     credentialsService: "retail",
                     apisInvolved: [
-                        { method: "POST", path: "/transactions", title: "Create transaction (retail)", href: "/developers/api-reference/collect#transactions" },
-                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Initiate collection (biller)", href: "/developers/api-reference/collect#api-v2-Business-InitiateTransactions" },
-                        { method: "GET", path: "/transactions/{id}", title: "Transaction status", href: "/developers/api-reference/manage#transactions-{transactionId}" },
+                        { method: "POST", path: "/api/v1/mito/Transactions", title: "Create transaction (retail)", href: "/developers/api-reference/retail-api#create-transaction" },
+                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Initiate collection (biller)", href: "/developers/api-reference/biller-api#initiate-transaction" },
+                        { method: "GET", path: "/api/v1/mito/Transactions/by-reference", title: "Transaction status", href: "/developers/api-reference/retail-api#get-transaction" },
                     ],
                 }}
             />

@@ -67,10 +67,10 @@ export default function SettlementPage() {
                         <li>Payout reports available for biller partners.</li>
                     </ul>
                     <div className="mt-4 flex flex-wrap gap-3">
-                        <Link href="/developers/api-reference/biller-api#api-v2-Business-balances" className="text-sm font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary">
+                        <Link href="/developers/api-reference/biller-api#get-balances" className="text-sm font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary">
                             Wallet balances
                         </Link>
-                        <Link href="/developers/api-reference/biller-api#api-v2-payout-report" className="text-sm font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary">
+                        <Link href="/developers/api-reference/biller-api#get-payout-report" className="text-sm font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary">
                             Payout report
                         </Link>
                         <Link href="/developers/webhooks" className="text-sm font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary">

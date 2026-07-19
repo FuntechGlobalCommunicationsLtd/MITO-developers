@@ -471,7 +471,7 @@ export default function GetStartedPage() {
                         <p className="text-muted-foreground mb-6">
                             Verify your credentials with a rate lookup. Full request/response specs:{" "}
                             <Link href="/developers/api-reference/process-forex#exchange-rates" className="text-primary font-semibold hover:underline">
-                                GET /exchange/rates
+                                POST /api/v1/mito/Exchange/rates
                             </Link>
                         </p>
 

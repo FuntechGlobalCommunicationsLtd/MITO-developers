@@ -20,10 +20,25 @@ export interface GuideApiEntry {
     href: string;
 }
 
+export interface GuideApiGroup {
+    id?: string;
+    title: string;
+    description?: string;
+    apis: GuideApiEntry[];
+}
+
+export interface GuideAuthContent {
+    summary: string;
+    headers: { name: string; value: string }[];
+    docsHref?: string;
+}
+
 export interface IntegrationGuideContent {
     title: string;
     partnerLabel: string;
     description: string;
+    /** Shown in Overview for each workflow (Retail / Biller / MTO) */
+    authentication?: GuideAuthContent;
     prerequisites: string[];
     integrationMethods: { label: string; href: string; description: string }[];
     diagramTitle?: string;
@@ -33,7 +48,10 @@ export interface IntegrationGuideContent {
         processForex: GuideStep[];
         disburse: GuideStep[];
     };
-    apisInvolved: GuideApiEntry[];
+    /** Flat list — used when apiGroups is not provided */
+    apisInvolved?: GuideApiEntry[];
+    /** Grouped lists (e.g. Workflow / Helper). Takes precedence over apisInvolved. */
+    apiGroups?: GuideApiGroup[];
     webhookEvents?: { name: string; href: string; when: string }[];
     statusFlow?: string[];
     credentialsService?: "mto" | "retail" | "biller";
@@ -87,16 +105,89 @@ const methodColors: Record<GuideApiEntry["method"], string> = {
     DELETE: "bg-red-500/10 text-red-700",
 };
 
+export function ApiEntryList({ apis }: { apis: GuideApiEntry[] }) {
+    return (
+        <div className="divide-y border rounded-xl overflow-hidden">
+            {apis.map((api) => (
+                <Link
+                    key={api.href + api.path}
+                    href={api.href}
+                    className="flex flex-col sm:flex-row sm:items-center gap-2 p-4 hover:bg-muted/40 transition-colors group"
+                >
+                    <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
+                        <Badge variant="secondary" className={cn("text-[10px]", methodColors[api.method])}>
+                            {api.method}
+                        </Badge>
+                        <span className="text-muted-foreground">{api.path}</span>
+                    </div>
+                    <span className="text-sm font-medium group-hover:text-primary flex-1">{api.title}</span>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0 hidden sm:block" />
+                </Link>
+            ))}
+        </div>
+    );
+}
+
 export function IntegrationGuide({ content }: { content: IntegrationGuideContent }) {
     const credentialsHref = content.credentialsService
         ? `/developers/credentials?service=${content.credentialsService}`
         : "/developers/credentials";
 
+    const hasApiGroups = Boolean(content.apiGroups?.length);
+    const hasFlatApis = Boolean(content.apisInvolved?.length);
+    const showApis = hasApiGroups || hasFlatApis;
+
     return (
         <div className="max-w-4xl">
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">{content.partnerLabel}</p>
-            <h1 className="text-4xl font-extrabold tracking-tight mb-4">{content.title}</h1>
-            <p className="text-xl text-muted-foreground mb-8">{content.description}</p>
+            <section id="overview" className="mb-12 space-y-10">
+                <div>
+                    <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">{content.partnerLabel}</p>
+                    <h1 className="text-4xl font-extrabold tracking-tight mb-4">{content.title}</h1>
+                    <p className="text-xl text-muted-foreground">{content.description}</p>
+                </div>
+
+                {content.authentication && (
+                    <div id="authentication" className="scroll-mt-24 space-y-3">
+                        <h2 className="text-2xl font-bold">
+                            {content.credentialsService === "biller"
+                                ? "Authentication (Basic Auth)"
+                                : content.credentialsService === "retail"
+                                    ? "Authentication (JWT)"
+                                    : "Authentication"}
+                        </h2>
+                        <p className="text-sm text-muted-foreground">{content.authentication.summary}</p>
+                        <div className="overflow-x-auto rounded-xl border">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-muted/50 text-muted-foreground border-b">
+                                    <tr>
+                                        <th className="px-4 py-3 font-medium">Header</th>
+                                        <th className="px-4 py-3 font-medium">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y">
+                                    {content.authentication.headers.map((h) => (
+                                        <tr key={h.name}>
+                                            <td className="px-4 py-3 font-mono text-primary">{h.name}</td>
+                                            <td className="px-4 py-3 text-muted-foreground">
+                                                <code className="bg-muted px-1.5 py-0.5 rounded text-xs">{h.value}</code>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        {content.authentication.docsHref && (
+                            <p className="text-sm text-muted-foreground">
+                                Details:{" "}
+                                <Link href={content.authentication.docsHref} className="text-primary font-semibold hover:underline">
+                                    Authentication docs
+                                </Link>
+                            </p>
+                        )}
+                    </div>
+                )}
+
+            </section>
 
             {/* Integration methods */}
             <section id="integration-methods" className="mb-12">
@@ -214,34 +305,31 @@ export function IntegrationGuide({ content }: { content: IntegrationGuideContent
             )}
 
             {/* APIs involved */}
-            <section id="apis-involved" className="mb-12">
-                <h2 className="text-2xl font-bold mb-2">APIs involved</h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                    Full request/response specs live in{" "}
-                    <Link href="/developers/api-reference" className="text-primary font-semibold hover:underline">
-                        API Reference
-                    </Link>
-                    .
-                </p>
-                <div className="divide-y border rounded-xl overflow-hidden">
-                    {content.apisInvolved.map((api) => (
-                        <Link
-                            key={api.href}
-                            href={api.href}
-                            className="flex flex-col sm:flex-row sm:items-center gap-2 p-4 hover:bg-muted/40 transition-colors group"
-                        >
-                            <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
-                                <Badge variant="secondary" className={cn("text-[10px]", methodColors[api.method])}>
-                                    {api.method}
-                                </Badge>
-                                <span className="text-muted-foreground">{api.path}</span>
-                            </div>
-                            <span className="text-sm font-medium group-hover:text-primary flex-1">{api.title}</span>
-                            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0 hidden sm:block" />
-                        </Link>
-                    ))}
-                </div>
-            </section>
+            {showApis && (
+                <section id="apis-involved" className="mb-12">
+                    <h2 className="text-2xl font-bold mb-2">APIs involved</h2>
+                    <p className="text-sm text-muted-foreground mb-6">
+                        Click an endpoint to open its full request/response spec in the partner API reference.
+                    </p>
+                    {hasApiGroups ? (
+                        <div className="space-y-8">
+                            {content.apiGroups!.map((group) => (
+                                <div key={group.id ?? group.title} id={group.id} className="scroll-mt-24 space-y-3">
+                                    <div>
+                                        <h3 className="text-lg font-bold">{group.title}</h3>
+                                        {group.description && (
+                                            <p className="text-sm text-muted-foreground mt-1">{group.description}</p>
+                                        )}
+                                    </div>
+                                    <ApiEntryList apis={group.apis} />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <ApiEntryList apis={content.apisInvolved ?? []} />
+                    )}
+                </section>
+            )}
 
             {/* Footer CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t">

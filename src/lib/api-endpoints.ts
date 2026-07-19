@@ -17,7 +17,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
     // ─── Retail (mito.html) ───
     {
         method: "POST",
-        path: "/auth/login",
+        path: "/api/v1/mito/Auth/login",
         title: "Authenticate (Retail)",
         description: "JWT bearer token with AccessAffiliateNumber and AccessServiceNumber.",
         phase: "manage",
@@ -27,7 +27,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
     },
     {
         method: "POST",
-        path: "/users",
+        path: "/api/v1/mito/Users",
         title: "Create user (sender)",
         description: "Register retail customer / sender for KYC and transactions.",
         phase: "collect",
@@ -36,7 +36,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
     },
     {
         method: "GET",
-        path: "/exchange/Corridors",
+        path: "/api/v1/mito/Exchange/corridors",
         title: "Get corridors (Retail)",
         description: "Available send/receive corridor pairs.",
         phase: "processForex",
@@ -45,16 +45,16 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
     },
     {
         method: "POST",
-        path: "/exchange/rates",
+        path: "/api/v1/mito/Exchange/rates",
         title: "Validate exchange rate (Retail)",
-        description: "Get rateId required before POST /transactions.",
+        description: "Get rateId required before POST /api/v1/mito/Transactions.",
         phase: "processForex",
         partners: ["retail"],
         href: "/developers/api-reference/retail-api#exchange-rates",
     },
     {
         method: "GET",
-        path: "/lookups/provider",
+        path: "/api/v1/mito/Lookups/provider",
         title: "Get payout providers (Retail)",
         description: "Providers by country, currency, service, and collection mode.",
         phase: "processForex",
@@ -63,7 +63,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
     },
     {
         method: "POST",
-        path: "/beneficiaries",
+        path: "/api/v1/mito/Beneficiaries",
         title: "Create beneficiary (Retail)",
         description: "Register payout destination before or during hosted flow.",
         phase: "disburse",
@@ -72,7 +72,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
     },
     {
         method: "POST",
-        path: "/transactions",
+        path: "/api/v1/mito/Transactions",
         title: "Initiate transaction (Retail)",
         description: "Primary entry point. Returns PaymentUrl for HOSTEDPAGE/SDK channel.",
         phase: "collect",
@@ -82,12 +82,12 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
     },
     {
         method: "GET",
-        path: "/transactions/{id}",
+        path: "/api/v1/mito/Transactions/by-reference",
         title: "Get transaction (Retail)",
-        description: "Poll status by transaction ID or partner reference.",
+        description: "Poll status by MITO reference or partnerReferenceNumber.",
         phase: "manage",
         partners: ["retail"],
-        href: "/developers/api-reference/retail-api#transactions-{transactionId}",
+        href: "/developers/api-reference/retail-api#get-transaction",
     },
 
     // ─── Biller (affiliate-payment-collection) ───
@@ -98,7 +98,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Start collection with billerId. Returns redirectUrl for hosted/card/bank pay.",
         phase: "collect",
         partners: ["biller"],
-        href: "/developers/api-reference/biller-api#api-v2-Business-InitiateTransactions",
+        href: "/developers/api-reference/biller-api#initiate-transaction",
         externalDoc: "https://furp02-pre-pord.funtechcom.com/affiliate-payment-collection.html",
     },
     {
@@ -108,7 +108,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Poll by referenceNo or partnerRefernceNumber.",
         phase: "manage",
         partners: ["biller"],
-        href: "/developers/api-reference/biller-api#api-v2-Business-GetTransactionStatus",
+        href: "/developers/api-reference/biller-api#get-status",
     },
     {
         method: "GET",
@@ -117,7 +117,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Available balance after collections.",
         phase: "manage",
         partners: ["biller"],
-        href: "/developers/api-reference/biller-api#api-v2-Business-balances",
+        href: "/developers/api-reference/biller-api#get-balances",
     },
     {
         method: "POST",
@@ -126,7 +126,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Withdraw wallet to approved corporate bank account.",
         phase: "disburse",
         partners: ["biller"],
-        href: "/developers/api-reference/biller-api#api-v2-payout-CreatePayout",
+        href: "/developers/api-reference/biller-api#create-payout",
     },
     {
         method: "POST",
@@ -135,7 +135,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Register settlement bank account.",
         phase: "disburse",
         partners: ["biller"],
-        href: "/developers/api-reference/biller-api#api-v2-Payout-AddPayoutAccount",
+        href: "/developers/api-reference/biller-api#add-payout-account",
     },
 
     // ─── MTO (mtoforex.html) ───

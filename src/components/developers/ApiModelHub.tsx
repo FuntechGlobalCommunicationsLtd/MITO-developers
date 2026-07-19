@@ -43,7 +43,7 @@ export function ApiModelHub({
             <section className="mb-12">
                 <h2 className="text-2xl font-bold mb-4">Endpoints</h2>
                 <p className="text-muted-foreground mb-6 text-sm">
-                    Canonical API reference grouped by capability. The same endpoint may appear in multiple integration flows.
+                    Capability index only — click an endpoint to open its full partner API documentation (not a second copy of the spec).
                 </p>
                 <div className="divide-y border rounded-xl overflow-hidden">
                     {endpoints.map((ep) => (

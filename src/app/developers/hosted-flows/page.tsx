@@ -40,7 +40,7 @@ export default function HostedFlowsPage() {
                                 description: "Your backend calls the session API and receives a MITO checkout URL.",
                                 apiLinks: [
                                     { label: "POST /v1/checkout/sessions", href: "/developers/api-reference/hosted#v1-checkout-sessions" },
-                                    { label: "Biller: InitiateTransactions", href: "/developers/api-reference/biller-api#api-v2-Business-InitiateTransactions" },
+                                    { label: "Biller: InitiateTransactions", href: "/developers/api-reference/biller-api#initiate-transaction" },
                                 ],
                             },
                             {
@@ -64,7 +64,7 @@ export default function HostedFlowsPage() {
                                 title: "Confirm via webhook",
                                 description: "Verify payment server-side via webhook before releasing goods or marking transfer complete.",
                                 apiLinks: [
-                                    { label: "GetTransactionStatus", href: "/developers/api-reference/biller-api#api-v2-Business-GetTransactionStatus" },
+                                    { label: "GetTransactionStatus", href: "/developers/api-reference/biller-api#get-status" },
                                 ],
                             },
                         ],
@@ -77,7 +77,7 @@ export default function HostedFlowsPage() {
                     statusFlow: ["session.created", "processing", "completed", "failed"],
                     apisInvolved: [
                         { method: "POST", path: "/v1/checkout/sessions", title: "Create checkout session", href: "/developers/api-reference/hosted#v1-checkout-sessions" },
-                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Biller collection (hosted redirect URL)", href: "/developers/api-reference/collect#api-v2-Business-InitiateTransactions" },
+                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Biller collection (hosted redirect URL)", href: "/developers/api-reference/biller-api#initiate-transaction" },
                     ],
                 }}
             />

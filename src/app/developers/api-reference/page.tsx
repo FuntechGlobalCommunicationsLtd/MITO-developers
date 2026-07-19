@@ -29,7 +29,7 @@ export default function ApiReferenceLandingPage() {
                         <IntegrationTypeCard title="Disburse" description="Payouts, beneficiaries, settlement." href="/developers/api-reference/disburse" />
                         <IntegrationTypeCard title="Manage" description="Auth, balances, status, webhooks." href="/developers/api-reference/manage" />
                         <IntegrationTypeCard title="SDK" description="MITO Link install and config." href="/developers/api-reference/sdk" />
-                        <IntegrationTypeCard title="Hosted checkout" description="POST /transactions (HOSTEDPAGE)." href="/developers/api-reference/hosted" />
+                        <IntegrationTypeCard title="Hosted checkout" description="POST /api/v1/mito/Transactions (HOSTEDPAGE)." href="/developers/api-reference/hosted" />
                         <IntegrationTypeCard title="FTP file formats" description="MTO batch CSV specs." href="/developers/api-reference/ftp" />
                     </div>
                 </section>

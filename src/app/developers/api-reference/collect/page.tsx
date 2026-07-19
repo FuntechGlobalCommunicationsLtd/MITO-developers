@@ -52,7 +52,7 @@ export default function CollectApiPage() {
         <PhasePage
             phase="collect"
             title="Collect"
-            description="Accept payments and initiate transactions — retail POST /transactions, biller InitiateTransactions, MTO merchant onboarding."
+            description="Accept payments and initiate transactions — retail POST /api/v1/mito/Transactions, biller InitiateTransactions, MTO merchant onboarding."
         />
     );
 }

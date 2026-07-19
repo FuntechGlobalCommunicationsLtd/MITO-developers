@@ -13,6 +13,14 @@ export default function MtoGuidePage() {
                     partnerLabel: "Integration model · MTO",
                     description:
                         "Send bulk remittance transactions via REST API or FTP batch. You own the customer UI; MITO handles FX routing and payout execution. Senders and beneficiaries are included in the transaction payload — sender registration in MITO is not required today.",
+                    authentication: {
+                        summary: "Obtain a Bearer token via Auth login, then send it on all MTO API calls.",
+                        headers: [
+                            { name: "Authorization", value: "Bearer <token from POST /api/v1/Auth/Login>" },
+                            { name: "Content-Type", value: "application/json" },
+                        ],
+                        docsHref: "/developers/api-reference/mto-api#auth-login",
+                    },
                     prerequisites: [
                         "Signed MTO partner contract.",
                         "Credentials from onboarding email (POST /api/v1/Auth/Login).",
@@ -35,6 +43,11 @@ export default function MtoGuidePage() {
                     ),
                     phases: {
                         collect: [
+                            {
+                                title: "Authenticate",
+                                description: "Call POST /api/v1/Auth/Login and store the Bearer token for subsequent requests.",
+                                apiLinks: [{ label: "Auth Login", href: "/developers/api-reference/mto-api#auth-login" }],
+                            },
                             {
                                 title: "Fund operational wallet",
                                 description: "Ensure your MITO wallet has sufficient balance to cover submitted transfers and fees.",
@@ -82,11 +95,30 @@ export default function MtoGuidePage() {
                     ],
                     statusFlow: ["pending", "processing", "completed", "failed"],
                     credentialsService: "mto",
-                    apisInvolved: [
-                        { method: "POST", path: "/api/v1/Auth/Login", title: "Authenticate", href: "/developers/api-reference/mto-api#auth-login" },
-                        { method: "GET", path: "/api/v1/mito/Exchange/corridors", title: "Corridors", href: "/developers/api-reference/mto-api#exchange-corridors" },
-                        { method: "POST", path: "/api/v1/mito/Exchange/rates", title: "Exchange rate", href: "/developers/api-reference/mto-api#exchange-rates" },
-                        { method: "GET", path: "/api/v1/mito/Mto/Payouts", title: "Payout history", href: "/developers/api-reference/mto-api#mto-payouts" },
+                    apiGroups: [
+                        {
+                            id: "apis-workflow",
+                            title: "Workflow APIs",
+                            description: "Auth → quote → create → status.",
+                            apis: [
+                                { method: "POST", path: "/api/v1/Auth/Login", title: "Authenticate", href: "/developers/api-reference/mto-api#auth-login" },
+                                { method: "GET", path: "/api/v1/mito/Exchange/corridors", title: "Corridors", href: "/developers/api-reference/mto-api#exchange-corridors" },
+                                { method: "POST", path: "/api/v1/mito/Exchange/rates", title: "Exchange rate", href: "/developers/api-reference/mto-api#exchange-rates" },
+                                { method: "POST", path: "/api/v1/Mto/TransactionCreate", title: "Create transaction", href: "/developers/api-reference/mto-api#create-transaction" },
+                                { method: "GET", path: "/api/v1/mito/Mto/TransactionDetails", title: "Transaction detail", href: "/developers/api-reference/mto-api#get-transaction" },
+                            ],
+                        },
+                        {
+                            id: "apis-helper",
+                            title: "Helper APIs",
+                            description: "Balances, settlement accounts, and payout history.",
+                            apis: [
+                                { method: "GET", path: "/api/v1/mito/Lookups/provider", title: "Providers", href: "/developers/api-reference/mto-api#lookups-provider" },
+                                { method: "GET", path: "/api/v1/mito/Users/{userId}/balances", title: "Balances", href: "/developers/api-reference/mto-api#user-balances" },
+                                { method: "POST", path: "/api/v1/MTO/AddSettlementAccount", title: "Add settlement account", href: "/developers/api-reference/mto-api#add-settlement-account" },
+                                { method: "GET", path: "/api/v1/mito/Mto/Payouts", title: "Payout history", href: "/developers/api-reference/mto-api#mto-payouts" },
+                            ],
+                        },
                     ],
                 }}
             />

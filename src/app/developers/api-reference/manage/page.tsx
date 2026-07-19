@@ -31,7 +31,7 @@ export default function ManageApiPage() {
                 <ApiModelHub
                     phase="API Reference"
                     title="Manage"
-                    description="Authentication, balances, status polling, refunds, and webhook verification."
+                    description="Index of auth, balances, and status endpoints. Click any row to open the full partner API endpoint page."
                     endpoints={endpoints.map((e) => ({
                         method: e.method,
                         path: e.path,
@@ -40,9 +40,10 @@ export default function ManageApiPage() {
                         href: e.href,
                     }))}
                     relatedDocs={[
-                        { title: "API credentials", href: "/developers/credentials", description: "Per-partner sandbox/live keys" },
+                        { title: "Retail API", href: "/developers/api-reference/retail-api", description: "Full retail endpoint specs" },
+                        { title: "Biller API", href: "/developers/api-reference/biller-api", description: "Full Business / payout endpoint specs" },
+                        { title: "MTO API", href: "/developers/api-reference/mto-api", description: "Full MTO endpoint specs" },
                         { title: "Webhooks", href: "/developers/webhooks", description: "Event catalog" },
-                        { title: "Getting started", href: "/developers/get-started", description: "Environments" },
                     ]}
                 />
 

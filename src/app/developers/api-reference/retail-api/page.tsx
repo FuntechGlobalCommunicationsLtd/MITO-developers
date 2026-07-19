@@ -5,7 +5,7 @@ import { EndpointBlock } from "@/components/developers/ApiBlocks";
 import { CodeTabs } from "@/components/developers/CodeBlocks";
 import { SchemaTable } from "@/components/developers/SchemaTable";
 import { Badge } from "@/components/ui/badge";
-import { Key, Landmark, Laptop, Smartphone, Zap, Download, ArrowRight } from "lucide-react";
+import { Key, Landmark, Laptop, Smartphone, Zap, Download, ArrowRight, AlertTriangle, RefreshCw, ListChecks } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -32,16 +32,18 @@ export default function RetailApiReference() {
                 {/* Authentication Info */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
                     <h2 id="auth" className="text-2xl font-bold flex items-center gap-2">
-                        <Key className="w-6 h-6 text-primary" /> API Authentication
+                        <Key className="w-6 h-6 text-primary" /> Authentication (JWT)
                     </h2>
                     <p className="text-muted-foreground">
-                        All requests to the Retail API must be authenticated using a JWT token in the <code>Authorization</code> header and your private key in the <code>Mito-Secret-Key</code> header.
+                        Retail uses JWT Bearer authentication. Obtain a token from login, then send it in the{" "}
+                        <code className="bg-muted px-1.5 py-0.5 rounded">Authorization</code> header. Transaction create also requires your private key in the{" "}
+                        <code className="bg-muted px-1.5 py-0.5 rounded">Mito-Secret-Key</code> header (server-side only).
                     </p>
                     <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 space-y-4">
                         <h4 className="font-bold text-foreground m-0">Required Headers</h4>
                         <SchemaTable
                             fields={[
-                                { name: "Authorization", type: "string", required: true, description: "Bearer token returned by the /auth/login endpoint.", example: "Bearer eyJhbGciOi..." },
+                                { name: "Authorization", type: "string", required: true, description: "Bearer token returned by the /api/v1/mito/Auth/login endpoint.", example: "Bearer eyJhbGciOi..." },
                                 { name: "Mito-Secret-Key", type: "string", required: true, description: "Your private API secret key generated in your dashboard.", example: "sk_live_xyz789" },
                                 { name: "Content-Type", type: "string", required: true, description: "Must be set to application/json.", example: "application/json" }
                             ]}
@@ -78,6 +80,125 @@ export default function RetailApiReference() {
                     </div>
                 </div>
 
+                {/* Error Handling */}
+                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
+                    <h2 id="errors" className="text-2xl font-bold flex items-center gap-2">
+                        <AlertTriangle className="w-6 h-6 text-primary" /> Error handling
+                    </h2>
+                    <p className="text-muted-foreground">
+                        Retail APIs use conventional HTTP status codes. Treat{" "}
+                        <code className="bg-muted px-1.5 py-0.5 rounded text-xs">2xx</code> as success,{" "}
+                        <code className="bg-muted px-1.5 py-0.5 rounded text-xs">4xx</code> as partner/request issues, and{" "}
+                        <code className="bg-muted px-1.5 py-0.5 rounded text-xs">5xx</code> as retryable platform errors.
+                    </p>
+                    <div className="overflow-x-auto rounded-xl border">
+                        <table className="w-full text-sm text-left">
+                            <thead className="bg-muted/50 text-muted-foreground border-b">
+                                <tr>
+                                    <th className="px-4 py-3 font-medium w-20">Code</th>
+                                    <th className="px-4 py-3 font-medium">Meaning</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y">
+                                <tr>
+                                    <td className="px-4 py-3 font-mono font-bold">200</td>
+                                    <td className="px-4 py-3 text-muted-foreground">
+                                        Request succeeded. Parse <code className="bg-muted px-1 rounded">data</code>.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="px-4 py-3 font-mono font-bold">400</td>
+                                    <td className="px-4 py-3 text-muted-foreground">
+                                        Invalid or missing fields (e.g. expired <code className="bg-muted px-1 rounded">rateId</code>).
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="px-4 py-3 font-mono font-bold">401</td>
+                                    <td className="px-4 py-3 text-muted-foreground">Missing or invalid JWT / secret key.</td>
+                                </tr>
+                                <tr>
+                                    <td className="px-4 py-3 font-mono font-bold">403</td>
+                                    <td className="px-4 py-3 text-muted-foreground">
+                                        Credentials valid but not permitted for this action or corridor.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="px-4 py-3 font-mono font-bold">404</td>
+                                    <td className="px-4 py-3 text-muted-foreground">
+                                        Resource not found (transaction, beneficiary, user).
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="px-4 py-3 font-mono font-bold">5xx</td>
+                                    <td className="px-4 py-3 text-muted-foreground">
+                                        Retry with backoff; reuse the same{" "}
+                                        <code className="bg-muted px-1 rounded">PartnerReferenceNumber</code> on create.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                        Integration flows and option selection:{" "}
+                        <Link href="/developers/guides/retail" className="text-primary font-semibold hover:underline">
+                            Retail partner guide
+                        </Link>
+                        .
+                    </p>
+                </div>
+
+                {/* Idempotency */}
+                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
+                    <h2 id="idempotency" className="text-2xl font-bold flex items-center gap-2">
+                        <RefreshCw className="w-6 h-6 text-primary" /> Idempotency
+                    </h2>
+                    <p className="text-muted-foreground">
+                        <code className="bg-muted px-1.5 py-0.5 rounded">PartnerReferenceNumber</code> on{" "}
+                        <code className="bg-muted px-1.5 py-0.5 rounded">POST /api/v1/mito/Transactions</code> is the create idempotency key.
+                        Replaying the same value returns the existing transaction instead of creating a duplicate.
+                    </p>
+                    <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                        <li>Generate a unique partner reference per customer transfer attempt.</li>
+                        <li>
+                            On network timeout or <code className="bg-muted px-1 rounded">5xx</code>, retry with the same reference.
+                        </li>
+                        <li>
+                            Store MITO <code className="bg-muted px-1 rounded">reference</code> /{" "}
+                            <code className="bg-muted px-1 rounded">retailTransactionId</code> alongside your partner reference for reconciliation.
+                        </li>
+                    </ul>
+                </div>
+
+                {/* Partner-visible statuses */}
+                <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
+                    <h2 id="status-model" className="text-2xl font-bold flex items-center gap-2">
+                        <ListChecks className="w-6 h-6 text-primary" /> Partner-visible statuses
+                    </h2>
+                    <p className="text-muted-foreground">
+                        Redirect <code className="bg-muted px-1 rounded">orderStatus</code> and transaction status APIs use these shortcodes:
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                        {[
+                            "NEW",
+                            "AWAITINGPAYMENT",
+                            "READYTOPROCESS",
+                            "INPROGRESS",
+                            "PROCESSED",
+                            "FAILED",
+                            "CANCELLED",
+                            "TIMEOUT",
+                            "INREVIEW",
+                        ].map((s) => (
+                            <Badge key={s} variant="secondary" className="font-mono text-xs">
+                                {s}
+                            </Badge>
+                        ))}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                        Prefer webhook <code className="bg-muted px-1 rounded">eventType</code> for business decisions; use status APIs for reconciliation.
+                    </p>
+                </div>
+
                 {/* API Sections */}
                 <div className="space-y-0">
                     
@@ -89,7 +210,7 @@ export default function RetailApiReference() {
                     <section id="auth-login">
                         <EndpointBlock
                             method="POST"
-                            path="/auth/login"
+                            path="/api/v1/mito/Auth/login"
                             title="Generate Access Token"
                             description="Authenticate your server credentials and receive a temporary JWT bearer token valid for 1 hour."
                             requestSamples={
@@ -138,7 +259,7 @@ export default function RetailApiReference() {
                     <section id="create-user">
                         <EndpointBlock
                             method="POST"
-                            path="/users"
+                            path="/api/v1/mito/Users"
                             title="Create User (Onboard)"
                             description="Register a new retail customer. MITO will automatically verify their identity and initiate compliance screening."
                             requestSamples={
@@ -188,7 +309,7 @@ export default function RetailApiReference() {
                     <section id="get-user">
                         <EndpointBlock
                             method="GET"
-                            path="/users/{userId}"
+                            path="/api/v1/mito/Users/{userId}"
                             title="Get User Profile"
                             description="Retrieve user profile, current KYC status, and creation details."
                             responseSamples={
@@ -220,7 +341,7 @@ export default function RetailApiReference() {
                     <section id="get-balances">
                         <EndpointBlock
                             method="GET"
-                            path="/users/{userId}/balances"
+                            path="/api/v1/mito/Users/{userId}/balances"
                             title="Get User Balances"
                             description="Check current funds and currency wallet allocations for a specific retail user."
                             responseSamples={
@@ -258,7 +379,7 @@ export default function RetailApiReference() {
                     <section id="get-users">
                         <EndpointBlock
                             method="GET"
-                            path="/users"
+                            path="/api/v1/mito/Users"
                             title="Get All Users"
                             description="List and search onboarding users across your affiliate network."
                             responseSamples={
@@ -298,7 +419,7 @@ export default function RetailApiReference() {
                     <section id="get-corridors">
                         <EndpointBlock
                             method="GET"
-                            path="/exchange/Corridors"
+                            path="/api/v1/mito/Exchange/corridors"
                             title="Get Active Corridors"
                             description="Retrieve a listing of active corridors, specifying destination countries and supported payout currencies."
                             responseSamples={
@@ -330,7 +451,7 @@ export default function RetailApiReference() {
                     <section id="get-lookup-provider">
                         <EndpointBlock
                             method="GET"
-                            path="/lookups/provider"
+                            path="/api/v1/mito/Lookups/provider"
                             title="Lookup Service Providers"
                             description="Lookup bank networks, mobile wallets, or cash locations supported in the target payout corridor."
                             responseSamples={
@@ -365,7 +486,7 @@ export default function RetailApiReference() {
                     <section id="get-lookup-types">
                         <EndpointBlock
                             method="GET"
-                            path="/lookups/types"
+                            path="/api/v1/mito/Lookups/types"
                             title="Retrieve Types"
                             description="Retrieve various static configurations and types required for creating transactions (e.g. transfer purposes, source of funds)."
                             responseSamples={
@@ -397,7 +518,7 @@ export default function RetailApiReference() {
                     <section id="post-rates">
                         <EndpointBlock
                             method="POST"
-                            path="/exchange/rates"
+                            path="/api/v1/mito/Exchange/rates"
                             title="Calculate FX Rate Quote (Validate)"
                             description="Generates and locks an FX conversion rate and breakdown fees for the user."
                             requestSamples={
@@ -452,7 +573,7 @@ export default function RetailApiReference() {
                     <section id="get-beneficiary-requirements">
                         <EndpointBlock
                             method="GET"
-                            path="/beneficiaries/requirements"
+                            path="/api/v1/mito/Beneficiaries/requirements"
                             title="Get Beneficiary Requirements"
                             description="Fetch the dynamically required fields for adding a beneficiary in a specific payout corridor."
                             responseSamples={
@@ -489,7 +610,7 @@ export default function RetailApiReference() {
                     <section id="get-beneficiary">
                         <EndpointBlock
                             method="GET"
-                            path="/beneficiaries/{beneficiaryId}"
+                            path="/api/v1/mito/Beneficiaries/{beneficiaryId}"
                             title="Get Beneficiary by ID"
                             description="Retrieve detailed beneficiary information, including banking account details and nickname."
                             responseSamples={
@@ -521,7 +642,7 @@ export default function RetailApiReference() {
                     <section id="create-beneficiary">
                         <EndpointBlock
                             method="POST"
-                            path="/beneficiaries"
+                            path="/api/v1/mito/Beneficiaries"
                             title="Create Beneficiary"
                             description="Create a payout recipient (Beneficiary) profile on the network. Field requirements must be derived dynamically from GetBeneficiaryRequirements."
                             requestSamples={
@@ -574,7 +695,7 @@ export default function RetailApiReference() {
                     <section id="get-beneficiaries">
                         <EndpointBlock
                             method="GET"
-                            path="/beneficiaries"
+                            path="/api/v1/mito/Beneficiaries"
                             title="Get Beneficiaries"
                             description="List and filter beneficiaries created under your partner portfolio."
                             responseSamples={
@@ -616,7 +737,7 @@ export default function RetailApiReference() {
                     <section id="create-transaction">
                         <EndpointBlock
                             method="POST"
-                            path="/transactions"
+                            path="/api/v1/mito/Transactions"
                             title="Initiate Transaction Session"
                             description="Locks in transfer parameters and returns a paymentUrl and linkToken. The linkToken is used to initialize the frontend SDK checkout modal."
                             requestSamples={
@@ -654,7 +775,7 @@ export default function RetailApiReference() {
                                         { name: "receiveCurrency", type: "string", required: true, description: "3-letter destination currency." },
                                         { name: "sendAmount", type: "number", required: true, description: "Amount to send (excluding fees)." },
                                         { name: "providerId", type: "string", required: true, description: "Provider ID." },
-                                        { name: "rateId", type: "string", required: true, description: "The active FX quote ID from POST /exchange/rates." },
+                                        { name: "rateId", type: "string", required: true, description: "The active FX quote ID from POST /api/v1/mito/Exchange/rates." },
                                         { name: "userId", type: "string", required: true, description: "The customer's onboarding ID." },
                                         { name: "redirecturl", type: "string", required: true, description: "Redirect URL for hosted flow completion." },
                                         { name: "PartnerReferenceNumber", type: "string", required: true, description: "Your internal tracking order reference." },
@@ -670,13 +791,13 @@ export default function RetailApiReference() {
 
                     <hr className="border-border" />
 
-                    {/* Get Transaction by ID (NEW) */}
+                    {/* Get Transaction by reference (Swagger) */}
                     <section id="get-transaction">
                         <EndpointBlock
                             method="GET"
-                            path="/transactions/{transactionId}"
+                            path="/api/v1/mito/Transactions/by-reference"
                             title="Get Transaction Details"
-                            description="Query current status and metadata of a specific transaction session."
+                            description="Query current status and metadata by MITO reference or partner reference number."
                             responseSamples={
                                 <CodeTabs
                                     tabs={[
@@ -690,10 +811,11 @@ export default function RetailApiReference() {
                             }
                         >
                             <div>
-                                <h4 className="font-semibold pt-4">Path Parameters</h4>
+                                <h4 className="font-semibold pt-4">Query Parameters</h4>
                                 <SchemaTable
                                     fields={[
-                                        { name: "transactionId", type: "string", required: true, description: "The unique transaction ID." }
+                                        { name: "reference", type: "string", required: false, description: "MITO transaction reference." },
+                                        { name: "partnerReferenceNumber", type: "string", required: false, description: "Your PartnerReferenceNumber from create." }
                                     ]}
                                 />
                             </div>
@@ -706,7 +828,7 @@ export default function RetailApiReference() {
                     <section id="get-transactions-list">
                         <EndpointBlock
                             method="GET"
-                            path="/transactions"
+                            path="/api/v1/mito/Transactions"
                             title="Get Transaction List"
                             description="List and search transactions under your affiliate account."
                             responseSamples={

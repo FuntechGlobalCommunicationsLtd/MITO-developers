@@ -16,7 +16,6 @@ import {
     Milestone,
     HelpCircle,
     FileDown,
-    Key,
     Store,
     Landmark,
     Globe,
@@ -67,6 +66,7 @@ const docsConfig: NavGroup[] = [
                 href: "/developers/guides",
                 icon: <Code2 className="w-4 h-4" />,
                 items: [
+                    { title: "API endpoints", href: "/developers/guides#api-endpoints" },
                     { title: "Integration Models", href: "/developers/guides#models" },
                     { title: "Integration Methods", href: "/developers/guides#methods" },
                     { title: "Platform", href: "/developers/guides#platform" },
@@ -77,13 +77,31 @@ const docsConfig: NavGroup[] = [
                 href: "/developers/guides/retail",
                 icon: <Globe className="w-4 h-4" />,
                 items: [
-                    { title: "Integration methods", href: "/developers/guides/retail#integration-methods" },
-                    { title: "Prerequisites", href: "/developers/guides/retail#prerequisites" },
-                    { title: "Architecture", href: "/developers/guides/retail#architecture" },
-                    { title: "Integration flow", href: "/developers/guides/retail#integration-flow" },
-                    { title: "Webhooks", href: "/developers/guides/retail#webhooks" },
-                    { title: "Status lifecycle", href: "/developers/guides/retail#status-lifecycle" },
-                    { title: "APIs involved", href: "/developers/guides/retail#apis-involved" },
+                    {
+                        title: "Overview",
+                        href: "/developers/guides/retail#overview",
+                        items: [
+                            { title: "Introduction", href: "/developers/guides/retail#introduction" },
+                            { title: "Overall workflow", href: "/developers/guides/retail#overall-workflow" },
+                            { title: "Integration options", href: "/developers/guides/retail#integration-options" },
+                            { title: "API contract", href: "/developers/guides/retail#api-contract" },
+                            { title: "Authentication (JWT)", href: "/developers/guides/retail#authentication" },
+                            { title: "Environments", href: "/developers/guides/retail#environments" },
+                            { title: "Webhooks", href: "/developers/guides/retail#webhooks" },
+                        ],
+                    },
+                    { title: "Widget (SDK)", href: "/developers/guides/retail#retail-widget" },
+                    { title: "Hosted Pages", href: "/developers/guides/retail#retail-hosted-pages" },
+                    { title: "Hosted Checkout (Hybrid)", href: "/developers/guides/retail#retail-hosted-hybrid" },
+                    { title: "Full API Integration", href: "/developers/guides/retail#retail-full-api" },
+                    {
+                        title: "APIs involved",
+                        href: "/developers/guides/retail#apis-involved",
+                        items: [
+                            { title: "Workflow APIs", href: "/developers/guides/retail#apis-workflow" },
+                            { title: "Helper APIs", href: "/developers/guides/retail#apis-helper" },
+                        ],
+                    },
                 ],
             },
             {
@@ -91,6 +109,21 @@ const docsConfig: NavGroup[] = [
                 href: "/developers/guides/biller",
                 icon: <Store className="w-4 h-4" />,
                 items: [
+                    {
+                        title: "Overview",
+                        href: "/developers/guides/biller#overview",
+                        items: [
+                            { title: "Authentication (Basic Auth)", href: "/developers/guides/biller#authentication" },
+                        ],
+                    },
+                    {
+                        title: "APIs involved",
+                        href: "/developers/guides/biller#apis-involved",
+                        items: [
+                            { title: "Workflow APIs", href: "/developers/guides/biller#apis-workflow" },
+                            { title: "Helper APIs", href: "/developers/guides/biller#apis-helper" },
+                        ],
+                    },
                     {
                         title: "Wholesale biller",
                         href: "/developers/guides/wholesale",
@@ -232,6 +265,9 @@ const docsConfig: NavGroup[] = [
                 icon: <Globe className="w-4 h-4" />,
                 items: [
                     { title: "API Authentication", href: "/developers/api-reference/retail-api#auth" },
+                    { title: "Error handling", href: "/developers/api-reference/retail-api#errors" },
+                    { title: "Idempotency", href: "/developers/api-reference/retail-api#idempotency" },
+                    { title: "Partner-visible statuses", href: "/developers/api-reference/retail-api#status-model" },
                     { title: "Generate Access Token", href: "/developers/api-reference/retail-api#auth-login" },
                     { title: "Create User (Onboard)", href: "/developers/api-reference/retail-api#create-user" },
                     { title: "Get User Profile", href: "/developers/api-reference/retail-api#get-user" },
@@ -246,7 +282,7 @@ const docsConfig: NavGroup[] = [
                     { title: "Create Beneficiary", href: "/developers/api-reference/retail-api#create-beneficiary" },
                     { title: "List Beneficiaries", href: "/developers/api-reference/retail-api#get-beneficiaries" },
                     { title: "Create Transaction", href: "/developers/api-reference/retail-api#create-transaction" },
-                    { title: "Get Transaction", href: "/developers/api-reference/retail-api#get-transaction" },
+                    { title: "Get Transaction (by-reference)", href: "/developers/api-reference/retail-api#get-transaction" },
                     { title: "List Transactions", href: "/developers/api-reference/retail-api#get-transactions-list" },
                     { title: "Webhook Event Notification", href: "/developers/api-reference/retail-api#webhook-notification" },
                     { title: "Mito Link SDKs", href: "/developers/api-reference/retail-api#sdks" },
@@ -309,10 +345,9 @@ const docsConfig: NavGroup[] = [
 
 function NavLink({ item, nested }: { item: NavItem; nested?: boolean }) {
     const pathname = usePathname();
-    const [hash, setHash] = useState("");
+    const [hash, setHash] = useState(() => (typeof window !== "undefined" ? window.location.hash : ""));
 
     useEffect(() => {
-        setHash(window.location.hash);
         const handleHashChange = () => setHash(window.location.hash);
         window.addEventListener("hashchange", handleHashChange, { passive: true });
         return () => window.removeEventListener("hashchange", handleHashChange);
