@@ -19,8 +19,8 @@ export default function MtoApiReference() {
             <div className="flex flex-col w-full">
                 {/* Header */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">MTO API Reference</h1>
-                    <p className="text-xl text-muted-foreground mb-4">
+                    <h1 className="text-3xl font-extrabold tracking-tight mb-4">MTO API Reference</h1>
+                    <p className="text-base text-muted-foreground mb-4">
                         Forex, collections, and payouts for MTO partners. Primary spec:{" "}
                         <a href="https://furp02-staging.funtechcom.com/mtoforex.html" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">
                             mtoforex.html
@@ -35,7 +35,7 @@ export default function MtoApiReference() {
 
                 {/* Authentication & Setup Overview */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
-                    <h2 id="setup" className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <h2 id="setup" className="text-xl font-bold mb-6 flex items-center gap-2">
                         <ShieldCheck className="w-6 h-6 text-primary" /> Setup & Authorization
                     </h2>
                     <div className="prose prose-slate dark:prose-invert max-w-none space-y-4">
@@ -59,7 +59,7 @@ export default function MtoApiReference() {
                                     Retrieve your staging or live credentials from the service profiles tab.
                                 </span>
                                 <Button asChild size="xs" variant="link" className="text-primary hover:underline font-semibold p-0 h-auto">
-                                    <Link href="/developers/credentials?service=mto" className="flex items-center gap-1">
+                                    <Link href="/developers/get-started#environments" className="flex items-center gap-1">
                                         View MTO Credentials <ArrowRight className="w-3.5 h-3.5" />
                                     </Link>
                                 </Button>
@@ -360,7 +360,7 @@ export default function MtoApiReference() {
                         <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl space-y-12">
                             {/* Directory Architecture */}
                             <div>
-                                <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                                     <FolderSync className="w-5 h-5 text-primary" /> Directory Layout
                                 </h3>
                                 <p className="text-muted-foreground mb-6">

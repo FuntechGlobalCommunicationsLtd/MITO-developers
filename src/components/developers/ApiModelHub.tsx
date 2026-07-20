@@ -37,11 +37,11 @@ export function ApiModelHub({
     return (
         <div className="max-w-4xl">
             <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">{phase}</p>
-            <h1 className="text-4xl font-extrabold tracking-tight mb-4">{title}</h1>
-            <p className="text-xl text-muted-foreground mb-10">{description}</p>
+            <h1 className="text-3xl font-extrabold tracking-tight mb-4">{title}</h1>
+            <p className="text-base text-muted-foreground mb-10">{description}</p>
 
             <section className="mb-12">
-                <h2 className="text-2xl font-bold mb-4">Endpoints</h2>
+                <h2 className="text-xl font-bold mb-4">Endpoints</h2>
                 <p className="text-muted-foreground mb-6 text-sm">
                     Capability index only — click an endpoint to open its full partner API documentation (not a second copy of the spec).
                 </p>
@@ -70,7 +70,7 @@ export function ApiModelHub({
 
             {relatedDocs && relatedDocs.length > 0 && (
                 <section>
-                    <h2 className="text-2xl font-bold mb-4">Related integration flows</h2>
+                    <h2 className="text-xl font-bold mb-4">Related integration flows</h2>
                     <div className="grid sm:grid-cols-2 gap-4">
                         {relatedDocs.map((doc) => (
                             <Link

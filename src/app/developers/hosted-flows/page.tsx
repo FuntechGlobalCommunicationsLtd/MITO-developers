@@ -39,7 +39,7 @@ export default function HostedFlowsPage() {
                                 title: "Create checkout session (server-side)",
                                 description: "Your backend calls the session API and receives a MITO checkout URL.",
                                 apiLinks: [
-                                    { label: "POST /v1/checkout/sessions", href: "/developers/api-reference/hosted#v1-checkout-sessions" },
+                                    { label: "POST /api/v1/mito/Transactions", href: "/developers/api-reference/hosted#api-v1-mito-Transactions" },
                                     { label: "Biller: InitiateTransactions", href: "/developers/api-reference/biller-api#initiate-transaction" },
                                 ],
                             },
@@ -70,13 +70,13 @@ export default function HostedFlowsPage() {
                         ],
                     },
                     webhookEvents: [
-                        { name: "PAYMENT_CAPTURED", href: "/developers/webhooks#events", when: "Biller collection captured." },
-                        { name: "collection.completed", href: "/developers/webhooks#events", when: "Collection request paid." },
-                        { name: "transfer.completed", href: "/developers/webhooks#events", when: "Retail transfer completed." },
+                        { name: "PAYMENT_CAPTURED", href: "/developers/webhooks#callback-notifications", when: "Biller collection captured." },
+                        { name: "transaction_completed", href: "/developers/webhooks#outbound-transaction", when: "Retail transfer completed." },
+                        { name: "payment_collected", href: "/developers/webhooks#outbound-payment", when: "Retail payment collected." },
                     ],
                     statusFlow: ["session.created", "processing", "completed", "failed"],
                     apisInvolved: [
-                        { method: "POST", path: "/v1/checkout/sessions", title: "Create checkout session", href: "/developers/api-reference/hosted#v1-checkout-sessions" },
+                        { method: "POST", path: "/api/v1/mito/Transactions", title: "Create hosted transaction", href: "/developers/api-reference/hosted#api-v1-mito-Transactions" },
                         { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Biller collection (hosted redirect URL)", href: "/developers/api-reference/biller-api#initiate-transaction" },
                     ],
                 }}

@@ -15,8 +15,8 @@ export default function RetailApiReference() {
             <div className="flex flex-col w-full">
                 {/* Page Title */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">Retail Submission API</h1>
-                    <p className="text-xl text-muted-foreground mb-4">
+                    <h1 className="text-3xl font-extrabold tracking-tight mb-4">Retail Submission API</h1>
+                    <p className="text-base text-muted-foreground mb-4">
                         Furp retail API — users, corridors, rates, beneficiaries, transactions. Spec:{" "}
                         <a href="https://furp02-staging.funtechcom.com/mito.html" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">mito.html</a>
                         {" · "}SDK:{" "}
@@ -31,7 +31,7 @@ export default function RetailApiReference() {
 
                 {/* Authentication Info */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
-                    <h2 id="auth" className="text-2xl font-bold flex items-center gap-2">
+                    <h2 id="auth" className="text-xl font-bold flex items-center gap-2">
                         <Key className="w-6 h-6 text-primary" /> Authentication (JWT)
                     </h2>
                     <p className="text-muted-foreground">
@@ -53,7 +53,7 @@ export default function RetailApiReference() {
                                 Retrieve your staging secret keys or JWT details from the service profiles tab.
                             </span>
                             <Button asChild size="xs" variant="link" className="text-primary hover:underline font-semibold p-0 h-auto">
-                                <Link href="/developers/credentials?service=retail" className="flex items-center gap-1">
+                                <Link href="/developers/get-started#environments" className="flex items-center gap-1">
                                     View Retail Credentials <ArrowRight className="w-3.5 h-3.5" />
                                 </Link>
                             </Button>
@@ -82,7 +82,7 @@ export default function RetailApiReference() {
 
                 {/* Error Handling */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
-                    <h2 id="errors" className="text-2xl font-bold flex items-center gap-2">
+                    <h2 id="errors" className="text-xl font-bold flex items-center gap-2">
                         <AlertTriangle className="w-6 h-6 text-primary" /> Error handling
                     </h2>
                     <p className="text-muted-foreground">
@@ -149,7 +149,7 @@ export default function RetailApiReference() {
 
                 {/* Idempotency */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
-                    <h2 id="idempotency" className="text-2xl font-bold flex items-center gap-2">
+                    <h2 id="idempotency" className="text-xl font-bold flex items-center gap-2">
                         <RefreshCw className="w-6 h-6 text-primary" /> Idempotency
                     </h2>
                     <p className="text-muted-foreground">
@@ -171,7 +171,7 @@ export default function RetailApiReference() {
 
                 {/* Partner-visible statuses */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
-                    <h2 id="status-model" className="text-2xl font-bold flex items-center gap-2">
+                    <h2 id="status-model" className="text-xl font-bold flex items-center gap-2">
                         <ListChecks className="w-6 h-6 text-primary" /> Partner-visible statuses
                     </h2>
                     <p className="text-muted-foreground">
@@ -870,16 +870,16 @@ export default function RetailApiReference() {
                     <section id="webhook-notification">
                         <EndpointBlock
                             method="POST"
-                            path="/webhooks"
-                            title="Transaction Status Update Webhook"
-                            description="MITO sends a POST request to this webhook URL to notify partners of transaction status changes."
+                            path="{webhookUrl}"
+                            title="Outbound webhook (Retail)"
+                            description="MITO POSTs a signed outbound webhook envelope to the webhookUrl you supply on create transaction. Deduplicate with eventId. Full channel comparison (outbound webhook vs biller Notification callbacks): Webhooks & notifications guide."
                             requestSamples={
                                 <CodeTabs
                                     tabs={[
                                         {
                                             label: "JSON",
                                             language: "json",
-                                            code: `{\n  "transactionId": "tx_abc123xyz789",\n  "status": "PROCESSED",\n  "updatedAt": "2026-06-15T12:30:00Z",\n  "reason": "Payout processed successfully"\n}`
+                                            code: `{\n  "eventId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n  "eventType": "transaction_completed",\n  "timestamp": "2026-06-15T12:30:00.0000000Z",\n  "data": {\n    "transactionRef": "100012345",\n    "partnerRef": "ORD-2026-001",\n    "amount": 100.00,\n    "currency": "GBP",\n    "status": "completed",\n    "userId": "c183e206-aef7-42be-94d0-d3881c198066",\n    "createdAt": "2026-06-15T12:00:00.0000000Z",\n    "updatedAt": "2026-06-15T12:30:00.0000000Z"\n  },\n  "signature": "<HMAC-SHA256 Base64>"\n}`
                                         }
                                     ]}
                                 />
@@ -897,15 +897,22 @@ export default function RetailApiReference() {
                             }
                         >
                             <div>
-                                <h4 className="font-semibold pt-4">Webhook Payload Schema</h4>
+                                <h4 className="font-semibold pt-4">Envelope fields</h4>
                                 <SchemaTable
                                     fields={[
-                                        { name: "transactionId", type: "string", required: true, description: "The unique MITO transaction identifier." },
-                                        { name: "status", type: "string", required: true, description: "The new transaction status, e.g. PROCESSED, FAILED." },
-                                        { name: "updatedAt", type: "string", required: true, description: "Date time of status update (ISO 8601 format)." },
-                                        { name: "reason", type: "string", required: false, description: "Additional status description or reason for failure." }
+                                        { name: "eventId", type: "string", required: true, description: "Unique delivery id — use for idempotency." },
+                                        { name: "eventType", type: "string", required: true, description: "Canonical string e.g. transaction_initiated, payment_collected, transaction_completed." },
+                                        { name: "timestamp", type: "string", required: true, description: "ISO 8601 UTC time of the event." },
+                                        { name: "data", type: "object", required: true, description: "Business payload (partnerRef, transactionRef, amount, currency, status, …)." },
+                                        { name: "signature", type: "string", required: true, description: "HMAC-SHA256 Base64 using ApiSecretKey." }
                                     ]}
                                 />
+                                <p className="text-sm text-muted-foreground mt-4">
+                                    Guide:{" "}
+                                    <Link href="/developers/webhooks" className="text-primary font-semibold hover:underline">
+                                        Webhooks & notifications
+                                    </Link>
+                                </p>
                             </div>
                         </EndpointBlock>
                     </section>

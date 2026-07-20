@@ -4,6 +4,7 @@ import { DocsLayout } from "@/components/layout/DocsLayout";
 import Link from "next/link";
 import { FlowDiagram, FlowNode, FlowArrow } from "@/components/developers/Flows";
 import { ApiEntryList, type GuideApiEntry } from "@/components/developers/IntegrationGuide";
+import { DocsPage, DocsPageHeader } from "@/components/developers/DocsPage";
 import { ArrowRight } from "lucide-react";
 
 const RETAIL_WORKFLOW_APIS: GuideApiEntry[] = [
@@ -24,23 +25,18 @@ const RETAIL_HELPER_APIS: GuideApiEntry[] = [
 export default function RetailAffiliateGuidePage() {
     return (
         <DocsLayout>
-            <div className="max-w-4xl space-y-14 pb-16">
+            <DocsPage>
                 {/* ─── OVERVIEW ─── */}
-                <section id="overview" className="space-y-12">
-                    <div>
-                        <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">
-                            Integration model · Retail (B2C)
-                        </p>
-                        <h1 className="text-4xl font-extrabold tracking-tight mb-4">Retail partner integration</h1>
-                        <p className="text-xl text-muted-foreground">
-                            Partner-facing contract for C2C remittance: authenticate, quote, create a transaction, launch checkout,
-                            receive callbacks, and confirm final status.
-                        </p>
-                    </div>
+                <section id="overview" className="space-y-8">
+                    <DocsPageHeader
+                        eyebrow="Integration methods · Retail"
+                        title="Retail partner integration"
+                        description="Partner-facing contract for C2C remittance: authenticate, quote, create a transaction, launch checkout, receive callbacks, and confirm final status."
+                    />
 
                     {/* 1. Introduction */}
                     <div id="introduction" className="space-y-4 scroll-mt-24">
-                        <h2 className="text-2xl font-bold">Introduction</h2>
+                        <h2 className="text-xl font-bold">Introduction</h2>
                         <p className="text-muted-foreground">
                             Retail partners resell MITO remittance to end customers. You own the customer relationship and choose how much of the
                             checkout UI you build. MITO provides the transaction APIs, hosted checkout options, signed webhooks, and status APIs.
@@ -57,7 +53,7 @@ export default function RetailAffiliateGuidePage() {
                             <h3 className="font-semibold text-sm">What this documentation covers</h3>
                             <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
                                 <li>Overall partner workflow and integration options</li>
-                                <li>Authentication, environments, and webhooks</li>
+                                <li>Authentication and webhooks</li>
                                 <li>Per-option workflow diagrams, API sequences, and responsibilities</li>
                             </ul>
                         </div>
@@ -65,7 +61,7 @@ export default function RetailAffiliateGuidePage() {
 
                     {/* 2. Overall workflow */}
                     <div id="overall-workflow" className="space-y-4 scroll-mt-24">
-                        <h2 className="text-2xl font-bold">Overall workflow</h2>
+                        <h2 className="text-xl font-bold">Overall workflow</h2>
                         <p className="text-muted-foreground">
                             Every Retail option follows the same contract shape. Checkout UI differs; APIs and webhooks do not.
                         </p>
@@ -91,7 +87,7 @@ export default function RetailAffiliateGuidePage() {
 
                     {/* 3. Integration options */}
                     <div id="integration-options" className="space-y-4 scroll-mt-24">
-                        <h2 className="text-2xl font-bold">Integration options</h2>
+                        <h2 className="text-xl font-bold">Integration options</h2>
                         <p className="text-muted-foreground">
                             Pick one model below. Each detail section uses the same four parts: Overview, Workflow Diagram, API Sequence, Notes &amp; Responsibilities.
                         </p>
@@ -138,9 +134,9 @@ export default function RetailAffiliateGuidePage() {
                     </div>
 
                     {/* 4. API contract (shared across options) */}
-                    <div id="api-contract" className="space-y-10 scroll-mt-24">
+                    <div id="api-contract" className="space-y-6 scroll-mt-24">
                         <div>
-                            <h2 className="text-2xl font-bold">API contract</h2>
+                            <h2 className="text-xl font-bold">API contract</h2>
                             <p className="text-muted-foreground mt-2">
                                 Shared integration rules below. Error handling, idempotency, statuses, and request/response schemas:{" "}
                                 <Link href="/developers/api-reference/retail-api" className="text-primary font-semibold hover:underline">
@@ -152,7 +148,7 @@ export default function RetailAffiliateGuidePage() {
 
                         {/* Authentication — JWT */}
                         <div id="authentication" className="space-y-4 scroll-mt-24">
-                            <h3 className="text-xl font-bold">Authentication (JWT)</h3>
+                            <h3 className="text-lg font-bold">Authentication (JWT)</h3>
                             <p className="text-muted-foreground">
                                 Retail uses JWT Bearer authentication. Call login to get a token, then send{" "}
                                 <code className="bg-muted px-1.5 py-0.5 rounded">Authorization: Bearer &lt;jwt&gt;</code> on API calls.
@@ -222,56 +218,9 @@ export default function RetailAffiliateGuidePage() {
                             </p>
                         </div>
 
-                        {/* Environments */}
-                        <div id="environments" className="space-y-4 scroll-mt-24">
-                            <h3 className="text-xl font-bold">Environments</h3>
-                            <div className="overflow-x-auto rounded-xl border">
-                                <table className="w-full text-sm text-left">
-                                    <thead className="bg-muted/50 text-muted-foreground border-b">
-                                        <tr>
-                                            <th className="px-4 py-3 font-medium">Environment</th>
-                                            <th className="px-4 py-3 font-medium">API base URL</th>
-                                            <th className="px-4 py-3 font-medium">Checkout / SDK</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y">
-                                        <tr>
-                                            <td className="px-4 py-3 font-semibold">Sandbox</td>
-                                            <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                                                https://furp02-staging.funtechcom.com
-                                            </td>
-                                            <td className="px-4 py-3 text-muted-foreground">
-                                                SDK <code className="bg-muted px-1 rounded">environment: &quot;sandbox&quot;</code>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td className="px-4 py-3 font-semibold">Live</td>
-                                            <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                                                https://connect.funtechcom.com
-                                            </td>
-                                            <td className="px-4 py-3 text-muted-foreground">
-                                                SDK <code className="bg-muted px-1 rounded">environment: &quot;production&quot;</code>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p className="text-sm text-muted-foreground">
-                                Use sandbox credentials and test beneficiaries until your go-live checklist is complete. Spec:{" "}
-                                <a
-                                    href="https://furp02-staging.funtechcom.com/mito/mito.html"
-                                    className="text-primary font-semibold hover:underline"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    mito.html
-                                </a>
-                            </p>
-                        </div>
-
                         {/* Webhooks */}
                         <div id="webhooks" className="space-y-4 scroll-mt-24">
-                            <h3 className="text-xl font-bold">Webhooks</h3>
+                            <h3 className="text-lg font-bold">Webhooks</h3>
                             <p className="text-muted-foreground">
                                 Pass <code className="bg-muted px-1.5 py-0.5 rounded">webhookUrl</code> on{" "}
                                 <code className="bg-muted px-1.5 py-0.5 rounded">POST /api/v1/mito/Transactions</code>. MITO POSTs signed events there.
@@ -325,7 +274,7 @@ export default function RetailAffiliateGuidePage() {
                 </section>
 
                 <section id="retail-widget" className="space-y-6">
-                    <h2 className="text-2xl font-bold">1) Widget (SDK)</h2>
+                    <h2 className="text-xl font-bold">1) Widget (SDK)</h2>
 
                     <div id="retail-widget-overview" className="space-y-2">
                         <h3 className="text-lg font-semibold">Overview</h3>
@@ -379,7 +328,7 @@ export default function RetailAffiliateGuidePage() {
                 </section>
 
                 <section id="retail-hosted-pages" className="space-y-6">
-                    <h2 className="text-2xl font-bold">2) Hosted Pages</h2>
+                    <h2 className="text-xl font-bold">2) Hosted Pages</h2>
 
                     <div id="retail-hosted-pages-overview" className="space-y-2">
                         <h3 className="text-lg font-semibold">Overview</h3>
@@ -433,7 +382,7 @@ export default function RetailAffiliateGuidePage() {
                 </section>
 
                 <section id="retail-hosted-hybrid" className="space-y-6">
-                    <h2 className="text-2xl font-bold">3) Hosted Checkout (Hybrid)</h2>
+                    <h2 className="text-xl font-bold">3) Hosted Checkout (Hybrid)</h2>
 
                     <div id="retail-hosted-hybrid-overview" className="space-y-2">
                         <h3 className="text-lg font-semibold">Overview</h3>
@@ -487,7 +436,7 @@ export default function RetailAffiliateGuidePage() {
                 </section>
 
                 <section id="retail-full-api" className="space-y-6">
-                    <h2 className="text-2xl font-bold">4) Full API Integration</h2>
+                    <h2 className="text-xl font-bold">4) Full API Integration</h2>
 
                     <div id="retail-full-api-overview" className="space-y-2">
                         <h3 className="text-lg font-semibold">Overview</h3>
@@ -553,7 +502,7 @@ export default function RetailAffiliateGuidePage() {
                 {/* ─── APIs involved ─── */}
                 <section id="apis-involved" className="space-y-6">
                     <div>
-                        <h2 className="text-2xl font-bold mb-2">APIs involved</h2>
+                        <h2 className="text-xl font-bold mb-2">APIs involved</h2>
                         <p className="text-sm text-muted-foreground">
                             Click an endpoint to open its full request/response spec in the{" "}
                             <Link href="/developers/api-reference/retail-api" className="text-primary font-semibold hover:underline">
@@ -583,7 +532,7 @@ export default function RetailAffiliateGuidePage() {
                         <ApiEntryList apis={RETAIL_HELPER_APIS} />
                     </div>
                 </section>
-            </div>
+            </DocsPage>
         </DocsLayout>
     );
 }

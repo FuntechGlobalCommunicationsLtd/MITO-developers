@@ -59,7 +59,7 @@ const docsConfig: NavGroup[] = [
         ],
     },
     {
-        title: "",
+        title: "Integration methods",
         items: [
             {
                 title: "Overview",
@@ -67,13 +67,44 @@ const docsConfig: NavGroup[] = [
                 icon: <Code2 className="w-4 h-4" />,
                 items: [
                     { title: "API endpoints", href: "/developers/guides#api-endpoints" },
-                    { title: "Integration Models", href: "/developers/guides#models" },
-                    { title: "Integration Methods", href: "/developers/guides#methods" },
-                    { title: "Platform", href: "/developers/guides#platform" },
+                    { title: "Integration methods", href: "/developers/guides#methods" },
+                    { title: "Helper methods", href: "/developers/guides#helpers" },
                 ],
             },
             {
-                title: "Retail affiliate",
+                title: "Biller",
+                href: "/developers/guides/biller",
+                icon: <Store className="w-4 h-4" />,
+                items: [
+                    {
+                        title: "Overview",
+                        href: "/developers/guides/biller#overview",
+                        items: [
+                            { title: "Introduction", href: "/developers/guides/biller#introduction" },
+                            { title: "Overall workflow", href: "/developers/guides/biller#overall-workflow" },
+                            { title: "Integration options", href: "/developers/guides/biller#integration-options" },
+                            { title: "API contract", href: "/developers/guides/biller#api-contract" },
+                            { title: "Authentication (Basic Auth)", href: "/developers/guides/biller#authentication" },
+                            { title: "Callback notifications", href: "/developers/guides/biller#webhooks" },
+                        ],
+                    },
+                    { title: "Hosted checkout", href: "/developers/guides/biller#biller-hosted" },
+                    { title: "Full API", href: "/developers/guides/biller#biller-api" },
+                    { title: "Wholesale / Merchant", href: "/developers/guides/biller#biller-wholesale" },
+                    {
+                        title: "APIs involved",
+                        href: "/developers/guides/biller#apis-involved",
+                        items: [
+                            { title: "Workflow APIs", href: "/developers/guides/biller#apis-workflow" },
+                            { title: "Helper APIs", href: "/developers/guides/biller#apis-helper" },
+                        ],
+                    },
+                    { title: "Wholesale guide", href: "/developers/guides/wholesale" },
+                    { title: "Merchant guide", href: "/developers/guides/merchant" },
+                ],
+            },
+            {
+                title: "Retail",
                 href: "/developers/guides/retail",
                 icon: <Globe className="w-4 h-4" />,
                 items: [
@@ -86,157 +117,150 @@ const docsConfig: NavGroup[] = [
                             { title: "Integration options", href: "/developers/guides/retail#integration-options" },
                             { title: "API contract", href: "/developers/guides/retail#api-contract" },
                             { title: "Authentication (JWT)", href: "/developers/guides/retail#authentication" },
-                            { title: "Environments", href: "/developers/guides/retail#environments" },
                             { title: "Webhooks", href: "/developers/guides/retail#webhooks" },
                         ],
                     },
-                    { title: "Widget (SDK)", href: "/developers/guides/retail#retail-widget" },
-                    { title: "Hosted Pages", href: "/developers/guides/retail#retail-hosted-pages" },
-                    { title: "Hosted Checkout (Hybrid)", href: "/developers/guides/retail#retail-hosted-hybrid" },
-                    { title: "Full API Integration", href: "/developers/guides/retail#retail-full-api" },
                     {
-                        title: "APIs involved",
-                        href: "/developers/guides/retail#apis-involved",
+                        title: "Hosted",
+                        href: "/developers/guides/retail#retail-hosted-pages",
                         items: [
-                            { title: "Workflow APIs", href: "/developers/guides/retail#apis-workflow" },
-                            { title: "Helper APIs", href: "/developers/guides/retail#apis-helper" },
+                            { title: "Hosted pages", href: "/developers/guides/retail#retail-hosted-pages" },
+                            { title: "Hosted checkout (hybrid)", href: "/developers/guides/retail#retail-hosted-hybrid" },
+                            { title: "Hosted API reference", href: "/developers/api-reference/hosted" },
+                        ],
+                    },
+                    {
+                        title: "SDK",
+                        href: "/developers/guides/retail#retail-widget",
+                        items: [
+                            { title: "Widget (SDK)", href: "/developers/guides/retail#retail-widget" },
+                            { title: "SDK guide", href: "/developers/guides/sdk" },
+                            { title: "SDK API reference", href: "/developers/api-reference/sdk" },
+                        ],
+                    },
+                    {
+                        title: "API",
+                        href: "/developers/guides/retail#retail-full-api",
+                        items: [
+                            { title: "Full API integration", href: "/developers/guides/retail#retail-full-api" },
+                            { title: "APIs involved", href: "/developers/guides/retail#apis-involved" },
+                            { title: "Retail API reference", href: "/developers/api-reference/retail-api" },
                         ],
                     },
                 ],
             },
             {
-                title: "Biller",
-                href: "/developers/guides/biller",
-                icon: <Store className="w-4 h-4" />,
-                items: [
-                    {
-                        title: "Overview",
-                        href: "/developers/guides/biller#overview",
-                        items: [
-                            { title: "Authentication (Basic Auth)", href: "/developers/guides/biller#authentication" },
-                        ],
-                    },
-                    {
-                        title: "APIs involved",
-                        href: "/developers/guides/biller#apis-involved",
-                        items: [
-                            { title: "Workflow APIs", href: "/developers/guides/biller#apis-workflow" },
-                            { title: "Helper APIs", href: "/developers/guides/biller#apis-helper" },
-                        ],
-                    },
-                    {
-                        title: "Wholesale biller",
-                        href: "/developers/guides/wholesale",
-                        items: [
-                            { title: "Integration methods", href: "/developers/guides/wholesale#integration-methods" },
-                            { title: "Prerequisites", href: "/developers/guides/wholesale#prerequisites" },
-                            { title: "Architecture", href: "/developers/guides/wholesale#architecture" },
-                            { title: "Integration flow", href: "/developers/guides/wholesale#integration-flow" },
-                            { title: "Webhooks", href: "/developers/guides/wholesale#webhooks" },
-                            { title: "Status lifecycle", href: "/developers/guides/wholesale#status-lifecycle" },
-                            { title: "APIs involved", href: "/developers/guides/wholesale#apis-involved" },
-                        ],
-                    },
-                    {
-                        title: "Merchant biller",
-                        href: "/developers/guides/merchant",
-                        items: [
-                            { title: "Integration methods", href: "/developers/guides/merchant#integration-methods" },
-                            { title: "Prerequisites", href: "/developers/guides/merchant#prerequisites" },
-                            { title: "Architecture", href: "/developers/guides/merchant#architecture" },
-                            { title: "Integration flow", href: "/developers/guides/merchant#integration-flow" },
-                            { title: "Webhooks", href: "/developers/guides/merchant#webhooks" },
-                            { title: "Status lifecycle", href: "/developers/guides/merchant#status-lifecycle" },
-                            { title: "APIs involved", href: "/developers/guides/merchant#apis-involved" },
-                        ],
-                    },
-                ],
-            },
-            {
-                title: "MTO partner",
+                title: "MTO",
                 href: "/developers/guides/mto",
                 icon: <Landmark className="w-4 h-4" />,
                 items: [
                     {
-                        title: "FTP batch",
-                        href: "/developers/file-integration/mto-ftp",
+                        title: "Overview",
+                        href: "/developers/guides/mto#overview",
                         items: [
-                            { title: "Integration methods", href: "/developers/file-integration/mto-ftp#integration-methods" },
-                            { title: "Prerequisites", href: "/developers/file-integration/mto-ftp#prerequisites" },
-                            { title: "Architecture", href: "/developers/file-integration/mto-ftp#architecture" },
-                            { title: "Integration flow", href: "/developers/file-integration/mto-ftp#integration-flow" },
-                            { title: "Status lifecycle", href: "/developers/file-integration/mto-ftp#status-lifecycle" },
-                            { title: "APIs involved", href: "/developers/file-integration/mto-ftp#apis-involved" },
+                            { title: "Introduction", href: "/developers/guides/mto#introduction" },
+                            { title: "Overall workflow", href: "/developers/guides/mto#overall-workflow" },
+                            { title: "Integration options", href: "/developers/guides/mto#integration-options" },
+                            { title: "API contract", href: "/developers/guides/mto#api-contract" },
+                            { title: "Authentication", href: "/developers/guides/mto#authentication" },
                         ],
                     },
-                    {
-                        title: "File integration",
-                        href: "/developers/file-integration",
-                        items: [
-                            { title: "When to use", href: "/developers/file-integration#when-to-use" },
-                            { title: "Folder structure", href: "/developers/file-integration#folder-structure" },
-                            { title: "Documentation", href: "/developers/file-integration#documentation" },
-                            { title: "Related", href: "/developers/file-integration#related" },
-                        ]
-                    },
+                    { title: "REST API", href: "/developers/guides/mto#mto-api" },
+                    { title: "FTP Gateway", href: "/developers/guides/mto#mto-ftp" },
+                    { title: "APIs involved", href: "/developers/guides/mto#apis-involved" },
+                    { title: "MTO API reference", href: "/developers/api-reference/mto-api" },
+                    { title: "FTP file formats", href: "/developers/api-reference/ftp" },
                 ],
             },
-        ],
-    },
-    {
-        title: "Integration methods",
-        items: [
-            {
-                title: "Hosted checkout",
-                href: "/developers/hosted-flows",
-                icon: <TerminalSquare className="w-4 h-4" />,
-                items: [
-                    { title: "Integration methods", href: "/developers/hosted-flows#integration-methods" },
-                    { title: "Prerequisites", href: "/developers/hosted-flows#prerequisites" },
-                    { title: "Architecture", href: "/developers/hosted-flows#architecture" },
-                    { title: "Integration flow", href: "/developers/hosted-flows#integration-flow" },
-                    { title: "Webhooks", href: "/developers/hosted-flows#webhooks" },
-                    { title: "Status lifecycle", href: "/developers/hosted-flows#status-lifecycle" },
-                    { title: "APIs involved", href: "/developers/hosted-flows#apis-involved" },
-                ],
-            },
-            {
-                title: "SDK & widget",
-                href: "/developers/guides/sdk",
-                icon: <FileCode2 className="w-4 h-4" />,
-                items: [
-                    { title: "Integration methods", href: "/developers/guides/sdk#integration-methods" },
-                    { title: "Prerequisites", href: "/developers/guides/sdk#prerequisites" },
-                    { title: "Integration flow", href: "/developers/guides/sdk#integration-flow" },
-                    { title: "Webhooks", href: "/developers/guides/sdk#webhooks" },
-                    { title: "Status lifecycle", href: "/developers/guides/sdk#status-lifecycle" },
-                    { title: "APIs involved", href: "/developers/guides/sdk#apis-involved" },
-                ],
-            },
-        ],
-    },
-    {
-        title: "Platform",
-        items: [
             {
                 title: "Webhooks",
                 href: "/developers/webhooks",
                 icon: <Network className="w-4 h-4" />,
                 items: [
-                    { title: "Core behaviour", href: "/developers/webhooks#core-behaviour" },
-                    { title: "Signature verification", href: "/developers/webhooks#signature-verification" },
-                    { title: "Events by phase", href: "/developers/webhooks#events-by-phase" },
+                    {
+                        title: "Overview",
+                        href: "/developers/webhooks#overview",
+                        items: [
+                            { title: "Introduction", href: "/developers/webhooks#introduction" },
+                            { title: "Overall workflow", href: "/developers/webhooks#overall-workflow" },
+                            { title: "Notification channels", href: "/developers/webhooks#integration-options" },
+                            { title: "Delivery contract", href: "/developers/webhooks#api-contract" },
+                        ],
+                    },
+                    {
+                        title: "Outbound eventTypes",
+                        href: "/developers/webhooks#outbound-webhooks",
+                        items: [
+                            { title: "Payment", href: "/developers/webhooks#outbound-payment" },
+                            { title: "Transaction", href: "/developers/webhooks#outbound-transaction" },
+                            { title: "Refund & chargeback", href: "/developers/webhooks#outbound-refund-chargeback" },
+                            { title: "Payout (MTO)", href: "/developers/webhooks#outbound-payout-mto" },
+                        ],
+                    },
+                    {
+                        title: "Callback NotificationTypes",
+                        href: "/developers/webhooks#callback-notifications",
+                        items: [
+                            { title: "Transaction lifecycle", href: "/developers/webhooks#callback-transaction-lifecycle" },
+                            { title: "Refunds & payouts", href: "/developers/webhooks#callback-refunds-payouts" },
+                            { title: "Onboarding & verification", href: "/developers/webhooks#callback-onboarding-verification" },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        title: "Helper methods",
+        items: [
+            {
+                title: "Rates",
+                href: "/developers/rates",
+                icon: <ArrowRightLeft className="w-4 h-4" />,
+                items: [
+                    { title: "Retail quote", href: "/developers/rates#rates-retail" },
+                    { title: "MTO rates", href: "/developers/rates#rates-mto" },
+                    { title: "APIs involved", href: "/developers/rates#apis-involved" },
                 ],
             },
             {
-                title: "Settlement & Wallets",
+                title: "Wallets",
+                href: "/developers/wallets",
+                icon: <Wallet className="w-4 h-4" />,
+                items: [
+                    { title: "MTO Collection", href: "/developers/wallets#wallets-collection" },
+                    { title: "Biller", href: "/developers/wallets#wallets-biller" },
+                    { title: "Retail", href: "/developers/wallets#wallets-retail" },
+                    { title: "APIs involved", href: "/developers/wallets#apis-involved" },
+                ],
+            },
+            {
+                title: "KYC",
+                href: "/developers/kyc",
+                icon: <Milestone className="w-4 h-4" />,
+                items: [
+                    { title: "SDK / Hosted", href: "/developers/kyc#kyc-sdk" },
+                    { title: "Full API", href: "/developers/kyc#kyc-api" },
+                    { title: "APIs involved", href: "/developers/kyc#apis-involved" },
+                ],
+            },
+            {
+                title: "Settlement",
                 href: "/developers/settlement",
                 icon: <Building2 className="w-4 h-4" />,
                 items: [
-                    { title: "Wallet model", href: "/developers/settlement#wallet-model" },
-                    { title: "Settlement flow", href: "/developers/settlement#settlement-flow" },
-                    { title: "Reconciliation", href: "/developers/settlement#reconciliation" },
-                    { title: "Related flows", href: "/developers/settlement#related-flows" },
+                    { title: "Biller settlement", href: "/developers/settlement#settlement-biller" },
+                    { title: "MTO / Collection", href: "/developers/settlement#settlement-mto" },
+                ],
+            },
+            {
+                title: "Payouts",
+                href: "/developers/payouts",
+                icon: <Banknote className="w-4 h-4" />,
+                items: [
+                    { title: "Collection Api List", href: "/developers/payouts#payouts-collection" },
+                    { title: "Corporate withdrawal", href: "/developers/payouts#payouts-withdrawal" },
+                    { title: "APIs involved", href: "/developers/payouts#apis-involved" },
                 ],
             },
         ],
@@ -245,12 +269,16 @@ const docsConfig: NavGroup[] = [
         title: "API Reference",
         items: [
             { title: "Overview", href: "/developers/api-reference", icon: <FileText className="w-4 h-4" /> },
-            { title: "Collect", href: "/developers/api-reference/collect", icon: <Wallet className="w-4 h-4" /> },
-            { title: "Process / Forex", href: "/developers/api-reference/process-forex", icon: <ArrowRightLeft className="w-4 h-4" /> },
-            { title: "Disburse", href: "/developers/api-reference/disburse", icon: <Banknote className="w-4 h-4" /> },
-            { title: "Manage", href: "/developers/api-reference/manage", icon: <Settings className="w-4 h-4" /> },
             { title: "SDK", href: "/developers/api-reference/sdk", icon: <FileCode2 className="w-4 h-4" /> },
             { title: "Hosted checkout", href: "/developers/api-reference/hosted", icon: <TerminalSquare className="w-4 h-4" /> },
+            {
+                title: "Manage",
+                href: "/developers/api-reference/manage",
+                icon: <Settings className="w-4 h-4" />,
+                items: [
+                    { title: "Webhook verification", href: "/developers/api-reference/manage#webhook-verification" },
+                ],
+            },
             {
                 title: "FTP file formats",
                 href: "/developers/api-reference/ftp",

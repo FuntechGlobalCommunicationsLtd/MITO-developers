@@ -32,7 +32,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Register retail customer / sender for KYC and transactions.",
         phase: "collect",
         partners: ["retail"],
-        href: "/developers/api-reference/retail-api#users",
+        href: "/developers/api-reference/retail-api#create-user",
     },
     {
         method: "GET",
@@ -41,7 +41,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Available send/receive corridor pairs.",
         phase: "processForex",
         partners: ["retail"],
-        href: "/developers/api-reference/retail-api#exchange-Corridors",
+        href: "/developers/api-reference/retail-api#get-corridors",
     },
     {
         method: "POST",
@@ -50,7 +50,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Get rateId required before POST /api/v1/mito/Transactions.",
         phase: "processForex",
         partners: ["retail"],
-        href: "/developers/api-reference/retail-api#exchange-rates",
+        href: "/developers/api-reference/retail-api#post-rates",
     },
     {
         method: "GET",
@@ -59,7 +59,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Providers by country, currency, service, and collection mode.",
         phase: "processForex",
         partners: ["retail"],
-        href: "/developers/api-reference/retail-api#lookups-provider",
+        href: "/developers/api-reference/retail-api#get-lookup-provider",
     },
     {
         method: "POST",
@@ -68,7 +68,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Register payout destination before or during hosted flow.",
         phase: "disburse",
         partners: ["retail"],
-        href: "/developers/api-reference/retail-api#beneficiaries",
+        href: "/developers/api-reference/retail-api#create-beneficiary",
     },
     {
         method: "POST",
@@ -77,7 +77,7 @@ export const API_ENDPOINTS: ApiEndpointDef[] = [
         description: "Primary entry point. Returns PaymentUrl for HOSTEDPAGE/SDK channel.",
         phase: "collect",
         partners: ["retail"],
-        href: "/developers/api-reference/retail-api#transactions",
+        href: "/developers/api-reference/retail-api#create-transaction",
         externalDoc: "https://furp02-staging.funtechcom.com/mito/mito.html#tag/SDK-Integration",
     },
     {

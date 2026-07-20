@@ -10,13 +10,13 @@ export default function FileIntegrationPage() {
         <DocsLayout>
             <div className="max-w-4xl">
                 <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">Integration method · File / SFTP</p>
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">File integration overview</h1>
-                <p className="text-xl text-muted-foreground mb-8">
+                <h1 className="text-3xl font-extrabold tracking-tight mb-4">File integration overview</h1>
+                <p className="text-base text-muted-foreground mb-8">
                     For high-volume or legacy systems, MITO supports secure SFTP file exchange instead of real-time REST APIs.
                 </p>
 
                 <section className="mb-12">
-                    <h2 id="when-to-use" className="text-2xl font-bold mb-4">When to use file integration</h2>
+                    <h2 id="when-to-use" className="text-xl font-bold mb-4">When to use file integration</h2>
                     <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                         <li>MTO partners submitting bulk transactions (hundreds per batch)</li>
                         <li>Backend systems that cannot maintain persistent API connections</li>
@@ -25,7 +25,7 @@ export default function FileIntegrationPage() {
                 </section>
 
                 <section className="mb-12">
-                    <h2 id="folder-structure" className="text-2xl font-bold mb-6">Folder structure</h2>
+                    <h2 id="folder-structure" className="text-xl font-bold mb-6">Folder structure</h2>
                     <FlowDiagram title="SFTP directories">
                         <div className="flex flex-col md:flex-row items-center justify-center gap-4">
                             <FlowNode label="/inbox or /Inbound" sublabel="You → MITO" type="user" />
@@ -44,7 +44,7 @@ export default function FileIntegrationPage() {
                 </section>
 
                 <section className="mb-12">
-                    <h2 id="documentation" className="text-2xl font-bold mb-4">Documentation</h2>
+                    <h2 id="documentation" className="text-xl font-bold mb-4">Documentation</h2>
                     <div className="grid sm:grid-cols-2 gap-4">
                         <Link href="/developers/file-integration/mto-ftp" className="p-5 rounded-xl border hover:border-primary/40 hover:bg-primary/5 transition-colors group">
                             <p className="font-semibold group-hover:text-primary">MTO FTP batch flow</p>
@@ -58,7 +58,7 @@ export default function FileIntegrationPage() {
                 </section>
 
                 <section>
-                    <h2 id="related" className="text-2xl font-bold mb-4">Related</h2>
+                    <h2 id="related" className="text-xl font-bold mb-4">Related</h2>
                     <Link href="/developers/guides/mto" className="text-primary font-semibold hover:underline inline-flex items-center gap-1">
                         MTO partner integration (REST) <ArrowRight className="w-4 h-4" />
                     </Link>

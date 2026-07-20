@@ -2,164 +2,211 @@
 
 import { DocsLayout } from "@/components/layout/DocsLayout";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { IntegrationTypeCard } from "@/components/developers/HeroCards";
 import { PARTNER_API_BASE_URLS } from "@/lib/partner-api-overview";
+import {
+    DocsPage,
+    DocsPageHeader,
+    DocsSection,
+    DocsTable,
+    DocsTopicCard,
+    DocsTopicStack,
+} from "@/components/developers/DocsPage";
 
-const partnerFlows = [
+/** Sidebar order: Overview → Biller → Retail → MTO → Webhooks */
+const integrationMethods = [
     {
-        title: "Retail affiliate",
-        description: "C2C remittance for end customers. Auth: JWT.",
-        href: "/developers/guides/retail",
+        title: "Overview",
+        description: "Base URLs, auth types, and how to choose a partner path.",
+        href: "/developers/guides#api-endpoints",
     },
     {
         title: "Biller",
         description: "Collect on your site with a registered Biller ID. Auth: Basic Auth.",
         href: "/developers/guides/biller",
+        options: [
+            { title: "Wholesale", href: "/developers/guides/wholesale" },
+            { title: "Merchant", href: "/developers/guides/merchant" },
+        ],
     },
     {
-        title: "MTO partner",
+        title: "Retail",
+        description: "C2C remittance for end customers. Auth: JWT.",
+        href: "/developers/guides/retail",
+        options: [
+            { title: "Hosted", href: "/developers/guides/retail#retail-hosted-pages" },
+            { title: "SDK", href: "/developers/guides/retail#retail-widget" },
+            { title: "API", href: "/developers/guides/retail#retail-full-api" },
+        ],
+    },
+    {
+        title: "MTO",
         description: "Bulk remittance via REST API or FTP batch. Auth: JWT / Bearer.",
         href: "/developers/guides/mto",
+        options: [
+            { title: "API", href: "/developers/api-reference/mto-api" },
+            { title: "FTP", href: "/developers/file-integration/mto-ftp" },
+        ],
+    },
+    {
+        title: "Webhooks",
+        description: "Catalog of outbound eventTypes and Biller NotificationTypes.",
+        href: "/developers/webhooks",
+        options: [
+            { title: "Outbound eventTypes", href: "/developers/webhooks#outbound-webhooks" },
+            { title: "Callback NotificationTypes", href: "/developers/webhooks#callback-notifications" },
+        ],
     },
 ];
 
-const integrationMethods = [
-    { title: "Hosted checkout", href: "/developers/hosted-flows", description: "Redirect to MITO payment pages" },
-    { title: "SDK & widget", href: "/developers/guides/sdk", description: "Embedded modal checkout" },
-    { title: "File / SFTP", href: "/developers/file-integration", description: "Batch file exchange for MTO" },
+/** Sidebar order: Rates → Wallets → KYC → Settlement → Payouts */
+const helperMethods = [
+    {
+        title: "Rates",
+        description: "FX quotes, corridors, and rateId before create transaction.",
+        href: "/developers/rates",
+        options: [
+            { title: "Retail quote", href: "/developers/rates#rates-retail" },
+            { title: "MTO rates", href: "/developers/rates#rates-mto" },
+        ],
+    },
+    {
+        title: "Wallets",
+        description: "Partner-visible balances after collections settle.",
+        href: "/developers/wallets",
+        options: [
+            { title: "MTO Collection", href: "/developers/wallets#wallets-collection" },
+            { title: "Biller", href: "/developers/wallets#wallets-biller" },
+            { title: "Retail", href: "/developers/wallets#wallets-retail" },
+        ],
+    },
+    {
+        title: "KYC",
+        description: "Sender identity checks for retail and hosted / SDK capture.",
+        href: "/developers/kyc",
+        options: [
+            { title: "SDK / Hosted", href: "/developers/kyc#kyc-sdk" },
+            { title: "Full API", href: "/developers/kyc#kyc-api" },
+        ],
+    },
+    {
+        title: "Settlement",
+        description: "How collected funds become available and move to your bank.",
+        href: "/developers/settlement",
+        options: [
+            { title: "Biller settlement", href: "/developers/settlement#settlement-biller" },
+            { title: "MTO / Collection", href: "/developers/settlement#settlement-mto" },
+        ],
+    },
+    {
+        title: "Payouts",
+        description: "MTO Collection Api List, payout balances, and corporate withdrawal.",
+        href: "/developers/payouts",
+        options: [
+            { title: "Collection Api List", href: "/developers/payouts#payouts-collection" },
+            { title: "Corporate withdrawal", href: "/developers/payouts#payouts-withdrawal" },
+        ],
+    },
 ];
 
 export default function GuidesIndexPage() {
     return (
         <DocsLayout>
-            <div className="max-w-4xl space-y-14 pb-16">
-                <div>
-                    <h1 className="text-4xl font-extrabold tracking-tight mb-4">Documentation</h1>
-                    <p className="text-xl text-muted-foreground mb-4">
-                        Integration flows by partner type. Every guide follows{" "}
-                        <strong className="text-foreground">Collect → Process / Forex → Disburse</strong>.
-                    </p>
-                    <p className="text-muted-foreground">
+            <DocsPage>
+                <DocsPageHeader
+                    eyebrow="Documentation"
+                    title="Integration & helper methods"
+                    description={
+                        <>
+                            Choose an integration path, then use helpers for rates, wallets, KYC, settlement, and
+                            payouts. Flows follow{" "}
+                            <strong className="text-foreground">Collect → Process / Forex → Disburse</strong>.
+                        </>
+                    }
+                >
+                    <p className="text-muted-foreground mt-4">
                         Endpoint specs:{" "}
                         <Link
                             href="/developers/api-reference"
-                            className="text-primary font-semibold hover:underline inline-flex items-center gap-1"
+                            className="text-primary font-semibold hover:underline"
                         >
-                            API Reference <ArrowRight className="w-3.5 h-3.5" />
+                            API Reference
                         </Link>
                     </p>
-                </div>
+                </DocsPageHeader>
 
-                <section id="api-endpoints" className="scroll-mt-24">
-                    <h2 className="text-2xl font-bold mb-2">API endpoints</h2>
-                    <p className="text-muted-foreground mb-6">
-                        Base URLs for staging and live. Use the matching credentials and auth method for each partner.
-                    </p>
-                    <div className="overflow-x-auto rounded-xl border">
-                        <table className="w-full text-sm text-left">
-                            <thead className="bg-muted/50 text-muted-foreground border-b">
-                                <tr>
-                                    <th className="px-4 py-3 font-medium">Partner</th>
-                                    <th className="px-4 py-3 font-medium">Auth</th>
-                                    <th className="px-4 py-3 font-medium">Staging</th>
-                                    <th className="px-4 py-3 font-medium">Live</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y">
-                                {PARTNER_API_BASE_URLS.map((row) => (
-                                    <tr key={row.id} id={row.id} className="scroll-mt-24 align-top">
-                                        <td className="px-4 py-3">
-                                            <Link href={row.guideHref} className="font-semibold hover:text-primary">
-                                                {row.title}
-                                            </Link>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <Link href={row.authHref} className="text-primary font-medium hover:underline">
-                                                {row.authType}
-                                            </Link>
-                                        </td>
-                                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground break-all">
-                                            {row.staging}
-                                        </td>
-                                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground break-all">
-                                            {row.live}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-4">
+                <DocsSection
+                    id="api-endpoints"
+                    title="API endpoints"
+                    description="Base URLs for staging and live. Use the matching credentials and auth method for each partner."
+                >
+                    <DocsTable
+                        headers={["Partner", "Auth", "Staging", "Live"]}
+                        rows={PARTNER_API_BASE_URLS.map((row) => [
+                            <Link key={row.id} href={row.guideHref} className="font-semibold hover:text-primary">
+                                {row.title}
+                            </Link>,
+                            <Link
+                                key={`${row.id}-auth`}
+                                href={row.authHref}
+                                className="text-primary font-medium hover:underline"
+                            >
+                                {row.authType}
+                            </Link>,
+                            <span key={`${row.id}-s`} className="font-mono text-xs text-muted-foreground break-all">
+                                {row.staging}
+                            </span>,
+                            <span key={`${row.id}-l`} className="font-mono text-xs text-muted-foreground break-all">
+                                {row.live}
+                            </span>,
+                        ])}
+                    />
+                    <p className="text-sm text-muted-foreground">
                         Credentials and first request:{" "}
-                        <Link href="/developers/get-started#environments" className="text-primary font-semibold hover:underline">
+                        <Link
+                            href="/developers/get-started#environments"
+                            className="text-primary font-semibold hover:underline"
+                        >
                             Getting Started · Environments
                         </Link>
                     </p>
-                </section>
+                </DocsSection>
 
-                <section id="models" className="scroll-mt-24">
-                    <h2 className="text-2xl font-bold mb-6">Integration models</h2>
-                    <div className="space-y-4">
-                        {partnerFlows.map((partner) => (
-                            <Link
-                                key={partner.href}
-                                href={partner.href}
-                                className="block border rounded-xl p-6 hover:border-primary/40 hover:bg-primary/5 transition-colors group"
-                            >
-                                <h3 className="text-lg font-bold group-hover:text-primary flex items-center gap-2">
-                                    {partner.title}
-                                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100" />
-                                </h3>
-                                <p className="text-muted-foreground mt-1 text-sm">{partner.description}</p>
-                            </Link>
+                <DocsSection
+                    id="methods"
+                    title="Integration methods"
+                    description="Partner paths in sidebar order. Open a card for the guide, or use a chip for a delivery option."
+                >
+                    <DocsTopicStack>
+                        {integrationMethods.map((item) => (
+                            <DocsTopicCard
+                                key={item.href + item.title}
+                                href={item.href}
+                                title={item.title}
+                                description={item.description}
+                                options={item.options}
+                            />
                         ))}
-                    </div>
-                    <div className="mt-6 grid md:grid-cols-2 gap-4">
-                        <IntegrationTypeCard
-                            title="Wholesale biller"
-                            description="Sub-merchant aggregation and pooled settlement."
-                            href="/developers/guides/wholesale"
-                        />
-                        <IntegrationTypeCard
-                            title="Merchant biller"
-                            description="Single-merchant checkout integration."
-                            href="/developers/guides/merchant"
-                        />
-                    </div>
-                </section>
+                    </DocsTopicStack>
+                </DocsSection>
 
-                <section id="methods" className="scroll-mt-24">
-                    <h2 className="text-2xl font-bold mb-6">Integration methods</h2>
-                    <p className="text-sm text-muted-foreground mb-4">Shared across partner types — not tied to one model.</p>
-                    <div className="grid sm:grid-cols-3 gap-4">
-                        {integrationMethods.map((m) => (
-                            <Link
-                                key={m.href}
-                                href={m.href}
-                                className="p-4 rounded-xl border hover:border-primary/40 hover:bg-primary/5 group"
-                            >
-                                <p className="font-semibold text-sm group-hover:text-primary">{m.title}</p>
-                                <p className="text-xs text-muted-foreground mt-1">{m.description}</p>
-                            </Link>
+                <DocsSection
+                    id="helpers"
+                    title="Helper methods"
+                    description="Shared capabilities used across partner paths. Same layout and order as Integration methods."
+                >
+                    <DocsTopicStack>
+                        {helperMethods.map((item) => (
+                            <DocsTopicCard
+                                key={item.href + item.title}
+                                href={item.href}
+                                title={item.title}
+                                description={item.description}
+                                options={item.options}
+                            />
                         ))}
-                    </div>
-                </section>
-
-                <section id="platform" className="scroll-mt-24">
-                    <h2 className="text-2xl font-bold mb-6">Platform</h2>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                        <Link href="/developers/webhooks" className="p-4 rounded-xl border hover:border-primary/40 group">
-                            <p className="font-semibold group-hover:text-primary">Webhooks</p>
-                            <p className="text-xs text-muted-foreground mt-1">Async events by phase</p>
-                        </Link>
-                        <Link href="/developers/settlement" className="p-4 rounded-xl border hover:border-primary/40 group">
-                            <p className="font-semibold group-hover:text-primary">Settlement & wallets</p>
-                            <p className="text-xs text-muted-foreground mt-1">Balances, fees, reconciliation</p>
-                        </Link>
-                    </div>
-                </section>
-            </div>
+                    </DocsTopicStack>
+                </DocsSection>
+            </DocsPage>
         </DocsLayout>
     );
 }

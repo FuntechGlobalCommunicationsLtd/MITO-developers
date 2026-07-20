@@ -1,74 +1,85 @@
 "use client";
 
 import { DocsLayout } from "@/components/layout/DocsLayout";
-import { ApiModelHub } from "@/components/developers/ApiModelHub";
-import { endpointsByPhase, PARTNER_API_PAGES } from "@/lib/api-endpoints";
+import { DocsPage, DocsPageHeader, DocsInlineCode } from "@/components/developers/DocsPage";
 import { CodeBlock } from "@/components/developers/CodeBlocks";
+import Link from "next/link";
+import { PARTNER_API_PAGES } from "@/lib/api-endpoints";
 
 const signatureCheckCode = `const crypto = require('crypto');
 
-const payload = req.rawBody;
-const signatureHeader = req.headers['x-mito-signature'];
-const webhookSecret = process.env.MITO_WEBHOOK_SECRET;
+// Outbound webhook body includes: eventId, eventType, timestamp, data, signature
+const body = req.body;
+const apiSecretKey = process.env.MITO_API_SECRET_KEY;
 
-const expectedSignature = crypto
-  .createHmac('sha256', webhookSecret)
-  .update(payload)
-  .digest('hex');
+// Recompute HMAC-SHA256 over the same payload object MITO signed, Base64 digest
+const signedPayload = JSON.stringify({
+  eventId: body.eventId,
+  eventType: body.eventType,
+  timestamp: body.timestamp,
+  data: body.data,
+});
+const expected = crypto
+  .createHmac('sha256', apiSecretKey)
+  .update(signedPayload)
+  .digest('base64');
 
-if (signatureHeader === expectedSignature) {
+if (body.signature === expected) {
   res.status(200).send('OK');
 } else {
   res.status(401).send('Invalid signature');
 }`;
 
 export default function ManageApiPage() {
-    const endpoints = endpointsByPhase("manage");
-
     return (
         <DocsLayout>
-            <div className="max-w-4xl space-y-16">
-                <ApiModelHub
-                    phase="API Reference"
+            <DocsPage>
+                <DocsPageHeader
+                    eyebrow="API Reference · Manage"
                     title="Manage"
-                    description="Index of auth, balances, and status endpoints. Click any row to open the full partner API endpoint page."
-                    endpoints={endpoints.map((e) => ({
-                        method: e.method,
-                        path: e.path,
-                        title: e.title,
-                        description: e.description,
-                        href: e.href,
-                    }))}
-                    relatedDocs={[
-                        { title: "Retail API", href: "/developers/api-reference/retail-api", description: "Full retail endpoint specs" },
-                        { title: "Biller API", href: "/developers/api-reference/biller-api", description: "Full Business / payout endpoint specs" },
-                        { title: "MTO API", href: "/developers/api-reference/mto-api", description: "Full MTO endpoint specs" },
-                        { title: "Webhooks", href: "/developers/webhooks", description: "Event catalog" },
-                    ]}
+                    description="Cross-cutting verification helpers. Auth, balances, and status live on each partner API page."
                 />
 
-                <section id="webhook-verification" className="scroll-mt-24 border-t pt-12">
-                    <h2 className="text-2xl font-bold mb-4">Webhook signature verification</h2>
-                    <p className="text-muted-foreground mb-6 text-sm">
-                        MTO payout webhooks use HMAC-SHA256 with your <code className="bg-muted px-1 rounded">ApiSecretKey</code>.
-                        Events: <code className="bg-muted px-1 rounded">payout_initiated</code>, <code className="bg-muted px-1 rounded">payout_completed</code>, <code className="bg-muted px-1 rounded">payout_failed</code>.
+                <section id="webhook-verification" className="scroll-mt-24 space-y-4">
+                    <h2 className="text-xl font-bold">Webhook signature verification</h2>
+                    <p className="text-muted-foreground text-sm">
+                        Outbound webhooks (Retail + MTO payouts) include an HMAC-SHA256 digest as Base64 in the JSON{" "}
+                        <DocsInlineCode>signature</DocsInlineCode> field, using your{" "}
+                        <DocsInlineCode>ApiSecretKey</DocsInlineCode>. Deduplicate with{" "}
+                        <DocsInlineCode>eventId</DocsInlineCode>. Biller uses separate callback{" "}
+                        <DocsInlineCode>Notification</DocsInlineCode> POSTs — see{" "}
+                        <Link href="/developers/webhooks" className="text-primary font-semibold hover:underline">
+                            Webhooks & notifications
+                        </Link>
+                        . Envelope fields:{" "}
+                        <Link
+                            href="/developers/api-reference/retail-api#webhook-notification"
+                            className="text-primary font-semibold hover:underline"
+                        >
+                            Retail API · Webhook notification
+                        </Link>
+                        .
                     </p>
                     <CodeBlock code={signatureCheckCode} language="javascript" />
                 </section>
 
-                <section className="border-t pt-8 text-sm text-muted-foreground">
-                    <p className="font-semibold text-foreground mb-2">Full partner references</p>
-                    <ul className="space-y-1">
+                <section className="border-t pt-8 space-y-3">
+                    <h2 className="text-xl font-bold">Partner API references</h2>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
                         {Object.values(PARTNER_API_PAGES).map((p) => (
                             <li key={p.href}>
-                                <a href={p.href} className="text-primary hover:underline">{p.title}</a>
+                                <Link href={p.href} className="text-primary font-semibold hover:underline">
+                                    {p.title}
+                                </Link>
                                 {" · "}
-                                <a href={p.external} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">Redoc</a>
+                                <a href={p.external} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                                    Redoc
+                                </a>
                             </li>
                         ))}
                     </ul>
                 </section>
-            </div>
+            </DocsPage>
         </DocsLayout>
     );
 }

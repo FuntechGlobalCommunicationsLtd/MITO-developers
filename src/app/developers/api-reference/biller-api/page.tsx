@@ -15,8 +15,8 @@ export default function BillerApiReference() {
             <div className="flex flex-col w-full">
                 {/* Page Header */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">Biller Submission API</h1>
-                    <p className="text-xl text-muted-foreground mb-4">
+                    <h1 className="text-3xl font-extrabold tracking-tight mb-4">Biller Submission API</h1>
+                    <p className="text-base text-muted-foreground mb-4">
                         Biller collection, wallet, and payout APIs. Requires registered <strong>billerId</strong> on every transaction. Spec:{" "}
                         <a href="https://furp02-pre-pord.funtechcom.com/affiliate-payment-collection.html" className="text-primary font-semibold hover:underline" target="_blank" rel="noopener noreferrer">
                             affiliate-payment-collection.html
@@ -31,7 +31,7 @@ export default function BillerApiReference() {
 
                 {/* Authentication and Setup */}
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b space-y-6">
-                    <h2 id="auth" className="text-2xl font-bold flex items-center gap-2">
+                    <h2 id="auth" className="text-xl font-bold flex items-center gap-2">
                         <ShieldCheck className="w-6 h-6 text-primary" /> Authentication (Basic Auth)
                     </h2>
                     <p className="text-muted-foreground">
@@ -53,7 +53,7 @@ export default function BillerApiReference() {
                                 Retrieve your staging or live credentials from the service profiles tab.
                             </span>
                             <Button asChild size="xs" variant="link" className="text-primary hover:underline font-semibold p-0 h-auto">
-                                <Link href="/developers/credentials?service=biller" className="flex items-center gap-1">
+                                <Link href="/developers/get-started#environments" className="flex items-center gap-1">
                                     View Biller Credentials <ArrowRight className="w-3.5 h-3.5" />
                                 </Link>
                             </Button>

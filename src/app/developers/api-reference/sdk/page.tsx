@@ -12,11 +12,11 @@ export default function SdkApiReferencePage() {
             <div className="flex flex-col w-full">
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
                     <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">API Reference · Manage</p>
-                    <h1 className="text-4xl font-extrabold tracking-tight mb-4">MITO Link SDK</h1>
-                    <p className="text-xl text-muted-foreground">
-                        Install, configure, and launch the SDK. Server-side transaction creation lives under{" "}
-                        <Link href="/developers/api-reference/collect" className="text-primary font-semibold hover:underline">
-                            Collect
+                    <h1 className="text-3xl font-extrabold tracking-tight mb-4">MITO Link SDK</h1>
+                    <p className="text-base text-muted-foreground">
+                        Install, configure, and launch the SDK. Server-side transaction creation:{" "}
+                        <Link href="/developers/api-reference/retail-api#create-transaction" className="text-primary font-semibold hover:underline">
+                            Retail create transaction
                         </Link>
                         .
                     </p>
@@ -26,7 +26,7 @@ export default function SdkApiReferencePage() {
                     method="POST"
                     path="/api/v1/mito/Transactions"
                     title="Prerequisite: create transaction"
-                    description="Call this from your backend before opening the SDK. Use the linkToken from the response in useMitoLink. For biller flows, use InitiateTransactions instead."
+                    description="Call this from your backend before opening the SDK. Use the linkToken from the response in useMitoLink. Retail only — Biller partners use hosted checkout or Full API, not the SDK."
                     requestSamples={
                         <CodeTabs
                             tabs={[
@@ -46,29 +46,14 @@ export default function SdkApiReferencePage() {
   }
 }`,
                                 },
-                                {
-                                    label: "Biller",
-                                    language: "json",
-                                    code: `POST /api/v2/Business/InitiateTransactions
-{
-  "billerId": "bill_778899",
-  "sendAmount": 100,
-  "paymentMode": "CARDCHECKOUT",
-  "callbackurl": "https://your.site/webhooks/mito"
-}`,
-                                },
                             ]}
                         />
                     }
                 >
                     <p className="text-sm text-muted-foreground">
                         Full schema and parameters:{" "}
-                        <Link href="/developers/api-reference/retail-api#transactions" className="text-primary font-semibold hover:underline inline-flex items-center gap-1">
+                        <Link href="/developers/api-reference/retail-api#create-transaction" className="text-primary font-semibold hover:underline inline-flex items-center gap-1">
                             Retail API <ArrowRight className="w-3 h-3" />
-                        </Link>
-                        {" · "}
-                        <Link href="/developers/api-reference/biller-api#initiate-transaction" className="text-primary font-semibold hover:underline inline-flex items-center gap-1">
-                            Biller API <ArrowRight className="w-3 h-3" />
                         </Link>
                     </p>
                 </EndpointBlock>
@@ -152,7 +137,7 @@ const Checkout = ({ linkToken }) => {
                                     <td className="py-3 font-mono font-semibold text-foreground">linkType</td>
                                     <td className="py-3 font-mono">string</td>
                                     <td className="py-3 text-green-600 font-medium">Yes</td>
-                                    <td className="py-3"><code>bill-payment</code>, <code>retail-payment</code>, or <code>retail-collection</code>.</td>
+                                    <td className="py-3"><code>retail-payment</code> or <code>retail-collection</code>.</td>
                                 </tr>
                                 <tr className="border-b">
                                     <td className="py-3 font-mono font-semibold text-foreground">publishableKey</td>

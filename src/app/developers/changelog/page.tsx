@@ -6,8 +6,8 @@ export default function ChangelogPage() {
     return (
         <DocsLayout>
             <div className="max-w-4xl">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Changelog</h1>
-                <p className="text-xl text-muted-foreground mb-12">
+                <h1 className="text-3xl font-extrabold tracking-tight mb-4">Changelog</h1>
+                <p className="text-base text-muted-foreground mb-12">
                     Recent updates to the MITO APIs and Developer Tools.
                 </p>
 
