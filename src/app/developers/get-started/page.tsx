@@ -148,8 +148,8 @@ export default function GetStartedPage() {
                     <div className="absolute -inset-1 bg-gradient-to-r from-primary to-orange-400 rounded-2xl blur opacity-10"></div>
                     <div className="relative bg-background border p-6 md:p-8 rounded-2xl shadow-sm">
                         <Terminal className="w-10 h-10 md:w-12 md:h-12 text-primary mb-4" />
-                        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Getting Started</h1>
-                        <p className="text-lg md:text-xl text-muted-foreground">
+                        <h1 className="text-3xl md:text-3xl font-extrabold tracking-tight mb-4">Getting Started</h1>
+                        <p className="text-lg md:text-base text-muted-foreground">
                             Learn how to authenticate, explore our environments, and deploy your first integration with MITO&apos;s modern API.
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
@@ -170,7 +170,7 @@ export default function GetStartedPage() {
                 </div>
 
                 <section className="scroll-mt-24" id="journey">
-                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
                         <span className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-sm">1</span>
                         Integration Journey
                     </h2>
@@ -203,7 +203,7 @@ export default function GetStartedPage() {
                 </section>
 
                 <section className="scroll-mt-24" id="environments">
-                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
                         <span className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-sm">2</span>
                         Environments & Keys
                     </h2>
@@ -363,7 +363,7 @@ export default function GetStartedPage() {
                 </section>
 
                 <section className="scroll-mt-24" id="authentication">
-                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
                         <span className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-sm">3</span>
                         Authentication
                     </h2>
@@ -417,7 +417,7 @@ export default function GetStartedPage() {
                 </section>
 
                 <section className="scroll-mt-24" id="errors">
-                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
                         Errors
                     </h2>
                     <div className="pl-0 md:pl-11">
@@ -463,15 +463,15 @@ export default function GetStartedPage() {
                 </section>
 
                 <section className="scroll-mt-24" id="first-request">
-                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
                         <span className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-sm">4</span>
                         Your First Request
                     </h2>
                     <div className="pl-0 md:pl-11">
                         <p className="text-muted-foreground mb-6">
                             Verify your credentials with a rate lookup. Full request/response specs:{" "}
-                            <Link href="/developers/api-reference/process-forex#exchange-rates" className="text-primary font-semibold hover:underline">
-                                GET /exchange/rates
+                            <Link href="/developers/api-reference/retail-api#post-rates" className="text-primary font-semibold hover:underline">
+                                POST /api/v1/mito/Exchange/rates
                             </Link>
                         </p>
 

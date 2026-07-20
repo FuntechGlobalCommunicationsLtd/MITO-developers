@@ -59,7 +59,7 @@ export default function PreLiveTestingPage() {
                     <div className="absolute -inset-1 bg-gradient-to-r from-primary to-orange-400 rounded-2xl blur opacity-10 animate-pulse"></div>
                     <div className="relative bg-background border p-6 md:p-8 rounded-2xl shadow-sm">
                         <Landmark className="w-10 h-10 md:w-12 md:h-12 text-primary mb-4" />
-                        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Pre-Live Testing Beneficiary Accounts</h1>
+                        <h1 className="text-3xl md:text-3xl font-extrabold tracking-tight mb-4">Pre-Live Testing Beneficiary Accounts</h1>
                         <p className="text-lg text-muted-foreground">
                             Before launching your service in production, please use the following verified beneficiary accounts to perform real-world end-to-end tests for each respective corridor.
                         </p>

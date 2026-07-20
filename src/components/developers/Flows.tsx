@@ -29,28 +29,35 @@ export function StepFlow({ steps }: { steps: { title: string; description: strin
 export function FlowDiagram({
     title,
     description,
-    children
+    children,
+    compact = true,
 }: {
     title?: string;
     description?: string;
     children: ReactNode;
+    /** Compact layout (default). Pass compact={false} for the large diagram. */
+    compact?: boolean;
 }) {
     return (
-        <div className="my-10 border rounded-xl overflow-hidden bg-card">
+        <div className={cn("border rounded-xl overflow-hidden bg-card", compact ? "my-4" : "my-10")}>
             {(title || description) && (
-                <div className="p-6 border-b bg-muted/20">
-                    {title && <h3 className="font-bold text-xl mb-2">{title}</h3>}
-                    {description && <p className="text-muted-foreground">{description}</p>}
+                <div className={cn("border-b bg-muted/20", compact ? "px-4 py-2.5" : "p-6")}>
+                    {title && (
+                        <h3 className={cn("font-bold", compact ? "text-sm" : "text-xl mb-2")}>{title}</h3>
+                    )}
+                    {description && (
+                        <p className={cn("text-muted-foreground", compact && "text-xs mt-0.5")}>{description}</p>
+                    )}
                 </div>
             )}
-            <div className="p-8 flex items-center justify-center bg-background min-h-[300px] relative overflow-hidden">
-                {/* Placeholder background pattern */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-
-                {/* Diagram Content */}
-                <div className="relative z-10 w-full max-w-3xl">
-                    {children}
-                </div>
+            <div
+                className={cn(
+                    "flex items-center justify-center bg-background relative overflow-hidden",
+                    compact ? "px-4 py-5 min-h-0" : "p-8 min-h-[300px]"
+                )}
+            >
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+                <div className={cn("relative z-10 w-full", compact ? "max-w-2xl" : "max-w-3xl")}>{children}</div>
             </div>
         </div>
     );
@@ -60,12 +67,14 @@ export function FlowNode({
     label,
     sublabel,
     type = "default",
-    className
+    className,
+    compact = true,
 }: {
     label: string;
     sublabel?: string;
     type?: "default" | "primary" | "secondary" | "user" | "MITO";
     className?: string;
+    compact?: boolean;
 }) {
     const typeStyles = {
         default: "bg-background border-border text-foreground",
@@ -76,13 +85,20 @@ export function FlowNode({
     };
 
     return (
-        <div className={cn(
-            "px-6 py-4 rounded-lg border-2 text-center shadow-sm w-[180px] shrink-0 font-medium transition-all hover:shadow-md",
-            typeStyles[type] || typeStyles.default,
-            className
-        )}>
+        <div
+            className={cn(
+                "rounded-lg border-2 text-center shadow-sm shrink-0 font-medium transition-all hover:shadow-md",
+                compact ? "px-3 py-2 w-[132px] text-sm" : "px-6 py-4 w-[180px]",
+                typeStyles[type] || typeStyles.default,
+                className
+            )}
+        >
             {label}
-            {sublabel && <div className="text-xs mt-1 opacity-80 font-normal">{sublabel}</div>}
+            {sublabel && (
+                <div className={cn("opacity-80 font-normal", compact ? "text-[10px] mt-0.5 leading-tight" : "text-xs mt-1")}>
+                    {sublabel}
+                </div>
+            )}
         </div>
     );
 }
@@ -90,21 +106,38 @@ export function FlowNode({
 export function FlowArrow({
     label,
     direction = "right",
-    className
+    className,
+    compact = true,
 }: {
     label?: string;
     direction?: "right" | "left" | "down" | "up" | "both";
     className?: string;
+    compact?: boolean;
 }) {
     return (
-        <div className={cn("flex flex-col items-center justify-center shrink-0 min-w-[100px] px-2", className)}>
-            {label && <span className="text-xs text-muted-foreground font-medium mb-1 text-center bg-background px-2">{label}</span>}
+        <div
+            className={cn(
+                "flex flex-col items-center justify-center shrink-0 px-1",
+                compact ? "min-w-[48px]" : "min-w-[100px] px-2",
+                className
+            )}
+        >
+            {label && (
+                <span
+                    className={cn(
+                        "text-muted-foreground font-medium text-center bg-background px-1",
+                        compact ? "text-[10px] mb-0.5" : "text-xs mb-1 px-2"
+                    )}
+                >
+                    {label}
+                </span>
+            )}
             <div className="relative w-full h-0.5 bg-border/80">
                 {(direction === "right" || direction === "both") && (
-                    <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-3 h-3 border-t-2 border-r-2 border-border/80 rotate-45 transform origin-center"></div>
+                    <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-3 h-3 border-t-2 border-r-2 border-border/80 rotate-45 transform origin-center" />
                 )}
                 {(direction === "left" || direction === "both") && (
-                    <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-3 h-3 border-b-2 border-l-2 border-border/80 rotate-45 transform origin-center"></div>
+                    <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-3 h-3 border-b-2 border-l-2 border-border/80 rotate-45 transform origin-center" />
                 )}
             </div>
         </div>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { FlowDiagram } from "@/components/developers/Flows";
+import { DocsPage, DocsPageHeader, DocsSection, DocsLinkCard, DocsLinkGrid } from "@/components/developers/DocsPage";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -20,10 +21,25 @@ export interface GuideApiEntry {
     href: string;
 }
 
+export interface GuideApiGroup {
+    id?: string;
+    title: string;
+    description?: string;
+    apis: GuideApiEntry[];
+}
+
+export interface GuideAuthContent {
+    summary: string;
+    headers: { name: string; value: string }[];
+    docsHref?: string;
+}
+
 export interface IntegrationGuideContent {
     title: string;
     partnerLabel: string;
     description: string;
+    /** Shown in Overview for each workflow (Retail / Biller / MTO) */
+    authentication?: GuideAuthContent;
     prerequisites: string[];
     integrationMethods: { label: string; href: string; description: string }[];
     diagramTitle?: string;
@@ -33,7 +49,10 @@ export interface IntegrationGuideContent {
         processForex: GuideStep[];
         disburse: GuideStep[];
     };
-    apisInvolved: GuideApiEntry[];
+    /** Flat list — used when apiGroups is not provided */
+    apisInvolved?: GuideApiEntry[];
+    /** Grouped lists (e.g. Workflow / Helper). Takes precedence over apisInvolved. */
+    apiGroups?: GuideApiGroup[];
     webhookEvents?: { name: string; href: string; when: string }[];
     statusFlow?: string[];
     credentialsService?: "mto" | "retail" | "biller";
@@ -87,55 +106,119 @@ const methodColors: Record<GuideApiEntry["method"], string> = {
     DELETE: "bg-red-500/10 text-red-700",
 };
 
+export function ApiEntryList({ apis }: { apis: GuideApiEntry[] }) {
+    return (
+        <div className="divide-y border rounded-xl overflow-hidden">
+            {apis.map((api) => (
+                <Link
+                    key={api.href + api.path}
+                    href={api.href}
+                    className="flex flex-col sm:flex-row sm:items-center gap-2 p-4 hover:bg-muted/40 transition-colors group"
+                >
+                    <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
+                        <Badge variant="secondary" className={cn("text-[10px]", methodColors[api.method])}>
+                            {api.method}
+                        </Badge>
+                        <span className="text-muted-foreground">{api.path}</span>
+                    </div>
+                    <span className="text-sm font-medium group-hover:text-primary flex-1">{api.title}</span>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0 hidden sm:block" />
+                </Link>
+            ))}
+        </div>
+    );
+}
+
 export function IntegrationGuide({ content }: { content: IntegrationGuideContent }) {
-    const credentialsHref = content.credentialsService
-        ? `/developers/credentials?service=${content.credentialsService}`
-        : "/developers/credentials";
+    const credentialsHref = "/developers/get-started#environments";
+
+    const hasApiGroups = Boolean(content.apiGroups?.length);
+    const hasFlatApis = Boolean(content.apisInvolved?.length);
+    const showApis = hasApiGroups || hasFlatApis;
 
     return (
-        <div className="max-w-4xl">
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">{content.partnerLabel}</p>
-            <h1 className="text-4xl font-extrabold tracking-tight mb-4">{content.title}</h1>
-            <p className="text-xl text-muted-foreground mb-8">{content.description}</p>
+        <DocsPage>
+            <section id="overview" className="space-y-8">
+                <DocsPageHeader
+                    eyebrow={content.partnerLabel}
+                    title={content.title}
+                    description={content.description}
+                />
 
-            {/* Integration methods */}
-            <section id="integration-methods" className="mb-12">
-                <h2 className="text-2xl font-bold mb-4">Integration methods</h2>
-                <div className="grid sm:grid-cols-2 gap-3">
-                    {content.integrationMethods.map((m) => (
-                        <Link
-                            key={m.href + m.label}
-                            href={m.href}
-                            className="p-4 rounded-xl border hover:border-primary/40 hover:bg-primary/5 transition-colors group"
-                        >
-                            <p className="font-semibold text-sm group-hover:text-primary">{m.label}</p>
-                            <p className="text-xs text-muted-foreground mt-1">{m.description}</p>
-                        </Link>
-                    ))}
-                </div>
+                {content.authentication && (
+                    <div id="authentication" className="scroll-mt-24 space-y-3">
+                        <h2 className="text-xl font-bold">
+                            {content.credentialsService === "biller"
+                                ? "Authentication (Basic Auth)"
+                                : content.credentialsService === "retail"
+                                    ? "Authentication (JWT)"
+                                    : "Authentication"}
+                        </h2>
+                        <p className="text-sm text-muted-foreground">{content.authentication.summary}</p>
+                        <div className="overflow-x-auto rounded-xl border">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-muted/50 text-muted-foreground border-b">
+                                    <tr>
+                                        <th className="px-4 py-3 font-medium">Header</th>
+                                        <th className="px-4 py-3 font-medium">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y">
+                                    {content.authentication.headers.map((h) => (
+                                        <tr key={h.name}>
+                                            <td className="px-4 py-3 font-mono text-primary">{h.name}</td>
+                                            <td className="px-4 py-3 text-muted-foreground">
+                                                <code className="bg-muted px-1.5 py-0.5 rounded text-xs">{h.value}</code>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        {content.authentication.docsHref && (
+                            <p className="text-sm text-muted-foreground">
+                                Details:{" "}
+                                <Link href={content.authentication.docsHref} className="text-primary font-semibold hover:underline">
+                                    Authentication docs
+                                </Link>
+                            </p>
+                        )}
+                    </div>
+                )}
+
             </section>
 
-            {/* Prerequisites */}
-            <section id="prerequisites" className="mb-12">
-                <h2 className="text-2xl font-bold mb-4">Prerequisites</h2>
+            <DocsSection id="integration-methods" title="Integration methods">
+                <DocsLinkGrid>
+                    {content.integrationMethods.map((m) => (
+                        <DocsLinkCard
+                            key={m.href + m.label}
+                            href={m.href}
+                            title={m.label}
+                            description={m.description}
+                        />
+                    ))}
+                </DocsLinkGrid>
+            </DocsSection>
+
+            <DocsSection id="prerequisites" title="Prerequisites">
                 <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                     {content.prerequisites.map((item, i) => (
                         <li key={i}>{item}</li>
                     ))}
                 </ul>
-            </section>
+            </DocsSection>
 
-            {/* Architecture */}
             {content.diagram && content.diagramTitle && (
-                <section id="architecture" className="mb-12">
-                    <h2 className="text-2xl font-bold mb-6">Architecture</h2>
-                    <FlowDiagram title={content.diagramTitle}>{content.diagram}</FlowDiagram>
-                </section>
+                <DocsSection id="architecture" title="Architecture">
+                    <FlowDiagram title={content.diagramTitle} compact>
+                        {content.diagram}
+                    </FlowDiagram>
+                </DocsSection>
             )}
 
-            {/* Three phases */}
-            <section id="integration-flow" className="mb-12 space-y-10">
-                <h2 className="text-2xl font-bold">Integration flow</h2>
+            <section id="integration-flow" className="scroll-mt-24 space-y-8">
+                <h2 className="text-xl font-bold">Integration flow</h2>
 
                 <div>
                     <h3 className="text-lg font-bold mb-1 flex items-center gap-2">
@@ -171,16 +254,20 @@ export function IntegrationGuide({ content }: { content: IntegrationGuideContent
                 </div>
             </section>
 
-            {/* Webhooks */}
             {content.webhookEvents && content.webhookEvents.length > 0 && (
-                <section id="webhooks" className="mb-12">
-                    <h2 className="text-2xl font-bold mb-4">Webhooks</h2>
-                    <p className="text-muted-foreground text-sm mb-4">
-                        Confirm final status server-side via webhook before releasing goods or marking a transfer complete.{" "}
-                        <Link href="/developers/webhooks" className="text-primary font-semibold hover:underline">
-                            Webhook documentation
-                        </Link>
-                    </p>
+                <DocsSection
+                    id="webhooks"
+                    title="Webhooks"
+                    description={
+                        <>
+                            Confirm final status server-side via webhook before releasing goods or marking a transfer
+                            complete.{" "}
+                            <Link href="/developers/webhooks" className="text-primary font-semibold hover:underline">
+                                Webhook documentation
+                            </Link>
+                        </>
+                    }
+                >
                     <div className="divide-y border rounded-xl overflow-hidden">
                         {content.webhookEvents.map((event) => (
                             <Link
@@ -193,13 +280,11 @@ export function IntegrationGuide({ content }: { content: IntegrationGuideContent
                             </Link>
                         ))}
                     </div>
-                </section>
+                </DocsSection>
             )}
 
-            {/* Status lifecycle */}
             {content.statusFlow && content.statusFlow.length > 0 && (
-                <section id="status-lifecycle" className="mb-12">
-                    <h2 className="text-2xl font-bold mb-4">Status lifecycle</h2>
+                <DocsSection id="status-lifecycle" title="Status lifecycle">
                     <div className="flex flex-wrap items-center gap-2 text-sm font-mono">
                         {content.statusFlow.map((status, i) => (
                             <span key={status} className="flex items-center gap-2">
@@ -210,43 +295,38 @@ export function IntegrationGuide({ content }: { content: IntegrationGuideContent
                             </span>
                         ))}
                     </div>
-                </section>
+                </DocsSection>
             )}
 
-            {/* APIs involved */}
-            <section id="apis-involved" className="mb-12">
-                <h2 className="text-2xl font-bold mb-2">APIs involved</h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                    Full request/response specs live in{" "}
-                    <Link href="/developers/api-reference" className="text-primary font-semibold hover:underline">
-                        API Reference
-                    </Link>
-                    .
-                </p>
-                <div className="divide-y border rounded-xl overflow-hidden">
-                    {content.apisInvolved.map((api) => (
-                        <Link
-                            key={api.href}
-                            href={api.href}
-                            className="flex flex-col sm:flex-row sm:items-center gap-2 p-4 hover:bg-muted/40 transition-colors group"
-                        >
-                            <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
-                                <Badge variant="secondary" className={cn("text-[10px]", methodColors[api.method])}>
-                                    {api.method}
-                                </Badge>
-                                <span className="text-muted-foreground">{api.path}</span>
-                            </div>
-                            <span className="text-sm font-medium group-hover:text-primary flex-1">{api.title}</span>
-                            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary shrink-0 hidden sm:block" />
-                        </Link>
-                    ))}
-                </div>
-            </section>
+            {showApis && (
+                <DocsSection
+                    id="apis-involved"
+                    title="APIs involved"
+                    description="Click an endpoint to open its full request/response spec in the partner API reference."
+                >
+                    {hasApiGroups ? (
+                        <div className="space-y-8">
+                            {content.apiGroups!.map((group) => (
+                                <div key={group.id ?? group.title} id={group.id} className="scroll-mt-24 space-y-3">
+                                    <div>
+                                        <h3 className="text-lg font-semibold">{group.title}</h3>
+                                        {group.description && (
+                                            <p className="text-sm text-muted-foreground mt-1">{group.description}</p>
+                                        )}
+                                    </div>
+                                    <ApiEntryList apis={group.apis} />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <ApiEntryList apis={content.apisInvolved ?? []} />
+                    )}
+                </DocsSection>
+            )}
 
-            {/* Footer CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t">
                 <Button asChild variant="outline" className="rounded-full">
-                    <Link href={credentialsHref}>View credentials</Link>
+                    <Link href={credentialsHref}>Environments & credentials</Link>
                 </Button>
                 <Button asChild className="rounded-full bg-primary hover:bg-primary/90 text-white">
                     <Link href={content.goLiveHref ?? "/developers/support"}>
@@ -254,6 +334,6 @@ export function IntegrationGuide({ content }: { content: IntegrationGuideContent
                     </Link>
                 </Button>
             </div>
-        </div>
+        </DocsPage>
     );
 }

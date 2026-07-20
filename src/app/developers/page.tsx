@@ -65,32 +65,33 @@ export default function DevelopersLandingPage() {
                     <div className="mb-10 text-center">
                         <h2 id="transfer-phases" className="text-3xl font-bold tracking-tight mb-4">Every transfer has three phases</h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-                            Collect funds, process and convert, then disburse — documented by flow in Documentation and by capability in API Reference.
+                            Collect funds, process and convert, then disburse — documented by partner flow in Documentation,
+                            with full endpoint specs in API Reference.
                         </p>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <Link href="/developers/api-reference/collect">
+                        <Link href="/developers/guides">
                             <CapabilityCard
                                 title="Collect"
                                 description="Card, bank pay, wallets, and hosted checkout across multiple currencies."
                                 icon={<CreditCard className="w-6 h-6" />}
                             />
                         </Link>
-                        <Link href="/developers/api-reference/process-forex">
+                        <Link href="/developers/rates">
                             <CapabilityCard
                                 title="Process / Forex"
                                 description="FX quotes, corridor routing, compliance, and async processing."
                                 icon={<ArrowRightLeft className="w-6 h-6" />}
                             />
                         </Link>
-                        <Link href="/developers/api-reference/disburse">
+                        <Link href="/developers/payouts">
                             <CapabilityCard
                                 title="Disburse"
                                 description="Payouts to beneficiaries, biller settlements, and bank validation."
                                 icon={<Terminal className="w-6 h-6" />}
                             />
                         </Link>
-                        <Link href="/developers/api-reference/manage">
+                        <Link href="/developers/webhooks">
                             <CapabilityCard
                                 title="Manage"
                                 description="Auth, balances, webhooks, status polling, and platform config."

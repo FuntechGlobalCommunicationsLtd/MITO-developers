@@ -38,8 +38,8 @@ export default function ResourcesPage() {
         <DocsLayout>
             <div className="max-w-4xl">
                 <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">Resources</p>
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Tools & downloads</h1>
-                <p className="text-xl text-muted-foreground mb-12">
+                <h1 className="text-3xl font-extrabold tracking-tight mb-4">Tools & downloads</h1>
+                <p className="text-base text-muted-foreground mb-12">
                     OpenAPI specs, Postman collections, and SDK packages. Endpoint details live in{" "}
                     <Link href="/developers/api-reference" className="text-primary font-semibold hover:underline">
                         API Reference
@@ -68,7 +68,7 @@ export default function ResourcesPage() {
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-bold mb-4">SDK packages</h2>
+                    <h2 className="text-xl font-bold mb-4">SDK packages</h2>
                     <p className="text-muted-foreground mb-4">
                         Install and usage docs:{" "}
                         <Link href="/developers/api-reference/sdk" className="text-primary font-semibold hover:underline">

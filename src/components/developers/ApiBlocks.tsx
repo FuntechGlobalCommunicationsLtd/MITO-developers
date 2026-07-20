@@ -58,7 +58,7 @@ export function EndpointBlock({
             {/* Middle Column: Documentation */}
             <div className="flex-1 min-w-0 py-12 px-4 sm:px-6 lg:px-8 max-w-4xl">
                 <div className="flex items-center gap-4 mb-3">
-                    <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+                    <h2 className="text-xl font-bold tracking-tight">{title}</h2>
                     <StatusBadge status={status} />
                 </div>
 
@@ -78,7 +78,7 @@ export function EndpointBlock({
 
             {/* Right Column: Samples */}
             <div className="lg:w-[45%] lg:min-w-[450px] bg-[#0f172a] dark:bg-slate-900/50 p-6 lg:p-8 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] overflow-y-auto border-l border-slate-800">
-                <div className="space-y-12">
+                <div className="space-y-8">
                     {/* Request Samples Section */}
                     <div className="space-y-4">
                         <div className="flex items-center justify-between mb-4">

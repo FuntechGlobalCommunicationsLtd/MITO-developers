@@ -7,8 +7,8 @@ export default function FaqPage() {
     return (
         <DocsLayout>
             <div className="max-w-3xl">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Frequently Asked Questions</h1>
-                <p className="text-xl text-muted-foreground mb-12">
+                <h1 className="text-3xl font-extrabold tracking-tight mb-4">Frequently Asked Questions</h1>
+                <p className="text-base text-muted-foreground mb-12">
                     Quick answers to the most common integration and API questions.
                 </p>
 

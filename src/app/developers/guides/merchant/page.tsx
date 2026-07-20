@@ -42,7 +42,7 @@ export default function MerchantBillerGuidePage() {
                                 title: "Initiate payment at checkout",
                                 description: "Call the collection API with your Biller ID when the customer completes checkout.",
                                 apiLinks: [
-                                    { label: "InitiateTransactions", href: "/developers/api-reference/biller-api#api-v2-Business-InitiateTransactions" },
+                                    { label: "InitiateTransactions", href: "/developers/api-reference/biller-api#initiate-transaction" },
                                 ],
                             },
                         ],
@@ -51,7 +51,7 @@ export default function MerchantBillerGuidePage() {
                                 title: "Confirm payment",
                                 description: "Verify capture via webhook or status poll before fulfilling the order.",
                                 apiLinks: [
-                                    { label: "GetTransactionStatus", href: "/developers/api-reference/biller-api#api-v2-Business-GetTransactionStatus" },
+                                    { label: "GetTransactionStatus", href: "/developers/api-reference/biller-api#get-status" },
                                 ],
                                 webhookLinks: [{ label: "PAYMENT_CAPTURED", href: "/developers/webhooks" }],
                             },
@@ -60,7 +60,7 @@ export default function MerchantBillerGuidePage() {
                             {
                                 title: "Settle to bank",
                                 description: "Withdraw wallet balance to your registered corporate bank account.",
-                                apiLinks: [{ label: "CreatePayout", href: "/developers/api-reference/biller-api#api-v2-payout-CreatePayout" }],
+                                apiLinks: [{ label: "CreatePayout", href: "/developers/api-reference/biller-api#create-payout" }],
                             },
                         ],
                     },
@@ -71,9 +71,9 @@ export default function MerchantBillerGuidePage() {
                     statusFlow: ["pending", "processing", "completed", "failed"],
                     credentialsService: "biller",
                     apisInvolved: [
-                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Initiate collection", href: "/developers/api-reference/collect#api-v2-Business-InitiateTransactions" },
-                        { method: "GET", path: "/api/v2/Business/GetTransactionStatus", title: "Transaction status", href: "/developers/api-reference/manage#api-v2-Business-GetTransactionStatus" },
-                        { method: "POST", path: "/api/v2/payout/CreatePayout", title: "Create payout", href: "/developers/api-reference/disburse#api-v2-payout-CreatePayout" },
+                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Initiate collection", href: "/developers/api-reference/biller-api#initiate-transaction" },
+                        { method: "GET", path: "/api/v2/Business/GetTransactionStatus", title: "Transaction status", href: "/developers/api-reference/biller-api#get-status" },
+                        { method: "POST", path: "/api/v2/payout/CreatePayout", title: "Create payout", href: "/developers/api-reference/biller-api#create-payout" },
                     ],
                 }}
             />

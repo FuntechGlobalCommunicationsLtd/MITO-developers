@@ -7,8 +7,8 @@ export default function SupportPage() {
     return (
         <DocsLayout>
             <div className="max-w-4xl">
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Support & Go-Live</h1>
-                <p className="text-xl text-muted-foreground mb-12">
+                <h1 className="text-3xl font-extrabold tracking-tight mb-4">Support & Go-Live</h1>
+                <p className="text-base text-muted-foreground mb-12">
                     Reach out to our Integration Engineering team for technical assistance or to schedule your Production Go-Live review.
                 </p>
 

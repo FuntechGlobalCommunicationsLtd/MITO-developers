@@ -12,8 +12,8 @@ export default function FtpApiReferencePage() {
             <div className="flex flex-col w-full">
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
                     <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">API Reference · Process / Forex</p>
-                    <h1 className="text-4xl font-extrabold tracking-tight mb-4">MTO FTP file formats</h1>
-                    <p className="text-xl text-muted-foreground">
+                    <h1 className="text-3xl font-extrabold tracking-tight mb-4">MTO FTP file formats</h1>
+                    <p className="text-base text-muted-foreground">
                         SFTP file specifications for bulk MTO submissions. Integration flow:{" "}
                         <Link href="/developers/file-integration/mto-ftp" className="text-primary font-semibold hover:underline">
                             MTO FTP batch

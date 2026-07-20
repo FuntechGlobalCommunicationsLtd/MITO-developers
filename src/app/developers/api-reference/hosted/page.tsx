@@ -12,11 +12,11 @@ export default function HostedApiReferencePage() {
             <div className="flex flex-col w-full">
                 <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl border-b">
                     <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">API Reference · Collect</p>
-                    <h1 className="text-4xl font-extrabold tracking-tight mb-4">Hosted checkout</h1>
-                    <p className="text-xl text-muted-foreground">
-                        Retail hosted pages use <code className="bg-muted px-1 rounded text-base">POST /transactions</code> with{" "}
+                    <h1 className="text-3xl font-extrabold tracking-tight mb-4">Hosted checkout</h1>
+                    <p className="text-base text-muted-foreground">
+                        Retail hosted pages use <code className="bg-muted px-1 rounded text-base">POST /api/v1/mito/Transactions</code> with{" "}
                         <code className="bg-muted px-1 rounded text-base">channel: HOSTEDPAGE</code>. Biller hosted uses{" "}
-                        <Link href="/developers/api-reference/biller-api#api-v2-Business-InitiateTransactions" className="text-primary font-semibold hover:underline">
+                        <Link href="/developers/api-reference/biller-api#initiate-transaction" className="text-primary font-semibold hover:underline">
                             InitiateTransactions
                         </Link>{" "}
                         redirectUrl. Flow:{" "}
@@ -26,9 +26,9 @@ export default function HostedApiReferencePage() {
 
                 <EndpointBlock
                     method="POST"
-                    path="/transactions"
+                    path="/api/v1/mito/Transactions"
                     title="Initiate transaction (Retail — hosted page)"
-                    description="Validate rate via POST /exchange/rates first to obtain rateId. Returns PaymentUrl for customer redirect or SDK linkToken flow."
+                    description="Validate rate via POST /api/v1/mito/Exchange/rates first to obtain rateId. Returns PaymentUrl for customer redirect or SDK linkToken flow."
                     requestSamples={
                         <CodeTabs
                             tabs={[
@@ -76,7 +76,7 @@ export default function HostedApiReferencePage() {
                 >
                     <SchemaTable
                         fields={[
-                            { name: "rateId", type: "string", required: true, description: "From POST /exchange/rates validation." },
+                            { name: "rateId", type: "string", required: true, description: "From POST /api/v1/mito/Exchange/rates validation." },
                             { name: "channel", type: "string", required: true, description: "HOSTEDPAGE for redirect checkout." },
                             { name: "redirectUrl", type: "string", required: true, description: "Return URL after success/cancel/failure." },
                             { name: "webhookUrl", type: "string", required: false, description: "HTTPS endpoint for status POST callbacks." },
@@ -84,8 +84,8 @@ export default function HostedApiReferencePage() {
                     />
                     <p className="text-sm text-muted-foreground mt-4">
                         Full schema:{" "}
-                        <Link href="/developers/api-reference/retail-api#transactions" className="text-primary font-semibold hover:underline">
-                            Retail API — POST /transactions
+                        <Link href="/developers/api-reference/retail-api#create-transaction" className="text-primary font-semibold hover:underline">
+                            Retail API — POST /api/v1/mito/Transactions
                         </Link>
                     </p>
                 </EndpointBlock>

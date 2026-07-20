@@ -1,98 +1,98 @@
 "use client";
 
 import { DocsLayout } from "@/components/layout/DocsLayout";
-import { FlowDiagram, FlowNode, FlowArrow } from "@/components/developers/Flows";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { DocsPage, DocsPageHeader, DocsInlineCode } from "@/components/developers/DocsPage";
+import {
+    GuideIntro,
+    GuideOptionsChooser,
+    GuideOptionDetail,
+    GuideRelatedHelpers,
+} from "@/components/developers/PartnerGuideBlocks";
 
 export default function SettlementPage() {
     return (
         <DocsLayout>
-            <div className="max-w-4xl">
-                <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-2">Platform</p>
-                <h1 className="text-4xl font-extrabold tracking-tight mb-4">Settlement & wallets</h1>
-                <p className="text-xl text-muted-foreground mb-8">
-                    How collected funds move through MITO wallets, how fees are applied, and how you reconcile payouts to your bank.
-                </p>
+            <DocsPage>
+                <section id="overview" className="space-y-8">
+                    <DocsPageHeader
+                        eyebrow="Helper methods · Settlement"
+                        title="Settlement"
+                        description="How collected funds become available in your wallet and move to your bank. Pair with Wallets, Payouts, and Webhooks."
+                    />
 
-                <section className="mb-12">
-                    <h2 id="wallet-model" className="text-2xl font-bold mb-4">Wallet model</h2>
-                    <p className="text-muted-foreground mb-6">
-                        Affiliates and billers receive virtual wallets per currency (GBP, EUR, NGN, etc.). Collections credit the wallet; disbursements debit it.
-                    </p>
-                    <FlowDiagram title="Typical biller settlement">
-                        <div className="flex flex-col md:flex-row items-center justify-center">
-                            <FlowNode label="Customer payment" sublabel="£100.00" type="user" />
-                            <FlowArrow direction="right" label="Fee" />
-                            <FlowNode label="GBP wallet" sublabel="£99.00" type="MITO" />
-                            <FlowArrow direction="right" label="Payout" />
-                            <FlowNode label="Your bank" sublabel="Received" type="secondary" />
-                        </div>
-                    </FlowDiagram>
-                </section>
+                    <GuideIntro
+                        covers={[
+                            "When funds are available to withdraw",
+                            "Biller vs MTO settlement paths",
+                            "Which helpers / APIs to use next",
+                        ]}
+                    >
+                        <p>
+                            Settlement is collect → confirm → available in wallet → withdraw. Never mark funds settled on
+                            redirect alone. Detailed collect workflows stay on the Biller / MTO guides; this page maps
+                            settlement responsibilities only.
+                        </p>
+                    </GuideIntro>
 
-                <section className="mb-12 space-y-8">
-                    <h2 id="settlement-flow" className="text-2xl font-bold">Settlement flow</h2>
+                    <GuideOptionsChooser
+                        title="Settlement paths"
+                        description="Confirm via notifications, then balances → payout."
+                        options={[
+                            { href: "#settlement-biller", title: "Biller settlement", description: "Business collect → CreatePayout." },
+                            { href: "#settlement-mto", title: "MTO / Collection", description: "payout/balances + withdrawal / payout_*." },
+                        ]}
+                    />
 
-                    <div className="border-l-4 border-primary pl-6">
-                        <h3 className="font-bold mb-1">1. Collect</h3>
-                        <p className="text-sm text-muted-foreground">Payment captured → funds credited to wallet (minus MITO fees).</p>
-                        <Link href="/developers/api-reference/collect" className="text-sm text-primary font-semibold hover:underline mt-2 inline-block">
-                            Collect APIs →
-                        </Link>
-                    </div>
-
-                    <div className="border-l-4 border-primary pl-6">
-                        <h3 className="font-bold mb-1">2. Process / Forex</h3>
-                        <p className="text-sm text-muted-foreground">For multi-currency operations, FX conversion may occur before funds are available for payout.</p>
-                        <Link href="/developers/api-reference/process-forex" className="text-sm text-primary font-semibold hover:underline mt-2 inline-block">
-                            Process / Forex APIs →
-                        </Link>
-                    </div>
-
-                    <div className="border-l-4 border-primary pl-6">
-                        <h3 className="font-bold mb-1">3. Disburse</h3>
-                        <p className="text-sm text-muted-foreground">Withdraw wallet balance to your registered corporate bank account.</p>
-                        <Link href="/developers/api-reference/disburse" className="text-sm text-primary font-semibold hover:underline mt-2 inline-block">
-                            Disburse APIs →
-                        </Link>
+                    <div id="confirmation" className="space-y-3 scroll-mt-24">
+                        <h2 className="text-xl font-bold">Confirmation signals</h2>
+                        <p className="text-muted-foreground">
+                            Biller: <DocsInlineCode>PAYMENT_CAPTURED</DocsInlineCode> /{" "}
+                            <DocsInlineCode>TRANSACTION_COMPLETED</DocsInlineCode>. Retail/MTO: outbound{" "}
+                            <DocsInlineCode>eventType</DocsInlineCode> / <DocsInlineCode>payout_*</DocsInlineCode>. Full
+                            catalogs:{" "}
+                            <Link href="/developers/webhooks" className="text-primary font-semibold hover:underline">
+                                Webhooks
+                            </Link>
+                            .
+                        </p>
                     </div>
                 </section>
 
-                <section className="mb-12">
-                    <h2 id="reconciliation" className="text-2xl font-bold mb-4">Reconciliation</h2>
-                    <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                        <li>Match webhook events and transaction references to wallet movements.</li>
-                        <li>Use balance and transaction list APIs for daily reconciliation.</li>
-                        <li>Payout reports available for biller partners.</li>
-                    </ul>
-                    <div className="mt-4 flex flex-wrap gap-3">
-                        <Link href="/developers/api-reference/biller-api#api-v2-Business-balances" className="text-sm font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary">
-                            Wallet balances
-                        </Link>
-                        <Link href="/developers/api-reference/biller-api#api-v2-payout-report" className="text-sm font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary">
-                            Payout report
-                        </Link>
-                        <Link href="/developers/webhooks" className="text-sm font-medium px-3 py-1.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary">
-                            Webhooks
-                        </Link>
-                    </div>
-                </section>
+                <GuideOptionDetail
+                    id="settlement-biller"
+                    title="1) Biller settlement"
+                    overview="Initiate collection, confirm capture, read Business balances, CreatePayout to corporate account."
+                    sequence={[
+                        <>InitiateTransactions + callbackurl.</>,
+                        <>Confirm notification / GetTransactionStatus.</>,
+                        <>GET balances → CreatePayout.</>,
+                    ]}
+                    partnerNotes={[<>Reconcile with payout report.</>]}
+                    mitoNotes={[<>Credit wallet and process CreatePayout.</>]}
+                />
 
-                <section>
-                    <h2 id="related-flows" className="text-2xl font-bold mb-4">Related integration flows</h2>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                        <Link href="/developers/guides/biller" className="p-4 rounded-xl border hover:border-primary/40 group">
-                            <p className="font-semibold group-hover:text-primary">Biller</p>
-                            <p className="text-xs text-muted-foreground mt-1">Collection → wallet → bank payout</p>
-                        </Link>
-                        <Link href="/developers/guides/wholesale" className="p-4 rounded-xl border hover:border-primary/40 group">
-                            <p className="font-semibold group-hover:text-primary">Wholesale biller</p>
-                            <p className="text-xs text-muted-foreground mt-1">Aggregated sub-merchant settlement</p>
-                        </Link>
-                    </div>
-                </section>
-            </div>
+                <GuideOptionDetail
+                    id="settlement-mto"
+                    title="2) MTO / Collection settlement"
+                    overview="Use MTO Collection balances and payout webhooks; corporate withdrawal via Business payout APIs when applicable."
+                    sequence={[
+                        <>Complete collection or MTO submit.</>,
+                        <>Read GET /api/v2/payout/balances.</>,
+                        <>Track payout_* outbound webhooks / CreatePayout.</>,
+                    ]}
+                    partnerNotes={[<>See Payouts helper for Api List.</>]}
+                    mitoNotes={[<>Publish balances and payout status events.</>]}
+                />
+
+                <GuideRelatedHelpers
+                    items={[
+                        { href: "/developers/wallets", title: "Wallets", description: "Balance APIs" },
+                        { href: "/developers/payouts", title: "Payouts", description: "Api List + withdrawal" },
+                        { href: "/developers/webhooks", title: "Webhooks", description: "Confirm before settle" },
+                    ]}
+                />
+            </DocsPage>
         </DocsLayout>
     );
 }

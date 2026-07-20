@@ -44,7 +44,7 @@ export default function WholesaleBillerGuidePage() {
                                 title: "Initiate sub-merchant collection",
                                 description: "Call collection APIs with your Biller ID and a sub-merchant reference for attribution.",
                                 apiLinks: [
-                                    { label: "InitiateTransactions", href: "/developers/api-reference/biller-api#api-v2-Business-InitiateTransactions" },
+                                    { label: "InitiateTransactions", href: "/developers/api-reference/biller-api#initiate-transaction" },
                                 ],
                             },
                         ],
@@ -53,8 +53,8 @@ export default function WholesaleBillerGuidePage() {
                                 title: "Confirm and reconcile",
                                 description: "Verify payment via webhook or status API. Map funds to sub-merchants in your system.",
                                 apiLinks: [
-                                    { label: "GetTransactionStatus", href: "/developers/api-reference/biller-api#api-v2-Business-GetTransactionStatus" },
-                                    { label: "GetTransactions", href: "/developers/api-reference/biller-api#api-v2-Business-GetTransactions" },
+                                    { label: "GetTransactionStatus", href: "/developers/api-reference/biller-api#get-status" },
+                                    { label: "GetTransactions", href: "/developers/api-reference/biller-api#get-transactions" },
                                 ],
                                 webhookLinks: [{ label: "Webhook events", href: "/developers/webhooks" }],
                             },
@@ -63,7 +63,7 @@ export default function WholesaleBillerGuidePage() {
                             {
                                 title: "Settle to platform bank",
                                 description: "Payout aggregated balance to your corporate account, then distribute to sub-merchants per your model.",
-                                apiLinks: [{ label: "CreatePayout", href: "/developers/api-reference/biller-api#api-v2-payout-CreatePayout" }],
+                                apiLinks: [{ label: "CreatePayout", href: "/developers/api-reference/biller-api#create-payout" }],
                             },
                         ],
                     },
@@ -73,9 +73,9 @@ export default function WholesaleBillerGuidePage() {
                     statusFlow: ["pending", "processing", "completed", "failed"],
                     credentialsService: "biller",
                     apisInvolved: [
-                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Initiate collection", href: "/developers/api-reference/collect#api-v2-Business-InitiateTransactions" },
-                        { method: "GET", path: "/api/v2/Business/GetTransactions", title: "List transactions", href: "/developers/api-reference/manage#api-v2-Business-GetTransactions" },
-                        { method: "POST", path: "/api/v2/payout/CreatePayout", title: "Create payout", href: "/developers/api-reference/disburse#api-v2-payout-CreatePayout" },
+                        { method: "POST", path: "/api/v2/Business/InitiateTransactions", title: "Initiate collection", href: "/developers/api-reference/biller-api#initiate-transaction" },
+                        { method: "GET", path: "/api/v2/Business/GetTransactions", title: "List transactions", href: "/developers/api-reference/biller-api#get-transactions" },
+                        { method: "POST", path: "/api/v2/payout/CreatePayout", title: "Create payout", href: "/developers/api-reference/biller-api#create-payout" },
                     ],
                 }}
             />

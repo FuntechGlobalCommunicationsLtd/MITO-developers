@@ -14,10 +14,10 @@ export function HeroSection({
     return (
         <div className="relative overflow-hidden bg-background py-16 sm:py-24 mb-12 border-b">
             <div className="mx-auto max-w-4xl text-center px-4 sm:px-6 lg:px-8">
-                <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl mb-6">
+                <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl mb-6">
                     {title}
                 </h1>
-                <p className="mx-auto max-w-2xl text-xl text-muted-foreground leading-relaxed">
+                <p className="mx-auto max-w-2xl text-base text-muted-foreground leading-relaxed">
                     {description}
                 </p>
                 {children && <div className="mt-10 flex justify-center gap-4">{children}</div>}
@@ -62,18 +62,15 @@ export function IntegrationTypeCard({
     href: string;
 }) {
     return (
-        <a href={href} className="block group">
-            <Card className="h-full transition-all border-border/60 hover:border-primary/50 hover:shadow-sm bg-card">
-                <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                        <CardTitle className="text-lg group-hover:text-primary transition-colors">{title}</CardTitle>
-                        <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors group-hover:translate-x-1" />
-                    </div>
-                    <CardDescription className="text-sm">
-                        {description}
-                    </CardDescription>
-                </CardHeader>
-            </Card>
+        <a
+            href={href}
+            className="block p-4 rounded-xl border hover:border-primary/40 hover:bg-primary/5 transition-colors group"
+        >
+            <p className="font-semibold text-sm group-hover:text-primary inline-flex items-center gap-1">
+                {title}
+                <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">{description}</p>
         </a>
     );
 }
